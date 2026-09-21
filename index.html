@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#123d30">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Studio Costa">
+  <title>Studio Costa Companion</title>
+
+  <link rel="manifest" href="./manifest.webmanifest?v=20260921">
+  <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png?v=20260921">
+  <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png?v=20260921">
+  <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png?v=20260921">
+  <link rel="stylesheet" href="./styles.css?v=20260921">
+</head>
+<body>
+<header class="topbar">
+  <div><strong>Studio Costa</strong><span>Companion V13.5</span></div>
+  <label for="fileInput" id="importBtn" class="ghost file-trigger" role="button" tabindex="0">Aggiorna</label>
+</header>
+
+<template id="periodButtonsTemplate">
+  <button>Oggi</button><button>Settimana</button><button>Mese</button>
+</template>
+
+<main id="app">
+  <section class="empty">
+    <h1>Studio Costa Companion</h1>
+    <p>Importa l’aggiornamento cifrato creato dal gestionale desktop.</p>
+    <label for="fileInput" id="firstImport" class="primary file-trigger" role="button" tabindex="0">Importa .scmobile</label>
+  </section>
+</main>
+
+<button id="fab" class="fab" title="Nuovo elemento">＋</button>
+
+<nav class="bottomnav">
+  <button data-view="home" class="active">⌂<span>Home</span></button>
+  <button data-view="agenda">▦<span>Agenda</span></button>
+  <button data-view="practices">▤<span>Pratiche</span></button>
+  <button data-view="creset">C<span>Creset</span></button>
+</nav>
+
+<input id="fileInput" class="file-input-native" type="file" aria-label="Seleziona file .scmobile">
+
+<div id="modal" class="modal hidden">
+  <div class="modal-card">
+    <div class="modal-head"><strong id="modalTitle">Dettaglio</strong><button id="modalClose">×</button></div>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<script src="./app.js?v=20260921"></script>
+</body>
+</html>

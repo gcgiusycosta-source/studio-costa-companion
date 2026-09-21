@@ -1,0 +1,1 @@
+Companion V13.7 migliorata: header e navigazione verdi, Home con controlli Giorno/Settimana/Mese e navigazione tra periodi, riepiloghi aggiuntivi, FAB ridotto, corretta classificazione delle attività preparatorie non più rosse come le udienze.

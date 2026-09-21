@@ -5,6 +5,7 @@ let agendaMode="week";
 let agendaSelectedDay="";
 let homeMode="week";
 let homeSelectedDate="";
+let homeAnchorDate="";
 let localTasks=[];
 let pendingMobileActions=[];
 let checklistMode="todo";
@@ -374,6 +375,15 @@ function monthBounds(dateString){
   const end=new Date(d.getFullYear(),d.getMonth()+1,0,12);
   return [start.toISOString().slice(0,10),end.toISOString().slice(0,10)];
 }
+function shiftPeriod(dateString,mode,step){
+  if(mode==="month"){
+    const d=new Date((dateString||new Date().toISOString().slice(0,10))+"T12:00:00");
+    d.setMonth(d.getMonth()+step);
+    return d.toISOString().slice(0,10);
+  }
+  return addDays(dateString||new Date().toISOString().slice(0,10),mode==="week"?step*7:step);
+}
+
 function escapeHtml(value){
   return String(value??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
 }
@@ -460,9 +470,21 @@ function eventKind(event){
   const source=String(event?.source_type||"").toUpperCase();
   if(source==="APPOINTMENT"||category.includes("APPUNTAMENTO"))return "APPUNTAMENTO";
   if(category.includes("CRESET"))return "CRESET";
-  if(source==="HEARING"||source==="MEDIATION"||category.includes("UDIENZA")||category.includes("MEDIAZ"))return "UDIENZA";
-  if(source==="DEADLINE"||category.includes("SCADENZA"))return "SCADENZA";
+  if(source==="HEARING"||source==="MEDIATION"||category.includes("MEDIAZ"))return "UDIENZA";
+  if(source==="DEADLINE")return "SCADENZA";
+  if(source==="TASK"){
+    if(category.includes("PREPARATOR")||category.includes("PREPARAZIONE"))return "PREPARAZIONE";
+    if(category.includes("SCADENZA")||category.includes("TERMINE"))return "SCADENZA";
+    return "ATTIVITÀ";
+  }
+  if(source==="LOCAL"){
+    if(category.includes("UDIENZA"))return "UDIENZA";
+    if(category.includes("SCADENZA"))return "SCADENZA";
+    return "ATTIVITÀ";
+  }
   if(category.includes("PREPARATOR")||category.includes("PREPARAZIONE"))return "PREPARAZIONE";
+  if(category.includes("SCADENZA"))return "SCADENZA";
+  if(category.includes("UDIENZA"))return "UDIENZA";
   return "ATTIVITÀ";
 }
 function openChecklistCount(date){
@@ -512,51 +534,116 @@ function dayOperationalHtml(items,date){
   }).join("");
   return `${html}<section class="compact-day-section agenda-category-card kind-CHECKLIST"><h3><span class="agenda-card-icon">✓</span><span class="agenda-card-title">Checklist</span><b>${openChecklistCount(date)}</b><em>Vedi tutte ›</em></h3>${checklistDayHtml(date)}</section>`;
 }
-function bindHomeControls(root,items){
-  root.querySelectorAll("[data-home-mode]").forEach(b=>b.onclick=()=>{homeMode=b.dataset.homeMode;renderHome()});
-  root.querySelectorAll("[data-home-day]").forEach(b=>b.onclick=()=>{homeSelectedDate=b.dataset.homeDay;renderHome()});
-  root.querySelectorAll("[data-home-month-day]").forEach(b=>b.onclick=()=>{homeSelectedDate=b.dataset.homeMonthDay;renderHome()});
-  bindPracticeLinks(root);bindInlineChecklist(root);
+function bindHomeControls(root){
+  root.querySelectorAll("[data-home-mode]").forEach(button=>button.onclick=()=>{
+    homeMode=button.dataset.homeMode||"week";
+    homeAnchorDate=homeSelectedDate||homeAnchorDate||new Date().toISOString().slice(0,10);
+    renderHome();
+  });
+  root.querySelectorAll("[data-home-day]").forEach(button=>button.onclick=()=>{
+    homeSelectedDate=button.dataset.homeDay;
+    renderHome();
+  });
+  root.querySelectorAll("[data-home-month-day]").forEach(button=>button.onclick=()=>{
+    homeSelectedDate=button.dataset.homeMonthDay;
+    renderHome();
+  });
+  root.querySelectorAll("[data-home-nav]").forEach(button=>button.onclick=()=>{
+    const step=Number(button.dataset.homeNav||0);
+    homeAnchorDate=shiftPeriod(homeAnchorDate||new Date().toISOString().slice(0,10),homeMode||"week",step);
+    homeSelectedDate=homeAnchorDate;
+    renderHome();
+  });
+  root.querySelector("[data-home-today]")?.addEventListener("click",()=>{
+    homeAnchorDate=new Date().toISOString().slice(0,10);
+    homeSelectedDate=homeAnchorDate;
+    renderHome();
+  });
+  root.querySelector("#homeDate")?.addEventListener("change",event=>{
+    homeAnchorDate=event.target.value||new Date().toISOString().slice(0,10);
+    homeSelectedDate=homeAnchorDate;
+    renderHome();
+  });
+  bindPracticeLinks(root);
+  bindInlineChecklist(root);
 }
 
-function weeklyEventsSection(items,start,kinds,title){
-  const end=addDays(start,6);
-  const rows=items.filter(e=>e.event_date>=start&&e.event_date<=end&&kinds.includes(eventKind(e))).sort(eventSort);
-  if(!rows.length)return `<section class="compact-day-section"><h3>${escapeHtml(title)} <span>0</span></h3><div class="empty small">Nessuna voce nella settimana</div></section>`;
-  const groups={};rows.forEach(e=>(groups[e.event_date]??=[]).push(e));
-  return `<section class="compact-day-section"><h3>${escapeHtml(title)} <span>${rows.length}</span></h3>${Object.keys(groups).sort().map(ds=>`<div class="weekly-category-day"><div class="selected-day-label">${escapeHtml(fmtWeekday(ds))} ${fmtDate(ds)}</div>${groups[ds].map(eventCard).join("")}</div>`).join("")}</section>`;
-}
-function weeklyChecklistSection(start){
-  const days=Array.from({length:7},(_,i)=>addDays(start,i));
-  const total=days.reduce((n,ds)=>n+openChecklistCount(ds),0);
-  const chunks=days.filter(ds=>openChecklistCount(ds)>0).map(ds=>`<div class="weekly-category-day"><div class="selected-day-label">${escapeHtml(fmtWeekday(ds))} ${fmtDate(ds)}</div>${checklistDayHtml(ds)}</div>`).join("");
-  return `<section class="compact-day-section"><h3>Checklist <span>${total}</span></h3>${chunks||'<div class="empty small">Nessuna checklist nella settimana</div>'}</section>`;
-}
-function weekAllDaysHtml(items,start){
-  return Array.from({length:7},(_,i)=>addDays(start,i)).map(ds=>`<section class="agenda-day-group"><div class="agenda-day-title"><strong>${escapeHtml(fmtWeekday(ds))}</strong><span>${fmtDate(ds)}</span></div>${dayOperationalHtml(items,ds)}</section>`).join("");
-}
 function renderHome(){
   const root=$("homeView");if(!root||!snapshot)return;
   const today=new Date().toISOString().slice(0,10);
-  const start=startOfWeek(today),end=addDays(start,6);
+  if(!homeAnchorDate)homeAnchorDate=today;
+  if(!homeMode)homeMode="week";
   const all=calendarItems().sort(eventSort);
-  const week=all.filter(e=>e.event_date>=start&&e.event_date<=end);
-  const counts={UDIENZA:0,APPUNTAMENTO:0,SCADENZA:0};
-  week.forEach(e=>{const k=eventKind(e);if(k==="UDIENZA")counts.UDIENZA++;else if(k==="APPUNTAMENTO")counts.APPUNTAMENTO++;else if(k==="SCADENZA")counts.SCADENZA++});
+  const anchor=homeAnchorDate||today;
+
+  let periodStart=anchor;
+  let periodEnd=anchor;
+  let selected=homeSelectedDate||anchor;
+  let periodLabel="";
+  let content="";
+
+  if(homeMode==="day"){
+    selected=anchor;
+    periodStart=anchor;
+    periodEnd=anchor;
+    periodLabel=`${fmtWeekday(anchor)} ${fmtDate(anchor)}`;
+    content=`<div class="selected-day-label home-selected-label">${escapeHtml(periodLabel)}</div>${dayOperationalHtml(all,anchor)}`;
+  }else if(homeMode==="week"){
+    periodStart=startOfWeek(anchor);
+    periodEnd=addDays(periodStart,6);
+    if(!selected||selected<periodStart||selected>periodEnd)selected=(today>=periodStart&&today<=periodEnd)?today:periodStart;
+    periodLabel=`Settimana ${fmtDate(periodStart)} – ${fmtDate(periodEnd)}`;
+    content=`${weekOverview(all,periodStart,selected,"data-home-day")}<div class="selected-agenda-day home-selected-label"><strong>${escapeHtml(fmtWeekday(selected))}</strong><span>${fmtDate(selected)}</span></div>${dayOperationalHtml(all,selected)}`;
+  }else{
+    const bounds=monthBounds(anchor);
+    periodStart=bounds[0];
+    periodEnd=bounds[1];
+    if(!selected||selected<periodStart||selected>periodEnd)selected=anchor;
+    periodLabel=new Intl.DateTimeFormat("it-IT",{month:"long",year:"numeric"}).format(new Date(anchor+"T12:00:00"));
+    const monthEvents=all.filter(e=>e.event_date>=periodStart&&e.event_date<=periodEnd);
+    content=`${renderMonthGrid(monthEvents,selected).replaceAll('data-agenda-day','data-home-month-day')}<div class="selected-day-label home-selected-label">${escapeHtml(fmtWeekday(selected))} ${fmtDate(selected)}</div>${dayOperationalHtml(all,selected)}`;
+  }
+
+  homeSelectedDate=selected;
+
+  const inRange=all.filter(e=>e.event_date>=periodStart&&e.event_date<=periodEnd);
+  const stats={
+    hearings:inRange.filter(e=>eventKind(e)==="UDIENZA").length,
+    appointments:inRange.filter(e=>eventKind(e)==="APPUNTAMENTO").length,
+    deadlines:inRange.filter(e=>["SCADENZA","PREPARAZIONE","ATTIVITÀ"].includes(eventKind(e))).length,
+    sync:pendingMobileActions.filter(a=>a.sync_status!=="IMPORTATA_DAL_GESTIONALE").length,
+    practices:(snapshot.practices||[]).filter(p=>!/(ARCHIVIAT|CHIUS|DEFINIT|ESTINT)/i.test(String(p.stato||""))).length || (snapshot.practices||[]).length
+  };
+
   root.innerHTML=`
-    <section class="welcome-panel"><div class="eyebrow dark">STUDIO COSTA COMPANION V13.6</div><h2>Settimana ${fmtDate(start)} – ${fmtDate(end)}</h2><p>Lunedì–domenica · priorità a udienze e termini processuali</p></section>
-    <div class="summary-grid home-summary four-summary">
-      <div class="summary-card hearing-summary"><strong>${counts.UDIENZA}</strong><span>Udienze</span></div>
-      <div class="summary-card"><strong>${counts.APPUNTAMENTO}</strong><span>Appuntamenti</span></div>
-      <div class="summary-card"><strong>${counts.SCADENZA}</strong><span>Scadenze</span></div>
-      <div class="summary-card attention"><strong>${pendingMobileActions.filter(a=>a.sync_status!=="IMPORTATA_DAL_GESTIONALE").length}</strong><span>Da sincronizzare</span></div>
+    <section class="welcome-panel home-hero">
+      <div class="hero-brand-row"><div class="brand-mark">GC</div><div><div class="eyebrow dark">STUDIO LEGALE COSTA</div><h2>Dashboard operativa</h2><p>Riepilogo rapido di udienze, appuntamenti, scadenze e pratiche.</p></div></div>
+    </section>
+    <div class="summary-grid home-summary home-summary-rich">
+      <div class="summary-card"><strong>${stats.practices}</strong><span>Pratiche attive</span></div>
+      <div class="summary-card hearing-summary"><strong>${stats.hearings}</strong><span>Udienze</span></div>
+      <div class="summary-card"><strong>${stats.deadlines}</strong><span>Scadenze e atti</span></div>
+      <div class="summary-card"><strong>${stats.appointments}</strong><span>Appuntamenti</span></div>
+      <div class="summary-card attention"><strong>${stats.sync}</strong><span>Da sincronizzare</span></div>
     </div>
-    ${weekOverview(all,start,today,"data-home-day")}
-    ${weeklyEventsSection(all,start,["UDIENZA"],"Udienze")}${weeklyEventsSection(all,start,["APPUNTAMENTO"],"Appuntamenti")}
-    ${weeklyEventsSection(all,start,["SCADENZA","PREPARAZIONE","ATTIVITÀ"],"Scadenze, atti e attività da preparare")}
-    ${weeklyEventsSection(all,start,["CRESET"],"Creset")}
-    ${weeklyChecklistSection(start)}`;
-  bindPracticeLinks(root);bindInlineChecklist(root);
+    <section class="section-head stacked agenda-heading home-heading">
+      <div class="agenda-title-row">
+        <div><h2>Home</h2><p class="muted">${escapeHtml(periodLabel)}</p></div>
+        <button class="secondary-button" data-home-today>Oggi</button>
+      </div>
+      <div class="agenda-mode home-mode-switch" role="group" aria-label="Vista dashboard">
+        <button data-home-mode="day" class="${homeMode==="day"?"active":""}">Giorno</button>
+        <button data-home-mode="week" class="${homeMode==="week"?"active":""}">Settimana</button>
+        <button data-home-mode="month" class="${homeMode==="month"?"active":""}">Mese</button>
+      </div>
+      <div class="agenda-navigation home-navigation">
+        <button class="nav-square" data-home-nav="-1" aria-label="Periodo precedente">‹</button>
+        <input id="homeDate" type="date" value="${anchor}">
+        <button class="nav-square" data-home-nav="1" aria-label="Periodo successivo">›</button>
+      </div>
+    </section>
+    ${content}`;
+  bindHomeControls(root);
 }
 
 function groupedAgenda(items){

@@ -2,9 +2,9 @@ const CACHE="studio-costa-companion-v13-6-restored-20260921";
 const APP_SHELL=[
   "./",
   "./index.html",
-  "./styles.css?v=13.6",
-  "./app.js?v=13.6",
-  "./manifest.json?v=13.6",
+  "./styles.css?v=13.7",
+  "./app.js?v=13.7",
+  "./manifest.json?v=13.7",
   "./icon-192.png",
   "./icon-512.png",
   "./apple-touch-icon.png"

@@ -1,0 +1,17 @@
+STUDIO COSTA COMPANION V13.4
+
+Questa release modifica esclusivamente la grafica dell’Agenda/Home mobile e mantiene le funzioni già approvate:
+- apertura fascicoli e dettagli;
+- completamento attività e checklist;
+- aggiunta di attività, appuntamenti e udienze;
+- esito/rinvio udienza;
+- importazione aggiornamenti cifrati;
+- esportazione modifiche verso il gestionale;
+- sincronizzazione tramite identificativi stabili.
+
+Grafica V13.4:
+- viste Giorno / Settimana / Mese;
+- settimana lunedì-domenica cliccabile;
+- card colorate Udienze, Appuntamenti, Scadenze, Atti da preparare, Creset e Checklist.
+
+Nessun dato dello studio deve essere pubblicato su GitHub Pages.

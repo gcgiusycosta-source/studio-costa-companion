@@ -3,54 +3,205 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#123d30">
+  <meta name="theme-color" content="#214e42">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Studio Costa">
-  <title>Studio Costa Companion</title>
-
-  <link rel="manifest" href="./manifest.webmanifest?v=20260921">
-  <link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png?v=20260921">
-  <link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png?v=20260921">
-  <link rel="icon" type="image/png" sizes="512x512" href="./icon-512.png?v=20260921">
-  <link rel="stylesheet" href="./styles.css?v=20260921">
+  <link rel="manifest" href="manifest.json?v=13.6">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=13.6">
+  <link rel="stylesheet" href="styles.css?v=13.6">
+  <title>Studio Costa Companion V13</title>
 </head>
 <body>
-<header class="topbar">
-  <div><strong>Studio Costa</strong><span>Companion V13.5</span></div>
-  <label for="fileInput" id="importBtn" class="ghost file-trigger" role="button" tabindex="0">Aggiorna</label>
-</header>
-
-<template id="periodButtonsTemplate">
-  <button>Oggi</button><button>Settimana</button><button>Mese</button>
-</template>
-
-<main id="app">
-  <section class="empty">
-    <h1>Studio Costa Companion</h1>
-    <p>Importa l’aggiornamento cifrato creato dal gestionale desktop.</p>
-    <label for="fileInput" id="firstImport" class="primary file-trigger" role="button" tabindex="0">Importa .scmobile</label>
+  <section id="pairScreen" class="screen hidden">
+    <div class="login-card">
+      <div class="brand">GC</div>
+      <div class="eyebrow dark">STUDIO LEGALE COSTA</div>
+      <h1>Importa aggiornamento</h1>
+      <p>Seleziona il file <strong>StudioCostaMobile.scmobile</strong> generato dal gestionale e inserisci la password scelta durante l’esportazione.</p>
+      <input id="companionFile" class="file-input-native" type="file" aria-label="Seleziona file .scmobile">
+      <label for="companionFile" id="companionFilePicker" class="file-picker-button" role="button" tabindex="0">Seleziona file .scmobile</label>
+      <div id="companionFileName" class="file-selected-name">Nessun file selezionato</div>
+      <input id="companionPassword" type="password" autocomplete="current-password" placeholder="Password archivio">
+      <button id="companionImportButton">Importa aggiornamento</button>
+      <div id="pairError" class="error"></div>
+    </div>
   </section>
-</main>
 
-<button id="fab" class="fab" title="Nuovo elemento">＋</button>
+  <section id="emptyScreen" class="screen hidden">
+    <div class="login-card">
+      <div class="brand">GC</div>
+      <h1>Nessun archivio locale</h1>
+      <p>Esporta dal gestionale il file <strong>StudioCostaMobile.scmobile</strong>, trasferiscilo su iPhone e importalo qui.</p>
+      <button id="emptyImportButton">Importa aggiornamento</button>
+    </div>
+  </section>
 
-<nav class="bottomnav">
-  <button data-view="home" class="active">⌂<span>Home</span></button>
-  <button data-view="agenda">▦<span>Agenda</span></button>
-  <button data-view="practices">▤<span>Pratiche</span></button>
-  <button data-view="creset">C<span>Creset</span></button>
-</nav>
+  <div id="app" class="hidden">
+    <header>
+      <div>
+        <div class="eyebrow">STUDIO LEGALE COSTA</div>
+        <h1 id="pageTitle">Settimana</h1>
+      </div>
+      <div class="header-actions">
+        <button id="settingsButton" class="icon-button" aria-label="Sincronizzazione e privacy">⋯</button>
+        <div class="sync-pill" id="headerSync">—</div>
+      </div>
+    </header>
 
-<input id="fileInput" class="file-input-native" type="file" aria-label="Seleziona file .scmobile">
+    <div class="syncbar">
+      <span id="syncStatus">Ultima sincronizzazione: —</span>
+      <button id="quickExportActions" class="text-button">0 modifiche</button>
+    </div>
 
-<div id="modal" class="modal hidden">
-  <div class="modal-card">
-    <div class="modal-head"><strong id="modalTitle">Dettaglio</strong><button id="modalClose">×</button></div>
-    <div id="modalBody"></div>
+    <main>
+      <section id="homeView" class="view"></section>
+
+      <section id="agendaView" class="view hidden">
+        <div class="section-head stacked agenda-heading">
+          <div class="agenda-title-row">
+            <div><h2>Agenda</h2><p id="agendaPeriodLabel" class="muted"></p></div>
+            <button id="agendaToday" class="secondary-button">Oggi</button>
+          </div>
+          <div class="agenda-mode" role="group" aria-label="Vista calendario">
+            <button data-agenda-mode="day">Giorno</button>
+            <button data-agenda-mode="week" class="active">Settimana</button>
+            <button data-agenda-mode="month">Mese</button>
+          </div>
+          <div class="agenda-navigation">
+            <button id="agendaPrev" class="nav-square" aria-label="Periodo precedente">‹</button>
+            <input id="agendaDate" type="date">
+            <button id="agendaNext" class="nav-square" aria-label="Periodo successivo">›</button>
+          </div>
+          <button id="exportCalendarIcs" class="secondary-button full-width">Esporta nel calendario iPhone</button>
+        </div>
+        <div id="agendaContent"></div>
+      </section>
+
+      <section id="practicesView" class="view hidden">
+        <div class="section-head stacked">
+          <div><h2>Pratiche</h2><p class="muted">Fascicoli autorizzati per il telefono</p></div>
+          <input id="practiceSearch" type="search" placeholder="Assistito, RG, RGNR, SIUS, SIEP, autorità, controparte">
+        </div>
+        <div class="filters compact-filters">
+          <select id="areaFilter">
+            <option value="">Tutte</option><option value="PENALE">Penale</option><option value="CIVILE">Civile</option><option value="TRIBUTARIO">Tributario</option>
+          </select>
+          <label><input id="officeFilter" type="checkbox"> Ufficio</label>
+          <label><input id="hearingFilter" type="checkbox"> Udienza</label>
+          <label><input id="deadlineFilter" type="checkbox"> Scadenza</label>
+        </div>
+        <div id="practiceCount" class="result-count"></div>
+        <div id="practiceCards"></div>
+      </section>
+
+
+      <section id="checklistsView" class="view hidden">
+        <div class="section-head">
+          <div><h2>Checklist</h2><p class="muted">Attività da spuntare e sincronizzare con il gestionale</p></div>
+          <button id="addChecklistMobile" class="secondary-button">＋ Nuova</button>
+        </div>
+        <div class="filters checklist-filters">
+          <button id="checklistTodo" class="active">Da fare</button>
+          <button id="checklistDone">Completate</button>
+        </div>
+        <div id="checklistsContent"></div>
+      </section>
+
+      <section id="searchView" class="view hidden">
+        <div class="section-head stacked">
+          <div><h2>Ricerca</h2><p class="muted">Pratiche, udienze, attività e documenti</p></div>
+          <input id="globalSearch" type="search" autocomplete="off" placeholder="Scrivi un nome, RG, udienza, documento…">
+        </div>
+        <div id="globalSearchResults" class="search-results"></div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav five-nav">
+      <button data-target="homeView" class="active"><span>⌂</span>Home</button>
+      <button data-target="agendaView"><span>◫</span>Agenda</button>
+      <button data-target="checklistsView"><span>☑</span>Checklist</button>
+      <button data-target="practicesView"><span>▤</span>Pratiche</button>
+      <button data-target="searchView"><span>⌕</span>Ricerca</button>
+    </nav>
   </div>
-</div>
 
-<script src="./app.js?v=20260921"></script>
+  <button id="addLocalTask" class="floating-add" aria-label="Nuovo impegno">＋</button>
+
+  <div id="localTaskModal" class="modal hidden">
+    <div class="modal-sheet compact-sheet">
+      <div class="modal-top"><button id="closeLocalTask" class="back-button">‹</button><div><div class="eyebrow dark">NUOVO IMPEGNO</div><h2 id="localModalTitle">Inserisci</h2></div></div>
+      <input id="localTaskId" type="hidden">
+      <label>Tipo<select id="localCategory"><option>UDIENZA</option><option>APPUNTAMENTO</option><option>ATTIVITÀ</option><option>PROMEMORIA</option><option>TELEFONATA</option><option>COMMISSIONE</option><option>PERSONALE</option><option>ALTRO</option></select></label>
+      <label>Pratica<select id="localPractice"><option value="">Nessuna pratica</option></select></label>
+      <label>Titolo / tipo di udienza<input id="localTitle" type="text"></label>
+      <label>Data<input id="localDate" type="date"></label>
+      <div class="two-cols"><label>Ora iniziale<input id="localStart" type="time"></label><label>Ora finale<input id="localEnd" type="time"></label></div>
+      <label><input id="localAllDay" type="checkbox"> Tutto il giorno</label>
+      <label>Luogo<input id="localLocation" type="text"></label>
+      <div id="hearingExtraFields" class="hearing-extra hidden">
+        <div class="two-cols"><label>Aula<input id="localCourtroom" type="text"></label><label>Giudice<input id="localJudge" type="text"></label></div>
+        <label class="setting-row hearing-first-row"><span><strong>Prima udienza del procedimento</strong><small>Attiva i termini processuali pertinenti quando la pratica lo richiede.</small></span><input id="localFirstHearing" type="checkbox"></label>
+      </div>
+      <label>Note<textarea id="localNotes" rows="3"></textarea></label>
+      <label>Priorità<select id="localPriority"><option>BASSA</option><option selected>MEDIA</option><option>ALTA</option><option>URGENTE</option></select></label>
+      <label id="localBusyRow"><input id="localBusy" type="checkbox" checked> Occupa il calendario</label>
+      <label id="localPrivateRow"><input id="localPrivate" type="checkbox"> Privata</label>
+      <div class="modal-actions"><button id="deleteLocalTask" class="danger-button hidden">Elimina</button><button id="saveLocalTask">Salva sul telefono</button></div>
+      <p class="muted">La modifica entrerà nel gestionale solo dopo l’esportazione e l’importazione controllata sul PC.</p>
+    </div>
+  </div>
+
+  <div id="hearingOutcomeModal" class="modal hidden">
+    <div class="modal-sheet compact-sheet">
+      <div class="modal-top"><button id="closeHearingOutcome" class="back-button">‹</button><div><div class="eyebrow dark">UDIENZA</div><h2 id="hearingOutcomeTitle">Esito / rinvio</h2></div></div>
+      <input id="outcomeHearingId" type="hidden">
+      <label>Esito<select id="outcomeValue"><option value="">Seleziona</option><option value="RINVIO">Rinvio</option><option value="DISCUSSIONE">Discussione</option><option value="RISERVA">Riserva</option><option value="SENTENZA">Decisione / sentenza</option><option value="CTU AMMESSA">CTU ammessa</option><option value="TERMINI CONCESSI">Termini concessi</option><option value="ALTRO">Altro</option></select></label>
+      <div class="two-cols"><label>Nuova udienza<input id="outcomeNextDate" type="date"></label><label>Ora<input id="outcomeNextTime" type="time"></label></div>
+      <label>Motivo rinvio<input id="outcomeReason" type="text"></label>
+      <label><input id="outcomeTermsGranted" type="checkbox"> Il giudice ha concesso termini</label>
+      <label>Provvedimenti / termini esatti<textarea id="outcomeJudgeOrders" rows="3"></textarea></label>
+      <label>Nota / attività svolte<textarea id="outcomePerformed" rows="3"></textarea></label>
+      <button id="saveHearingOutcome">Registra da sincronizzare</button>
+      <p class="muted">Il telefono non trasforma il testo del provvedimento in una scadenza legale. Il desktop valida l’esito e applica il motore giuridico.</p>
+    </div>
+  </div>
+
+  <div id="practiceModal" class="modal hidden">
+    <div class="modal-sheet">
+      <div class="modal-top"><button id="closePractice" class="back-button">‹</button><div><div class="eyebrow dark">SCHEDA PRATICA</div><h2 id="detailTitle"></h2></div></div>
+      <div id="detailSync" class="detail-sync"></div>
+      <div id="practiceDetail"></div>
+    </div>
+  </div>
+
+  <div id="settingsModal" class="modal hidden">
+    <div class="modal-sheet compact-sheet">
+      <div class="modal-top"><button id="closeSettings" class="back-button">‹</button><div><div class="eyebrow dark">COMPANION V13</div><h2>Sincronizzazione e privacy</h2></div></div>
+      <div class="detail-section">
+        <h3>Modifiche da riportare al PC</h3>
+        <p id="pendingActionsInfo" class="muted"></p>
+        <button id="exportMobileActions">Esporta modifiche .scmr</button>
+      </div>
+      <div class="detail-section">
+        <h3>Archivio</h3>
+        <p id="localArchiveInfo" class="muted"></p>
+        <button id="privacyImportButton" class="secondary-button">Importa nuovo .scmobile</button>
+      </div>
+      <div class="detail-section">
+        <h3>Protezione visualizzazione</h3>
+        <label class="setting-row"><span><strong>Nascondi note sensibili</strong><small>Le note non saranno mostrate nelle schede pratica.</small></span><input id="hideNotesSetting" type="checkbox"></label>
+        <label class="setting-row"><span><strong>Nascondi documenti offline</strong><small>I file resteranno salvati ma non saranno elencati.</small></span><input id="hideDocumentsSetting" type="checkbox"></label>
+      </div>
+      <div class="detail-section">
+        <button id="exportLocalTasks" class="secondary-button">Backup attività create su iPhone</button>
+        <input id="localTasksFile" type="file" accept=".scl,application/json">
+        <button id="importLocalTasks" class="secondary-button">Ripristina backup attività</button>
+      </div>
+      <div class="detail-section"><button id="clearLocalArchive" class="danger-button">Elimina archivio locale</button></div>
+    </div>
+  </div>
+
+  <script src="app.js?v=13.6"></script>
 </body>
 </html>

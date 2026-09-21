@@ -1,0 +1,26 @@
+STUDIO COSTA COMPANION V13.6 — RIPRISTINO GRAFICA E FUNZIONI
+
+Base recuperata: Companion V13.4/V13.5 Checklist, precedente alla regressione grafica del 21/09/2026.
+
+RIPRISTINATO
+- Home distinta dall’Agenda, con riepilogo settimanale stile dashboard.
+- Agenda autonoma con viste Giorno / Settimana / Mese.
+- Udienze rese prioritarie, rosse e maggiormente evidenziate.
+- Appuntamenti separati dalle udienze nella Home.
+- Scadenze, atti/attività, Creset e checklist ordinati per funzione.
+- Pratiche nuovamente apribili con scheda completa: dati essenziali, dati processuali, prossima udienza, scadenze, attività, storico, assistito e documenti autorizzati.
+- Scheda pratica apribile cliccando l’intera card.
+- Checklist dedicate mantenute.
+- Import/export cifrato SCM1/SCMR1 e write-back controllato mantenuti.
+- Fix iPhone: selettore file nativo senza filtro estensione, per maggiore compatibilità con iOS/PWA.
+- Icone originali mantenute.
+
+NON MODIFICATO
+- formato dati desktop;
+- database;
+- password e cifratura;
+- logica di sincronizzazione controllata;
+- struttura dei dati esportati dal gestionale.
+
+NOTA
+La versione “DEFINITIVA” del 21/09/2026 conteneva una regressione: renderAgenda() richiamava renderHome(), rendendo Home e Agenda sostanzialmente identiche, e la scheda pratica era stata ridotta alla sola checklist. Questa release ripristina la struttura completa precedente senza riscrivere il gestionale.

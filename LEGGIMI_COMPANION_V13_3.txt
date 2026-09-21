@@ -1,0 +1,9 @@
+STUDIO COSTA COMPANION V13.3
+
+- Home = Settimana, non più Oggi.
+- Settimana sempre lunedì-domenica.
+- Nessun blocco Arretrate nella home.
+- Priorità: udienze e termini processuali.
+- Poi appuntamenti, attività da preparare, Creset e checklist.
+- La vista Calendario > Settimana mostra tutti e sette i giorni.
+- I dati restano locali/cifrati; GitHub Pages ospita soltanto l'app vuota.

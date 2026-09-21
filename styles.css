@@ -1,7 +1,217 @@
-:root{--green:#123d30;--petrol:#345f63;--beige:#f2eee6;--ink:#202824;--muted:#6d7771;--line:#d9ddd9;--red:#a53b35;--gold:#a77d2a;--white:#fff;--shadow:0 6px 22px rgba(20,45,36,.08)}
-*{box-sizing:border-box}html,body{margin:0;padding:0;background:var(--beige);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}body{min-height:100vh;padding-bottom:82px}.topbar{position:sticky;top:0;z-index:20;background:var(--green);color:white;padding:calc(12px + env(safe-area-inset-top)) 16px 12px;display:flex;justify-content:space-between;align-items:center}.topbar strong{display:block;font-size:17px}.topbar span{font-size:11px;opacity:.78;display:block}.ghost{border:1px solid rgba(255,255,255,.45);background:transparent;color:white;border-radius:9px;padding:8px 11px}.primary,.secondary,.danger{border:0;border-radius:10px;padding:11px 14px;font-weight:700}.primary{background:var(--green);color:white}.secondary{background:#e8efec;color:var(--green)}.danger{background:#f8e3e1;color:var(--red)}main{padding:14px;max-width:950px;margin:auto}.empty,.card{background:white;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}.empty{padding:28px 20px;text-align:center;margin-top:22px}.empty h1{font-size:21px;margin:0 0 8px}.card{padding:13px;margin-bottom:10px}.section-title{font-size:19px;margin:5px 2px 12px}.subtle{color:var(--muted);font-size:12px}.toolbar{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-bottom:10px}.seg{display:flex;background:#e7ebe8;border-radius:10px;padding:3px;flex:1;min-width:230px}.seg button{flex:1;border:0;background:transparent;padding:8px 5px;border-radius:8px;color:var(--muted);font-weight:650}.seg button.active{background:white;color:var(--green);box-shadow:0 1px 5px rgba(0,0,0,.08)}.navdate{display:flex;gap:5px}.navdate button{border:1px solid var(--line);background:white;border-radius:9px;padding:8px 10px}.period{font-size:13px;font-weight:700;color:var(--green);margin:4px 1px 10px}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:11px}.metric{background:white;border:1px solid var(--line);border-radius:11px;padding:10px 8px}.metric b{display:block;font-size:19px;color:var(--green)}.metric span{font-size:10px;color:var(--muted)}.event{background:white;border:1px solid var(--line);border-left:4px solid var(--petrol);border-radius:11px;padding:10px 11px;margin:7px 0}.event.hearing{border-left-color:#1f6fa8}.event.deadline{border-left-color:var(--red)}.event.creset{border-left-color:#7b4c91}.event.checklist{border-left-color:#168ba0}.event .when{font-size:11px;color:var(--muted);font-weight:700}.event .title{font-size:14px;font-weight:750;margin:3px 0}.event .meta{font-size:11px;color:var(--muted)}.event button{margin-top:7px}.day-group{margin:12px 0}.day-label{font-weight:800;color:var(--green);font-size:13px;border-bottom:1px solid var(--line);padding-bottom:5px}.weekstrip{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:11px}.daybtn{border:1px solid var(--line);background:white;border-radius:9px;padding:7px 2px;text-align:center}.daybtn b{display:block;font-size:10px}.daybtn span{font-size:12px}.daybtn.active{border-color:#4f8c78;background:#eaf4f0}.practice{cursor:pointer}.practice h3{margin:0 0 5px;font-size:15px}.badge{display:inline-block;border-radius:20px;background:#edf1ef;color:var(--green);font-size:10px;padding:4px 7px;margin-right:4px}.search{width:100%;border:1px solid var(--line);border-radius:10px;padding:11px 12px;font-size:15px;background:white;margin-bottom:10px}.bottomnav{position:fixed;bottom:0;left:0;right:0;z-index:30;background:white;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding-bottom:env(safe-area-inset-bottom)}.bottomnav button{border:0;background:white;color:var(--muted);padding:9px 3px 8px;font-size:18px}.bottomnav button span{display:block;font-size:10px;margin-top:2px}.bottomnav button.active{color:var(--green);font-weight:800}.fab{position:fixed;right:18px;bottom:88px;z-index:35;width:52px;height:52px;border-radius:50%;border:0;background:var(--green);color:white;font-size:28px;box-shadow:0 6px 20px rgba(0,0,0,.22)}.modal{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.38);display:flex;align-items:flex-end;justify-content:center}.modal.hidden{display:none}.modal-card{background:white;width:100%;max-width:720px;max-height:90vh;overflow:auto;border-radius:18px 18px 0 0;padding-bottom:calc(15px + env(safe-area-inset-bottom))}.modal-head{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line);position:sticky;top:0;background:white;z-index:2}.modal-head button{border:0;background:transparent;font-size:27px}.modal-body,#modalBody{padding:15px}.field{margin-bottom:11px}.field label{display:block;font-size:11px;font-weight:750;color:var(--muted);margin-bottom:4px}.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);border-radius:9px;padding:10px;font:inherit;background:white}.field textarea{min-height:110px}.actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.checkrow{display:flex;gap:9px;align-items:flex-start;padding:9px 0;border-bottom:1px solid #eee}.checkrow input{width:20px;height:20px}.creset-row{border-left:4px solid #7b4c91}.notice{background:#fff7de;border:1px solid #ead79b;border-radius:10px;padding:10px;font-size:12px;margin-bottom:10px}.muted-box{background:#f5f6f5;border-radius:10px;padding:10px;color:var(--muted);font-size:12px}.monthgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}.monthcell{min-height:66px;background:white;border:1px solid var(--line);border-radius:7px;padding:5px}.monthcell.other{opacity:.42}.monthcell b{font-size:11px}.dots{font-size:9px;line-height:1.4;margin-top:4px}.exportbar{position:sticky;bottom:0;background:white;border-top:1px solid var(--line);padding:10px 14px;display:flex;gap:7px;justify-content:flex-end}
-@media(max-width:560px){.metrics{grid-template-columns:repeat(2,1fr)}.weekstrip{gap:2px}.daybtn b{font-size:8px}.daybtn span{font-size:11px}.monthcell{min-height:58px}.topbar{padding-left:14px;padding-right:14px}.event .title{font-size:13px}}
+:root{
+  --green:#214e42;--green2:#315d63;--sage:#aebeaf;--beige:#f6f2ea;
+  --paper:#fffdfc;--text:#222522;--muted:#6d746f;--border:#ded8ce;
+  --red:#9d4138;--gold:#b49a68;--shadow:0 10px 30px rgba(34,37,34,.08)
+}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:var(--beige);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,select{font:inherit}.hidden{display:none!important}.muted{color:var(--muted)}
+.screen{min-height:100vh;display:grid;place-items:center;padding:24px}.login-card{width:min(430px,100%);background:var(--paper);border:1px solid var(--border);border-radius:24px;padding:28px;box-shadow:var(--shadow)}
+.brand{width:64px;height:64px;border-radius:18px;background:var(--green);color:white;display:grid;place-items:center;font-family:Georgia,serif;font-weight:700;font-size:22px}
+.login-card h1{font-family:Georgia,serif;font-size:30px;margin:16px 0 8px}.login-card p{color:var(--muted);line-height:1.5}.login-card input{width:100%;padding:14px;border:1px solid var(--border);border-radius:12px;margin:10px 0;background:white}.login-card button{width:100%}
+button{border:0;border-radius:12px;padding:11px 14px;background:var(--green);color:white;font-weight:700}.error{color:var(--red);font-size:13px;margin-top:8px}
+header{display:flex;justify-content:space-between;align-items:center;padding:calc(16px + env(safe-area-inset-top)) 18px 12px;background:var(--green);color:white;position:sticky;top:0;z-index:10}
+header h1{font-family:Georgia,serif;margin:2px 0 0;font-size:29px}.eyebrow{font-size:10px;letter-spacing:.13em;color:#dce9e3;font-weight:800}.eyebrow.dark{color:var(--green);margin-top:14px}.sync-pill{font-size:11px;background:rgba(255,255,255,.14);padding:8px 10px;border-radius:999px;max-width:150px;text-align:center}
+.syncbar{padding:8px 18px;background:#e6eee9;color:var(--green);font-size:12px;display:flex;justify-content:space-between;gap:12px}.readonly{font-weight:800}
+main{padding:12px 16px calc(94px + env(safe-area-inset-bottom))}.view{max-width:840px;margin:0 auto}.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:6px 0 12px}.section-head.stacked{align-items:flex-start;flex-direction:column}.section-head h2{font-family:Georgia,serif;font-size:25px;margin:0}.section-head p{margin:2px 0 0;font-size:13px}.section-head input{border:1px solid var(--border);border-radius:11px;padding:10px;background:white;max-width:100%}
+#practiceSearch{width:100%}.filters{display:flex;gap:8px;overflow:auto;padding-bottom:8px}.filters select,.filters label{white-space:nowrap;background:white;border:1px solid var(--border);border-radius:10px;padding:9px 10px;font-size:13px}.filters label{display:flex;align-items:center;gap:6px}.result-count{font-size:12px;color:var(--muted);margin:5px 0 8px}
+.summary-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}.summary-card{background:white;border:1px solid var(--border);border-radius:16px;padding:14px}.summary-card strong{display:block;font-family:Georgia,serif;font-size:26px;color:var(--green)}.summary-card span{font-size:12px;color:var(--muted)}
+.practice-card{background:white;border:1px solid var(--border);border-radius:18px;padding:14px;margin:10px 0;box-shadow:0 4px 16px rgba(34,37,34,.04);position:relative;overflow:hidden}.practice-card:before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--green)}.practice-card.CIVILE:before{background:var(--gold)}.practice-card.TRIBUTARIO:before{background:var(--green2)}
+.practice-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.area-badge{font-size:10px;font-weight:900;letter-spacing:.06em;background:#e7eee9;color:var(--green);padding:6px 8px;border-radius:8px}.practice-card.CIVILE .area-badge{background:#f1e9db;color:#7d6031}.practice-card.TRIBUTARIO .area-badge{background:#e5eef0;color:#315d63}
+.practice-card h3{font-size:18px;margin:9px 0 3px}.practice-type{font-size:12px;color:var(--muted);margin-bottom:9px}.practice-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.field{min-width:0}.field .label{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:800}.field .value{font-size:13px;font-weight:650;overflow-wrap:anywhere}.next-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.next-box{background:#f7f4ee;border-radius:11px;padding:9px}.next-box .label{font-size:10px;color:var(--muted);text-transform:uppercase}.next-box .value{font-size:12px;font-weight:750;margin-top:2px}.open-practice{width:100%;margin-top:11px;background:#e7eee9;color:var(--green)}
+.event{background:white;border:1px solid var(--border);border-left:5px solid var(--green2);border-radius:14px;padding:12px;margin:8px 0}.event.UDIENZA{border-left-color:var(--green)}.event.SCADENZA{border-left-color:var(--red)}.event.PERSONALE{border-left-color:var(--gold)}.event-top{display:flex;justify-content:space-between;gap:10px}.event-time{font-weight:850;color:var(--green)}.event-category{font-size:10px;font-weight:900}.event h3{font-size:15px;margin:7px 0}.event-meta{font-size:12px;color:var(--muted);margin-top:3px}.event .practice-link{margin-top:8px;background:#edf2ef;color:var(--green);padding:8px 10px}
+.empty{background:white;border:1px dashed var(--border);border-radius:16px;padding:24px;text-align:center;color:var(--muted)}
+.bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:20;display:grid;grid-template-columns:repeat(6,1fr);background:rgba(255,253,252,.97);border-top:1px solid var(--border);padding:7px 8px calc(7px + env(safe-area-inset-bottom))}.bottom-nav button{background:transparent;color:var(--muted);padding:6px 2px;font-size:11px}.bottom-nav button span{display:block;font-size:19px;margin-bottom:2px}.bottom-nav button.active{color:var(--green)}
+.modal{position:fixed;inset:0;background:var(--beige);z-index:50;overflow:auto}.modal-sheet{min-height:100%;padding-bottom:28px}.modal-top{display:flex;gap:12px;align-items:center;background:white;border-bottom:1px solid var(--border);padding:calc(12px + env(safe-area-inset-top)) 14px 12px;position:sticky;top:0;z-index:2}.modal-top h2{font-family:Georgia,serif;font-size:22px;margin:2px 0}.back-button{width:42px;height:42px;border-radius:50%;font-size:28px;padding:0}.detail-sync{font-size:11px;color:var(--green);padding:9px 16px;background:#e7eee9;position:sticky;top:67px;z-index:1}
+#practiceDetail{padding:12px 15px}.detail-hero{background:var(--green);color:white;border-radius:18px;padding:16px;margin-bottom:12px}.detail-hero h3{font-size:22px;margin:4px 0}.detail-hero .sub{font-size:13px;color:#dce9e3}.detail-section{background:white;border:1px solid var(--border);border-radius:16px;padding:14px;margin:10px 0}.detail-section h3{font-family:Georgia,serif;font-size:19px;margin:0 0 10px}.detail-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}.detail-field{border-bottom:1px solid #eee8df;padding-bottom:7px}.detail-field .label{font-size:10px;color:var(--muted);text-transform:uppercase;font-weight:800}.detail-field .value{font-size:13px;font-weight:650;margin-top:3px;overflow-wrap:anywhere}.detail-list{display:flex;flex-direction:column;gap:8px}.detail-item{background:#f8f5ef;border-radius:11px;padding:10px}.detail-item strong{display:block;font-size:13px}.detail-item span{font-size:12px;color:var(--muted)}.document-button{width:100%;display:flex;justify-content:space-between;align-items:center;text-align:left;background:#eef2ef;color:var(--green);margin:7px 0}.note-box{white-space:pre-wrap;line-height:1.5;font-size:13px}
+@media(min-width:700px){.summary-grid{grid-template-columns:repeat(5,1fr)}.practice-grid,.detail-fields{grid-template-columns:repeat(3,1fr)}}
 
-.agenda-category-card{background:white;border:1px solid var(--line);border-radius:13px;padding:10px;margin:9px 0}.agenda-category-card h3{font-size:13px;margin:0 0 7px;color:var(--green)}.agenda-category-card.kind-UDIENZA{border-left:4px solid #1f6fa8}.agenda-category-card.kind-CRESET{border-left:4px solid #7b4c91}.agenda-category-card.kind-SCADENZA{border-left:4px solid var(--red)}.agenda-category-card.kind-CHECKLIST{border-left:4px solid #168ba0}.agenda-category-card.kind-APPUNTAMENTO{border-left:4px solid var(--gold)}
+.setting-row{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:12px 0;border-bottom:1px solid #eee8df}
+.setting-row:last-child{border-bottom:0}.setting-row span{display:flex;flex-direction:column;gap:3px}.setting-row small{color:var(--muted);line-height:1.35}.setting-row input{width:22px;height:22px;accent-color:var(--green)}
+.danger-button{background:var(--red);width:100%;margin-top:10px}
+.install-hint{background:#fff7df;border:1px solid #ead9a1;color:#5f4b16;border-radius:14px;padding:12px;margin-bottom:12px;font-size:13px;line-height:1.45}
 
-.file-trigger{display:inline-flex;align-items:center;justify-content:center;cursor:pointer;text-decoration:none;-webkit-tap-highlight-color:transparent;user-select:none}.file-input-native{position:fixed;left:-10000px;top:auto;width:1px;height:1px;opacity:.01;overflow:hidden}.file-trigger:focus{outline:2px solid currentColor;outline-offset:2px}
+.welcome-panel{
+  background:linear-gradient(135deg,#f8f4e9 0%,#ffffff 100%);
+  border:1px solid rgba(33,78,66,.12);
+  border-radius:22px;
+  padding:20px;
+  margin-bottom:14px;
+  box-shadow:0 10px 30px rgba(29,48,42,.06);
+}
+.welcome-panel h2{margin:5px 0 6px;font-size:1.35rem}
+.welcome-panel p{margin:0;color:#66736f;line-height:1.45}
+
+/* Agenda evoluta V7.0.2 */
+.event-date-row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:5px}
+.event-date{font-size:12px;font-weight:850;color:var(--text);text-transform:capitalize}
+.event-top{margin-top:1px}
+.agenda-heading{background:white;border:1px solid var(--border);border-radius:18px;padding:14px;margin-bottom:12px}
+.agenda-title-row{display:flex;justify-content:space-between;align-items:center;width:100%;gap:12px}
+.agenda-title-row h2{margin:0}.agenda-title-row p{text-transform:capitalize;margin:3px 0 0}
+.secondary-button{background:#e7eee9;color:var(--green);padding:9px 13px}
+.agenda-mode{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;width:100%;background:#eee9e1;border-radius:12px;padding:4px}
+.agenda-mode button{background:transparent;color:var(--muted);padding:9px 7px;border-radius:9px}
+.agenda-mode button.active{background:white;color:var(--green);box-shadow:0 2px 8px rgba(34,37,34,.08)}
+.agenda-navigation{display:grid;grid-template-columns:42px 1fr 42px;gap:8px;width:100%;align-items:center}
+.agenda-navigation input{width:100%;text-align:center}
+.nav-square{padding:8px;font-size:24px;line-height:1;background:var(--green)}
+.agenda-day-group{margin:12px 0 18px}
+.agenda-day-title{display:grid;grid-template-columns:auto 1fr auto;align-items:baseline;gap:7px;padding:0 3px 6px;text-transform:capitalize}
+.agenda-day-title strong{font-family:Georgia,serif;font-size:18px;color:var(--green)}
+.agenda-day-title span{font-size:12px;color:var(--muted)}
+.agenda-day-title em{font-size:11px;color:var(--muted);font-style:normal}
+
+.floating-add{position:fixed;right:18px;bottom:82px;width:56px;height:56px;border-radius:50%;font-size:30px;z-index:30;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+.local-badge{display:inline-block;font-size:.72rem;font-weight:700;padding:3px 7px;border-radius:999px;background:#eee7d8;color:#214e42}.local-actions{display:flex;justify-content:space-between;align-items:center;margin-top:9px}.local-actions button{width:auto;padding:6px 10px}
+.checklist-card{background:#fff;border:1px solid rgba(33,78,66,.13);border-radius:18px;padding:15px;margin-bottom:12px}.checklist-head{display:flex;justify-content:space-between;gap:12px}.checklist-head h3{margin:0}.checklist-head p{margin:4px 0;color:#6f7774;font-size:.85rem}.progress{height:8px;background:#ece9e0;border-radius:99px;overflow:hidden;margin:10px 0}.progress span{display:block;height:100%;background:#214e42}.check-item{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-top:1px solid #eee}.check-item input{margin-top:3px}.undo-toast{position:fixed;left:50%;bottom:88px;transform:translateX(-50%);background:#1f2926;color:#fff;padding:10px 14px;border-radius:12px;z-index:80}.undo-toast button{width:auto;margin-left:12px;padding:5px 8px}.compact-sheet label{display:block;margin:10px 0;font-weight:600}.compact-sheet input[type=text],.compact-sheet input[type=date],.compact-sheet input[type=time],.compact-sheet select,.compact-sheet textarea{width:100%;box-sizing:border-box;margin-top:4px;padding:10px;border:1px solid #d6d3ca;border-radius:10px}.two-cols{display:grid;grid-template-columns:1fr 1fr;gap:10px}.modal-actions{display:flex;justify-content:space-between;gap:10px;margin-top:15px}.modal-actions button{width:auto}.bottom-nav{overflow-x:auto}.bottom-nav button{min-width:64px}
+
+/* V8.3 agenda finale */
+.event.CRESET,.event.UDIENZA\ CRESET{border-left-color:#c69039;background:#fffaf0}.event.MEDIAZIONE{border-left-color:#8c6aae;background:#fcf8ff}.month-weekdays{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin:8px 0}.month-weekdays span{text-align:center;font-size:11px;font-weight:800;color:var(--muted)}.month-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.month-cell{min-height:78px;background:#fff;border:1px solid var(--border);border-radius:10px;padding:7px 5px;color:var(--text);text-align:left}.month-cell.selected{outline:2px solid var(--green)}.month-cell strong{display:block;margin-bottom:4px}.muted-cell{background:#f3f1ec}.month-dot{display:block;font-size:8px;margin:2px 0;font-weight:800}.month-dot.CRESET{color:#a97018}.month-dot.MEDIAZIONE{color:#7b5898}.month-dot.UDIENZA{color:var(--green)}.month-dot.SCADENZA{color:var(--red)}.month-dot.ATTIVITÀ{color:#557b70}.floating-add{left:50%;right:auto;transform:translateX(-50%);bottom:76px}.bottom-nav{overflow-x:visible}.bottom-nav button{min-width:0}
+
+/* V10.5 strumenti modulari e write-back controllato */
+.bottom-nav{grid-template-columns:repeat(7,1fr)}
+.plugin-status{display:flex;gap:7px;overflow:auto;margin:4px 0 12px;padding-bottom:4px}
+.plugin-chip{white-space:nowrap;border:1px solid var(--border);background:#fff;border-radius:999px;padding:6px 9px;font-size:11px;color:var(--green);font-weight:800}
+.tool-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;background:#e9e6df;border-radius:13px;padding:4px;margin-bottom:12px}
+.tool-tabs button{background:transparent;color:var(--muted);padding:9px 5px;border-radius:9px;font-size:12px}
+.tool-tabs button.active{background:#fff;color:var(--green);box-shadow:0 2px 8px rgba(34,37,34,.08)}
+.tool-card,.hearing-mobile-card,.creset-mobile-card{background:#fff;border:1px solid var(--border);border-radius:17px;padding:14px;margin:9px 0}
+.tool-card h3,.hearing-mobile-card h3,.creset-mobile-card h3{font-family:Georgia,serif;margin:0 0 7px;font-size:19px}
+.tool-form{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:11px 0}.tool-form label{font-size:12px;font-weight:750;color:var(--muted)}
+.tool-form input,.tool-form select,.full-input,.hearing-mobile-card textarea,.hearing-mobile-card select,.hearing-mobile-card input{width:100%;padding:10px;border:1px solid var(--border);border-radius:10px;background:#fff;margin-top:4px}
+.calculation-result{margin-top:10px;padding:12px;border-radius:12px;background:#eef3ef;color:var(--green);font-weight:850;text-align:center}
+.readiness-row{display:flex;justify-content:space-between;gap:8px;align-items:center;margin:7px 0}.readiness-badge{font-size:10px;border-radius:999px;padding:5px 8px;background:#fff3d9;color:#745315;font-weight:900}.readiness-badge.ready{background:#e5f0e8;color:#285b3d}
+.hearing-plan{background:#f8f5ef;border-radius:11px;padding:10px;margin:8px 0}.hearing-plan strong{font-size:12px;display:block}.hearing-plan span{font-size:11px;color:var(--muted)}
+.mobile-check-item{display:flex;gap:9px;align-items:flex-start;padding:8px 0;border-top:1px solid #eee}.mobile-check-item input{width:19px;height:19px;margin-top:1px;accent-color:var(--green)}
+.mobile-action-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.mobile-action-row button{width:auto;padding:8px 10px}.mobile-action-row .secondary-button{background:#e7eee9;color:var(--green)}
+.inline-editor{margin-top:10px;border-top:1px solid #eee;padding-top:10px}.inline-editor label{display:block;font-size:12px;font-weight:750;margin:6px 0;color:var(--muted)}
+.creset-meta{font-size:12px;color:var(--muted);line-height:1.5}.worked-local{opacity:.55}.worked-local:after{content:" · lavorata (da sincronizzare)";font-weight:800;color:var(--green)}
+.legal-hit{border-top:1px solid #eee;padding:10px 0}.legal-hit:first-child{border-top:0}.legal-hit strong{display:block;font-size:13px;color:var(--green)}.legal-hit p{white-space:pre-wrap;font-size:12px;line-height:1.45;margin:5px 0;color:var(--text)}
+.pending-pill{display:inline-block;font-size:10px;background:#fff3d9;color:#745315;padding:4px 7px;border-radius:999px;font-weight:850}
+@media(max-width:430px){.bottom-nav button{font-size:9.5px}.bottom-nav button span{font-size:17px}.tool-form{grid-template-columns:1fr}.tool-tabs button{font-size:11px}}
+
+
+/* V10.8 Companion - Udienze intelligenti */
+.companion-intro{display:flex;flex-direction:column;gap:4px;background:#eef4f1;border:1px solid rgba(33,78,66,.16);border-radius:14px;padding:12px;margin:4px 0 12px}.companion-intro strong{color:var(--green);font-family:Georgia,serif;font-size:17px}.companion-intro span{font-size:12px;color:var(--muted);line-height:1.45}
+.profile-strip{display:flex;flex-direction:column;gap:3px;background:#214e42;color:white;border-radius:11px;padding:10px;margin:8px 0}.profile-strip strong{font-size:12px;letter-spacing:.02em}.profile-strip span{font-size:11px;color:#dce9e3;line-height:1.4}
+.diagnostics-box{display:flex;flex-direction:column;gap:6px;margin:8px 0}.diagnostic{display:grid;grid-template-columns:auto 1fr;gap:7px;align-items:start;border-radius:10px;padding:8px 9px;font-size:11px}.diagnostic strong{font-size:9px;letter-spacing:.04em}.diagnostic.error{background:#fff0ed;color:#842b20}.diagnostic.warning{background:#fff7df;color:#735514}.diagnostic.info{background:#edf3f0;color:#365c52}.diagnostic span{line-height:1.4}
+.hearing-plan.strategy{border-left:3px solid var(--green)}
+.mobile-plan-group{border:1px solid #ebe6dc;border-radius:12px;margin:8px 0;overflow:hidden}.mobile-plan-title{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:#f5f2eb;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.03em}.mobile-plan-title span{border-radius:999px;background:white;padding:2px 6px}.mobile-plan-group.legal .mobile-plan-title{background:#fff0ed;color:#842b20}.mobile-plan-group.prep .mobile-plan-title{background:#eef4f1;color:#214e42}.mobile-plan-item{padding:9px 10px;border-top:1px solid #eee8df;font-size:11px;position:relative}.mobile-plan-item:first-of-type{border-top:0}.mobile-plan-item strong{display:block;line-height:1.4}.mobile-plan-item small{display:block;color:var(--muted);margin-top:3px;line-height:1.35}.mobile-plan-item details{margin-top:5px;color:var(--muted)}.mobile-plan-item details summary{font-weight:750;cursor:pointer}.mobile-plan-item details p{white-space:pre-wrap;line-height:1.4}.verification-pill{display:inline-block;margin-top:5px;border-radius:999px;background:#fff3d9;color:#745315;font-size:9px;font-weight:850;padding:3px 6px}
+.readiness-badge.blocked{background:#ffe7e2;color:#842b20}.readiness-summary{background:#f8f5ef;border-radius:11px;padding:10px;margin:10px 0}.readiness-summary>div:first-child{display:flex;justify-content:space-between;font-size:11px}.readiness-meter{height:7px;background:#e5e0d7;border-radius:999px;overflow:hidden;margin-top:7px}.readiness-meter span{display:block;height:100%;background:var(--green)}
+.mobile-check-item span{display:flex;flex-direction:column;gap:2px}.mobile-check-item span strong{font-size:12px}.mobile-check-item span small{font-size:10px;color:var(--muted);line-height:1.35}
+.mobile-outcome-sheet{margin-top:12px;border-top:1px solid #eee;padding-top:10px}.mobile-outcome-sheet>summary{font-size:12px;font-weight:900;color:var(--green);cursor:pointer;padding:5px 0}.outcome-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.outcome-grid label{margin:0}.outcome-grid .full-span{grid-column:1/-1}.outcome-grid label.full-span:has(input[type=checkbox]){display:flex;align-items:center;gap:8px;background:#f8f5ef;border-radius:10px;padding:9px}.outcome-grid label.full-span input[type=checkbox]{width:18px;height:18px;margin:0}.outcome-grid button.full-span{width:100%}
+@media(max-width:430px){.outcome-grid{grid-template-columns:1fr}.outcome-grid .full-span{grid-column:1}.diagnostic{grid-template-columns:1fr}.profile-strip{padding:9px}}
+
+/* V11.1 - Dashboard settimanale, agenda visuale e appuntamenti */
+.full-width{width:100%}
+.home-mode{margin:0 0 10px}
+.home-summary{grid-template-columns:repeat(3,1fr)}
+.home-summary .summary-card{padding:10px;min-width:0}
+.home-summary .summary-card strong{font-size:22px}
+.home-summary .summary-card span{font-size:10px;line-height:1.15;display:block}
+.home-summary .attention{background:#fff6e5;border-color:#e7ce95}
+.week-strip{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;margin:10px 0 12px}
+.week-day-card{min-width:0;background:white;color:var(--text);border:1px solid var(--border);border-radius:12px;padding:7px 2px 6px;text-align:center;box-shadow:none}
+.week-day-card.selected{background:#e7eee9;border-color:var(--green);outline:1px solid var(--green)}
+.week-day-card .week-name{display:block;font-size:8px;text-transform:uppercase;color:var(--muted);font-weight:850}
+.week-day-card>strong{display:inline-block;font-family:Georgia,serif;color:var(--green);font-size:18px;line-height:1.1;margin-top:2px}
+.week-day-card>small{display:block;font-size:8px;color:var(--muted)}
+.week-dots{display:flex;flex-direction:column;gap:2px;margin-top:5px;align-items:center;min-height:28px}
+.week-dots i{font-style:normal;font-size:7px;line-height:1;border-radius:999px;padding:2px 3px;font-weight:900;white-space:nowrap}
+.week-dots .u{background:#e5f0e8;color:#285b3d}.week-dots .a{background:#e7eef5;color:#315d7b}.week-dots .s{background:#ffe8e4;color:#8b342b}.week-dots .c{background:#fff0d3;color:#805b18}.week-dots .k{background:#eee9f5;color:#66517f}.week-dots .none{color:#aaa;background:transparent}
+.selected-day-label{font-family:Georgia,serif;color:var(--green);font-weight:700;text-transform:capitalize;font-size:18px;margin:12px 0 7px}
+.compact-day-section{margin:10px 0 14px}
+.compact-day-section>h3{display:flex;justify-content:space-between;align-items:center;font-family:Georgia,serif;font-size:17px;margin:0 0 6px;color:var(--text)}
+.compact-day-section>h3 span{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:10px;background:#e7eee9;color:var(--green);padding:4px 7px;border-radius:999px}
+.home-checklist{background:#fff;border:1px solid var(--border);border-radius:14px;padding:4px 11px}
+.home-check-item{display:flex;gap:8px;align-items:flex-start;padding:9px 0;border-top:1px solid #eee8df}
+.home-check-item:first-child{border-top:0}.home-check-item input{width:18px;height:18px;margin-top:1px;accent-color:var(--green)}
+.home-check-item span{display:flex;flex-direction:column;gap:2px}.home-check-item strong{font-size:12px}.home-check-item small{font-size:10px;color:var(--muted)}
+.event.APPUNTAMENTO{border-left-color:#547ea0;background:#f8fbff}.event.PREPARAZIONE,.event.PREPARATORIA{border-left-color:#71927d;background:#f8fbf9}.practice-inline{font-weight:700;color:#4f625c}
+.month-dot.APPUNTAMENTO{color:#446f91}.month-dot.CHECKLIST{color:#66517f}.month-dot.PREPARAZIONE{color:#557b70}
+.bottom-nav{display:flex;overflow-x:auto;justify-content:flex-start;scrollbar-width:none;grid-template-columns:none}
+.bottom-nav::-webkit-scrollbar{display:none}.bottom-nav button{flex:0 0 64px;min-width:64px}
+@media(min-width:700px){.home-summary{grid-template-columns:repeat(7,1fr)}.bottom-nav{justify-content:center}.bottom-nav button{flex:0 0 82px}}
+@media(max-width:430px){.summary-grid.home-summary{gap:6px}.home-summary .summary-card{padding:8px 6px}.home-summary .summary-card strong{font-size:20px}.month-cell{min-height:70px;padding:5px 3px}.month-dot{font-size:7px}.week-strip{gap:3px}.week-day-card{padding-left:1px;padding-right:1px}}
+
+/* Companion V13 — agenda-first, quattro aree principali */
+.header-actions{display:flex;align-items:center;gap:8px}.icon-button{width:42px;height:42px;border-radius:50%;padding:0;font-size:22px;background:#e7eee9;color:var(--green)}.text-button{width:auto;padding:5px 8px;background:transparent;color:var(--green);font-size:12px;font-weight:800}.syncbar{display:flex;align-items:center;justify-content:space-between;gap:8px}.four-nav{display:grid!important;grid-template-columns:repeat(4,1fr)!important;overflow:visible!important;justify-content:stretch!important}.four-nav button{min-width:0!important;flex:none!important;width:auto!important;font-size:10.5px}.four-nav button span{font-size:20px}.four-summary{grid-template-columns:repeat(4,1fr);gap:6px}.four-summary .summary-card{padding:9px 5px;text-align:center}.four-summary .summary-card strong{font-size:21px}.four-summary .summary-card span{font-size:9.5px}.attention-section{margin-top:16px}.attention-section>h3,.search-group>h3{font-family:Georgia,serif;font-size:18px;margin:0 0 8px;display:flex;justify-content:space-between}.search-group>h3 span{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:11px;background:#e7eee9;color:var(--green);padding:3px 7px;border-radius:999px}.search-group{margin:12px 0 18px}.search-document{background:#fff;border:1px solid var(--border);border-radius:14px;padding:12px;margin:8px 0}.search-document strong{display:block;font-size:13px}.search-document span{display:block;color:var(--muted);font-size:11px;margin:3px 0 8px}.search-document button{width:auto;padding:7px 9px}.detail-disclosure{background:white;border:1px solid var(--border);border-radius:16px;padding:12px 14px;margin:10px 0}.detail-disclosure summary{font-family:Georgia,serif;font-size:17px;font-weight:700;color:var(--green);cursor:pointer}.detail-disclosure .detail-fields{margin-top:12px}.hearing-extra{background:#f3f7f4;border-radius:12px;padding:4px 9px}.compact-filters{flex-wrap:wrap;overflow:visible}.compact-filters select{flex:1 1 120px}.compact-sheet select{appearance:auto}.modal-sheet.compact-sheet{padding-bottom:calc(30px + env(safe-area-inset-bottom))}.floating-add{bottom:calc(78px + env(safe-area-inset-bottom))}
+@media(max-width:430px){.four-summary{grid-template-columns:repeat(2,1fr)}.four-nav button{font-size:9.5px}.four-nav button span{font-size:18px}.detail-fields{grid-template-columns:1fr 1fr}}
+
+.weekly-category-day{margin:8px 0 14px}.weekly-category-day .selected-day-label{margin:0 0 6px;font-weight:800;color:var(--green)}
+
+
+/* ================================================================
+   V13.4 – RESTYLING GRAFICO COMPANION
+   Solo presentazione: nessuna logica di import/export/sync viene modificata.
+   ================================================================ */
+:root{
+  --agenda-red:#c84452;--agenda-red-bg:#fff3f4;--agenda-red-border:#edaab0;
+  --agenda-blue:#2f75c7;--agenda-blue-bg:#f1f7ff;--agenda-blue-border:#a9caf1;
+  --agenda-orange:#c98213;--agenda-orange-bg:#fff8ec;--agenda-orange-border:#efc985;
+  --agenda-green:#2f7d5e;--agenda-green-bg:#eff9f4;--agenda-green-border:#a8d9c1;
+  --agenda-purple:#6941b2;--agenda-purple-bg:#f7f2ff;--agenda-purple-border:#cbb3ed;
+  --agenda-cyan:#178aa1;--agenda-cyan-bg:#effbfd;--agenda-cyan-border:#a6dfe9;
+}
+body{background:#f5f7f9;color:#11233d}
+header{background:rgba(255,255,255,.96);border-bottom:1px solid #e2e7ee;padding-top:max(12px,env(safe-area-inset-top));box-shadow:0 1px 10px rgba(20,38,62,.05)}
+header h1{font-size:16px;color:#19304f}.eyebrow{letter-spacing:.08em;color:#29486b}
+.syncbar{background:#fff;border-bottom:1px solid #edf0f4;color:#6b7788}
+main{padding:14px 13px 98px}
+#agendaView .section-head{background:transparent;border:0;box-shadow:none;padding:0;margin:0 0 10px}
+#agendaView .agenda-title-row h2{font-size:30px;line-height:1;margin:0;color:#0e2545;font-weight:800}
+#agendaView .agenda-title-row p{font-size:14px;margin-top:4px}
+#agendaView .agenda-mode{display:grid;grid-template-columns:repeat(3,1fr);gap:0;background:#e9eef5;padding:3px;border-radius:12px;margin-top:12px}
+#agendaView .agenda-mode button{border:0;background:transparent;color:#48607f;border-radius:9px;padding:10px 4px;font-weight:700}
+#agendaView .agenda-mode button.active{background:#294665;color:#fff;box-shadow:0 2px 6px rgba(28,54,84,.18)}
+#agendaView .agenda-navigation{gap:7px;margin-top:8px}
+#agendaView .agenda-navigation input{border-radius:10px;border:1px solid #dce3ec;background:#fff}
+#agendaView #exportCalendarIcs{border-radius:10px;background:#fff;color:#294665;border:1px solid #d6e0ec}
+.week-strip{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;overflow:visible;padding:2px 0 8px;margin:0}
+.week-day-card{min-width:0!important;width:auto!important;padding:7px 2px!important;border-radius:12px!important;background:#fff!important;border:1px solid #dfe6ef!important;color:#203a5b!important;box-shadow:0 1px 4px rgba(18,44,74,.04)}
+.week-day-card .week-name{font-size:11px!important;font-weight:700}.week-day-card strong{font-size:19px!important;display:block}.week-day-card small{display:none!important}
+.week-day-card.selected{background:#1769d2!important;color:#fff!important;border-color:#1769d2!important;box-shadow:0 4px 12px rgba(23,105,210,.24)}
+.week-dots{display:flex;justify-content:center;gap:2px;min-height:7px;margin-top:4px}.week-dots i{width:6px;height:6px;border-radius:50%;font-size:0!important;padding:0!important;display:block}.week-dots i.u{background:#d74755}.week-dots i.a{background:#2f75c7}.week-dots i.s{background:#e6981b}.week-dots i.c{background:#6941b2}.week-dots i.k{background:#178aa1}.week-dots i.none{background:#c9d2df}
+.selected-agenda-day{display:flex;align-items:baseline;gap:8px;padding:4px 2px 8px;color:#193454}.selected-agenda-day strong{font-size:16px}.selected-agenda-day span{font-size:13px;color:#738197}
+.agenda-category-card{border-radius:17px!important;overflow:hidden;border:1px solid!important;margin:0 0 10px!important;padding:0 9px 8px!important;box-shadow:0 3px 12px rgba(23,45,71,.045)}
+.agenda-category-card h3{display:flex!important;align-items:center;gap:7px;margin:0 -9px 5px!important;padding:10px 11px!important;border:0!important;font-size:17px!important}
+.agenda-category-card h3 .agenda-card-icon{font-size:21px;width:30px;text-align:center}.agenda-category-card h3 .agenda-card-title{font-weight:800;flex:0 1 auto}.agenda-category-card h3 b{font-size:12px;color:#fff;border-radius:999px;padding:4px 8px}.agenda-category-card h3 em{margin-left:auto;font-size:12px;font-style:normal;font-weight:600;opacity:.82}
+.agenda-category-card.kind-UDIENZA{background:var(--agenda-red-bg);border-color:var(--agenda-red-border)!important}.agenda-category-card.kind-UDIENZA h3{color:var(--agenda-red)}.agenda-category-card.kind-UDIENZA h3 b{background:var(--agenda-red)}
+.agenda-category-card.kind-APPUNTAMENTO{background:var(--agenda-blue-bg);border-color:var(--agenda-blue-border)!important}.agenda-category-card.kind-APPUNTAMENTO h3{color:var(--agenda-blue)}.agenda-category-card.kind-APPUNTAMENTO h3 b{background:var(--agenda-blue)}
+.agenda-category-card.kind-SCADENZA{background:var(--agenda-orange-bg);border-color:var(--agenda-orange-border)!important}.agenda-category-card.kind-SCADENZA h3{color:var(--agenda-orange)}.agenda-category-card.kind-SCADENZA h3 b{background:var(--agenda-orange)}
+.agenda-category-card.kind-PREPARAZIONE{background:var(--agenda-green-bg);border-color:var(--agenda-green-border)!important}.agenda-category-card.kind-PREPARAZIONE h3{color:var(--agenda-green)}.agenda-category-card.kind-PREPARAZIONE h3 b{background:var(--agenda-green)}
+.agenda-category-card.kind-CRESET{background:var(--agenda-purple-bg);border-color:var(--agenda-purple-border)!important}.agenda-category-card.kind-CRESET h3{color:var(--agenda-purple)}.agenda-category-card.kind-CRESET h3 b{background:var(--agenda-purple)}
+.agenda-category-card.kind-CHECKLIST{background:var(--agenda-cyan-bg);border-color:var(--agenda-cyan-border)!important}.agenda-category-card.kind-CHECKLIST h3{color:var(--agenda-cyan)}.agenda-category-card.kind-CHECKLIST h3 b{background:var(--agenda-cyan)}
+.agenda-category-card .event{background:#fff!important;border:1px solid rgba(68,86,108,.11)!important;border-radius:11px!important;padding:8px 9px!important;margin:5px 0!important;box-shadow:none!important}
+.agenda-category-card .event-date-row{display:none}.agenda-category-card .event-top{margin:0}.agenda-category-card .event-time{font-size:13px;font-weight:800;color:#254465}.agenda-category-card .event h3{display:block!important;margin:2px 0!important;padding:0!important;background:transparent!important;border:0!important;font-size:14px!important;color:#142c4b!important}.agenda-category-card .event-meta{font-size:11px!important;color:#64758b;margin-top:1px!important}.agenda-category-card .practice-link{font-size:11px!important;padding:5px 8px!important;border-radius:8px!important}.agenda-category-card .local-actions{margin-top:5px!important}.agenda-category-card .local-actions button{font-size:11px!important;padding:5px 8px!important}
+.home-checklist{background:transparent!important}.home-check-item{background:#fff!important;border:1px solid rgba(68,86,108,.11)!important;border-radius:10px!important;margin:5px 0!important;padding:8px!important}
+.bottom-nav{background:rgba(255,255,255,.96)!important;border-top:1px solid #dfe6ef!important;box-shadow:0 -4px 18px rgba(20,38,62,.07)!important}.bottom-nav button{color:#64758b!important}.bottom-nav button.active{color:#1769d2!important}.bottom-nav button span{font-size:22px!important}
+.floating-add{background:#1769d2!important;box-shadow:0 6px 18px rgba(23,105,210,.28)!important}
+@media(max-width:390px){.week-strip{gap:3px}.week-day-card{padding:6px 1px!important}.week-day-card strong{font-size:17px!important}.agenda-category-card h3{font-size:16px!important}}
+
+/* V13.5 - accesso Checklist ripristinato, nessuna modifica alla logica */
+.checklist-filters{display:flex;gap:8px;margin-bottom:12px;overflow:visible}.checklist-filters button{border:1px solid var(--border);background:#fff;border-radius:10px;padding:9px 14px;color:var(--text);font-weight:700}.checklist-filters button.active{background:#1769d2;color:#fff;border-color:#1769d2}
+
+
+/* V13.6 — ripristino gerarchia Home/Agenda e centralità udienze */
+.file-input-native{position:fixed;left:-10000px;top:auto;width:1px;height:1px;opacity:.01;overflow:hidden}
+.file-picker-button{display:flex;align-items:center;justify-content:center;width:100%;padding:13px 14px;margin:10px 0 5px;border-radius:12px;background:var(--green);color:#fff;font-weight:800;cursor:pointer;text-align:center}
+.file-selected-name{font-size:12px;color:var(--muted);text-align:center;margin:0 0 10px;overflow-wrap:anywhere}
+.five-nav{grid-template-columns:repeat(5,1fr)!important;overflow:visible!important}
+.five-nav button{min-width:0!important;font-size:10.5px!important}
+.hearing-summary{background:#fff3f4!important;border:2px solid var(--agenda-red-border)!important;box-shadow:0 4px 14px rgba(200,68,82,.10)!important}
+.hearing-summary strong,.hearing-summary span{color:var(--agenda-red)!important}
+.event.UDIENZA{border:2px solid var(--agenda-red-border)!important;border-left:7px solid var(--agenda-red)!important;background:var(--agenda-red-bg)!important;padding:14px!important;box-shadow:0 4px 15px rgba(200,68,82,.08)!important}
+.event.UDIENZA .event-time{font-size:15px!important;color:var(--agenda-red)!important}
+.event.UDIENZA h3{font-size:17px!important;line-height:1.25!important;color:#7f2430!important}
+.event.UDIENZA .event-category{color:var(--agenda-red)!important;font-weight:900!important}
+.agenda-category-card.kind-UDIENZA{border:2px solid var(--agenda-red-border)!important;box-shadow:0 5px 16px rgba(200,68,82,.10)!important}
+.agenda-category-card.kind-UDIENZA>h3{background:var(--agenda-red)!important;color:#fff!important;padding:12px!important}
+.agenda-category-card.kind-UDIENZA>h3 b{background:#fff!important;color:var(--agenda-red)!important}
+.agenda-category-card.kind-UDIENZA>h3 em{color:#fff!important;opacity:.92!important}
+.agenda-category-card.kind-UDIENZA .event{border-left:5px solid var(--agenda-red)!important;background:#fff!important}
+.practice-card[data-practice]{cursor:pointer;transition:transform .12s ease,box-shadow .12s ease}
+.practice-card[data-practice]:active{transform:scale(.992)}
+.practice-card[data-practice]:focus{outline:2px solid #1769d2;outline-offset:2px}
+.practice-open-hint{margin-top:12px;padding:9px 10px;border-radius:10px;background:#eef4f1;color:var(--green);font-size:12px;font-weight:850;text-align:center}
+@media(max-width:390px){.five-nav button{font-size:9.5px!important}.event.UDIENZA{padding:12px!important}.event.UDIENZA h3{font-size:16px!important}}

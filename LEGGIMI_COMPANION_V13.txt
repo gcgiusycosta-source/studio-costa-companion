@@ -1,0 +1,24 @@
+STUDIO COSTA COMPANION — V13
+============================
+
+Questa è l'unica cartella Companion operativa della V13.
+
+STRUTTURA OPERATIVA
+- Oggi: udienze, appuntamenti, scadenze e attività del giorno, senza spostare automaticamente le attività arretrate.
+- Calendario: viste Giorno / 7 giorni / Mese e esportazione ICS per iPhone.
+- Pratiche: consultazione offline delle pratiche abilitate dal desktop, con dati essenziali, scadenze, udienze, cronologia e documenti autorizzati.
+- Ricerca: ricerca unica su pratiche, eventi e documenti.
+
+INSERIMENTO DA IPHONE
+Il pulsante + consente di inserire una nuova udienza, un appuntamento o un'attività. Le udienze devono essere collegate a una pratica esistente. Appuntamenti e attività possono essere collegati a una pratica oppure restare generali.
+
+RINVIO UDIENZA
+Dalla scheda di un'udienza si può registrare esito, rinvio, nuova data/ora, provvedimenti e note. Il desktop applica le modifiche solo dopo l'importazione controllata del file .scmr. Il rinvio crea la nuova udienza collegata allo stesso practice_id.
+
+SINCRONIZZAZIONE
+Desktop -> iPhone: file cifrato .scmobile.
+iPhone -> Desktop: file cifrato .scmr contenente solo le modifiche.
+Le action_id e i mobile_uid impediscono l'applicazione duplicata delle stesse modifiche.
+
+SICUREZZA
+I dati restano cifrati nel pacchetto di scambio e l'archivio locale è mantenuto offline nel browser/PWA. Il desktop resta la fonte ufficiale dei dati.

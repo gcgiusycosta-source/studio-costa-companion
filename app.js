@@ -77,7 +77,7 @@ async function ensureOfflineShell(){
   if(!location.protocol.startsWith("http")) return false;
   if(!("serviceWorker" in navigator)) return false;
   const registration=await navigator.serviceWorker.register(
-    "service-worker.js?v=13.6",{scope:"./"}
+    "service-worker.js?v=14.0",{scope:"./"}
   );
   await navigator.serviceWorker.ready;
   if(registration.active){
@@ -416,12 +416,14 @@ function switchView(target){
   activeView=target;
   document.querySelectorAll(".view").forEach(v=>v.classList.toggle("hidden",v.id!==target));
   document.querySelectorAll(".bottom-nav button").forEach(b=>b.classList.toggle("active",b.dataset.target===target));
-  const titles={homeView:"Home",agendaView:"Agenda",checklistsView:"Checklist",practicesView:"Pratiche",searchView:"Ricerca"};
+  document.querySelectorAll("[data-top-target]").forEach(b=>b.classList.toggle("active",b.dataset.topTarget===target));
+  const titles={homeView:"Home",agendaView:"Agenda",checklistsView:"Checklist",practicesView:"Pratiche",toolsView:"Strumenti",searchView:"Ricerca"};
   if($("pageTitle"))$("pageTitle").textContent=titles[target]||"Studio Costa";
   if(target==="homeView")renderHome();
   if(target==="agendaView")renderAgenda();
   if(target==="checklistsView")renderChecklists();
   if(target==="practicesView")renderPractices();
+  if(target==="toolsView")renderPlugins();
   if(target==="searchView")renderGlobalSearch();
   window.scrollTo({top:0,behavior:"smooth"});
 }
@@ -568,6 +570,38 @@ function bindHomeControls(root){
   bindInlineChecklist(root);
 }
 
+function homeGreeting(){
+  const hour=new Date().getHours();
+  if(hour<12)return "Buongiorno";
+  if(hour<18)return "Buon pomeriggio";
+  return "Buonasera";
+}
+function nextEventCardData(){
+  const today=new Date().toISOString().slice(0,10);
+  const now=new Date();
+  const items=calendarItems().sort(eventSort).filter(e=>{
+    if(!e.event_date)return false;
+    const dt=new Date(`${e.event_date}T${e.start_time||'23:59'}:00`);
+    return dt>=new Date(now.getTime()-3600000);
+  });
+  return items[0]||null;
+}
+function countdownLabel(event){
+  if(!event||!event.event_date)return "";
+  const dt=new Date(`${event.event_date}T${event.start_time||'09:00'}:00`);
+  const diff=dt.getTime()-Date.now();
+  if(diff<=0)return "In corso o imminente";
+  const h=Math.floor(diff/3600000);
+  const m=Math.floor((diff%3600000)/60000);
+  const d=Math.floor(h/24);
+  if(d>0)return `tra ${d} g${d>1?'g':''}`;
+  if(h>0)return `tra ${h} h ${m} min`;
+  return `tra ${m} min`;
+}
+function quickToolCard(label, icon, view, badge=""){
+  return `<button class="quick-tool-card" data-open-view="${view}"><span class="quick-tool-icon">${icon}</span><strong>${label}</strong>${badge?`<small>${badge}</small>`:""}</button>`;
+}
+
 function renderHome(){
   const root=$("homeView");if(!root||!snapshot)return;
   const today=new Date().toISOString().slice(0,10);
@@ -583,21 +617,16 @@ function renderHome(){
   let content="";
 
   if(homeMode==="day"){
-    selected=anchor;
-    periodStart=anchor;
-    periodEnd=anchor;
+    selected=anchor; periodStart=anchor; periodEnd=anchor;
     periodLabel=`${fmtWeekday(anchor)} ${fmtDate(anchor)}`;
     content=`<div class="selected-day-label home-selected-label">${escapeHtml(periodLabel)}</div>${dayOperationalHtml(all,anchor)}`;
   }else if(homeMode==="week"){
-    periodStart=startOfWeek(anchor);
-    periodEnd=addDays(periodStart,6);
+    periodStart=startOfWeek(anchor); periodEnd=addDays(periodStart,6);
     if(!selected||selected<periodStart||selected>periodEnd)selected=(today>=periodStart&&today<=periodEnd)?today:periodStart;
     periodLabel=`Settimana ${fmtDate(periodStart)} – ${fmtDate(periodEnd)}`;
     content=`${weekOverview(all,periodStart,selected,"data-home-day")}<div class="selected-agenda-day home-selected-label"><strong>${escapeHtml(fmtWeekday(selected))}</strong><span>${fmtDate(selected)}</span></div>${dayOperationalHtml(all,selected)}`;
   }else{
-    const bounds=monthBounds(anchor);
-    periodStart=bounds[0];
-    periodEnd=bounds[1];
+    const bounds=monthBounds(anchor); periodStart=bounds[0]; periodEnd=bounds[1];
     if(!selected||selected<periodStart||selected>periodEnd)selected=anchor;
     periodLabel=new Intl.DateTimeFormat("it-IT",{month:"long",year:"numeric"}).format(new Date(anchor+"T12:00:00"));
     const monthEvents=all.filter(e=>e.event_date>=periodStart&&e.event_date<=periodEnd);
@@ -614,21 +643,40 @@ function renderHome(){
     sync:pendingMobileActions.filter(a=>a.sync_status!=="IMPORTATA_DAL_GESTIONALE").length,
     practices:(snapshot.practices||[]).filter(p=>!/(ARCHIVIAT|CHIUS|DEFINIT|ESTINT)/i.test(String(p.stato||""))).length || (snapshot.practices||[]).length
   };
-
+  const next=nextEventCardData();
+  const linked=next?.practice_id&&practiceById(next.practice_id);
   root.innerHTML=`
-    <section class="welcome-panel home-hero">
-      <div class="hero-brand-row"><div class="brand-mark">GC</div><div><div class="eyebrow dark">STUDIO LEGALE COSTA</div><h2>Dashboard operativa</h2><p>Riepilogo rapido di udienze, appuntamenti, scadenze e pratiche.</p></div></div>
+    <section class="lux-hero">
+      <div class="lux-hero-content">
+        <div class="hero-badge">Studio Costa Companion</div>
+        <h2>${homeGreeting()}<br>Avvocato Costa</h2>
+        <p>${new Intl.DateTimeFormat('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(new Date())}</p>
+      </div>
+      <div class="hero-glow"></div>
     </section>
-    <div class="summary-grid home-summary home-summary-rich">
-      <div class="summary-card"><strong>${stats.practices}</strong><span>Pratiche attive</span></div>
-      <div class="summary-card hearing-summary"><strong>${stats.hearings}</strong><span>Udienze</span></div>
-      <div class="summary-card"><strong>${stats.deadlines}</strong><span>Scadenze e atti</span></div>
-      <div class="summary-card"><strong>${stats.appointments}</strong><span>Appuntamenti</span></div>
-      <div class="summary-card attention"><strong>${stats.sync}</strong><span>Da sincronizzare</span></div>
+
+    <div class="kpi-grid">
+      <button class="kpi-card emerald" data-open-view="practicesView"><span class="kpi-icon">◫</span><strong>${stats.practices}</strong><small>Pratiche attive</small></button>
+      <button class="kpi-card ruby" data-open-view="agendaView"><span class="kpi-icon">⚖</span><strong>${stats.hearings}</strong><small>Udienze</small></button>
+      <button class="kpi-card amber" data-open-view="agendaView"><span class="kpi-icon">⌛</span><strong>${stats.deadlines}</strong><small>Scadenze</small></button>
+      <button class="kpi-card jade" data-open-view="toolsView"><span class="kpi-icon">✓</span><strong>${stats.sync}</strong><small>Da sincronizzare</small></button>
     </div>
+
+    <section class="next-focus-card">
+      <div class="next-focus-head"><span>Prossimo impegno</span>${next?`<b>${escapeHtml(countdownLabel(next))}</b>`:'<b>Nessun impegno imminente</b>'}</div>
+      ${next?`
+        <h3>${escapeHtml(next.title||eventKind(next))}</h3>
+        <div class="next-focus-meta">${escapeHtml(fmtDate(next.event_date))}${next.start_time?` · ${escapeHtml(next.start_time)}`:''} · ${escapeHtml(eventKind(next))}</div>
+        ${(linked||next.practice_name)?`<div class="next-focus-practice">${escapeHtml(linked?.assistito||next.practice_name||'')}</div>`:''}
+        <div class="next-focus-actions">
+          ${linked?`<button class="primary-soft" data-practice="${linked.id}">Apri pratica</button>`:''}
+          <button class="secondary-soft" data-top-target="agendaView">Vai all’agenda</button>
+        </div>`:`<p class="muted">Le attività e le udienze sincronizzate compariranno qui.</p>`}
+    </section>
+
     <section class="section-head stacked agenda-heading home-heading">
       <div class="agenda-title-row">
-        <div><h2>Home</h2><p class="muted">${escapeHtml(periodLabel)}</p></div>
+        <div><h2>Il tuo ritmo</h2><p class="muted">${escapeHtml(periodLabel)}</p></div>
         <button class="secondary-button" data-home-today>Oggi</button>
       </div>
       <div class="agenda-mode home-mode-switch" role="group" aria-label="Vista dashboard">
@@ -642,8 +690,23 @@ function renderHome(){
         <button class="nav-square" data-home-nav="1" aria-label="Periodo successivo">›</button>
       </div>
     </section>
-    ${content}`;
+    ${content}
+    <section class="quick-tools-strip">
+      <div class="section-head compact-head"><div><h3>Accessi rapidi</h3><p class="muted">Muoviti più velocemente fra le funzioni principali.</p></div></div>
+      <div class="quick-tools-grid">
+        ${quickToolCard('Pratiche','◫','practicesView','Fascicoli e schede')}
+        ${quickToolCard('Checklist','☑','checklistsView','Da fare e completate')}
+        ${quickToolCard('Ricerca','⌕','searchView','Pratiche e banca')}
+        ${quickToolCard('Strumenti','◆','toolsView','Udienze, banca, riparto')}
+      </div>
+      <div class="ai-promo-card" data-open-view="toolsView">
+        <div><span class="ai-chip">Assistant AI</span><strong>Analizza, organizza e trova più rapidamente.</strong><small>Usa la banca giuridica, i termini rapidi e gli strumenti operativi.</small></div>
+      </div>
+    </section>`;
   bindHomeControls(root);
+  root.querySelectorAll('[data-open-view]').forEach(btn=>btn.onclick=()=>switchView(btn.dataset.openView));
+  root.querySelectorAll('[data-top-target]').forEach(btn=>btn.onclick=()=>switchView(btn.dataset.topTarget));
+  bindPracticeLinks(root);
 }
 
 function groupedAgenda(items){
@@ -695,7 +758,7 @@ function exportCalendarIcs(){
   const rows=calendarItems().filter(e=>e.event_date>=today&&e.event_date<=limit&&["UDIENZA","APPUNTAMENTO","SCADENZA","CRESET"].includes(eventKind(e))).sort(eventSort);
   if(!rows.length){alert("Nessun evento da esportare nel calendario.");return}
   const now=new Date().toISOString().replace(/[-:]/g,"").replace(/\.\d{3}Z$/,"Z");
-  const chunks=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Studio Legale Costa//Companion V13//IT","CALSCALE:GREGORIAN","METHOD:PUBLISH","X-WR-CALNAME:Studio Legale Costa"];
+  const chunks=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Studio Legale Costa//Companion V14//IT","CALSCALE:GREGORIAN","METHOD:PUBLISH","X-WR-CALNAME:Studio Legale Costa"];
   for(const e of rows){const kind=eventKind(e);const uidBase=e.uid||`${e.source_type||"EVENT"}-${e.source_id||e.id||uid()}`;const title=`Studio Costa · ${e.title||kind}`;chunks.push("BEGIN:VEVENT",`UID:${icsEscape(uidBase)}@studio-costa`,`DTSTAMP:${now}`);
     if(e.start_time){chunks.push(`DTSTART;TZID=Europe/Rome:${icsDateTime(e.event_date,e.start_time)}`);if(e.end_time)chunks.push(`DTEND;TZID=Europe/Rome:${icsDateTime(e.event_date,e.end_time)}`)}else chunks.push(`DTSTART;VALUE=DATE:${String(e.event_date).replaceAll("-","")}`);
     chunks.push(`SUMMARY:${icsEscape(title)}`);if(e.location)chunks.push(`LOCATION:${icsEscape(e.location)}`);const desc=[e.practice_name,e.practice_code,e.notes].filter(Boolean).join(" · ");if(desc)chunks.push(`DESCRIPTION:${icsEscape(desc)}`);
@@ -719,26 +782,41 @@ function searchBlob(p){
 function practiceCard(p){
   const hearing=p.prossima_udienza;
   const deadline=p.prossima_scadenza;
+  const progress = Math.min(100, Math.max(12, ((hearing?30:10)+(deadline?20:5)+(nonEmpty(p.numero_principale)?15:0)+(nonEmpty(p.autorita||p.tribunale)?15:0)+(nonEmpty(p.oggetto)?20:0))));
+  const matter=(p.area||"PRATICA").toUpperCase();
   return `<article class="practice-card ${escapeHtml(p.area||"")}" data-practice="${p.id}" role="button" tabindex="0" aria-label="Apri scheda pratica ${escapeHtml(p.assistito||'')}">
     <div class="practice-top">
-      <div>
-        <span class="area-badge">${escapeHtml(p.area||"PRATICA")}</span>
+      <div class="practice-heading">
+        <span class="area-badge area-${escapeHtml(matter)}">${escapeHtml(matter)}</span>
         <h3>${escapeHtml(p.assistito||"Assistito non indicato")}</h3>
+        <div class="practice-subline">${escapeHtml(p.tipologia||p.tipologia_difesa||p.oggetto||"")}</div>
       </div>
-      <span class="area-badge">${escapeHtml(p.stato||"")}</span>
+      <span class="status-badge">${escapeHtml(p.stato||"In corso")}</span>
     </div>
-    <div class="practice-type">${escapeHtml(p.tipologia||p.tipologia_difesa||p.fase||"")}</div>
-    <div class="practice-grid">
+    <div class="practice-grid two-lines">
       ${fieldHtml("Numero",p.numero_principale)}
       ${fieldHtml("Autorità",p.autorita||p.tribunale)}
       ${fieldHtml("Controparte",p.controparte)}
       ${fieldHtml("Fase",p.fase)}
     </div>
-    <div class="next-row">
-      <div class="next-box"><span class="label">Prossima udienza</span><div class="value">${hearing?`${fmtDate(hearing.event_date)} ${escapeHtml(hearing.start_time||"")}`:"—"}</div></div>
-      <div class="next-box"><span class="label">Prossima scadenza</span><div class="value">${deadline?`${fmtDate(deadline.event_date)} · ${escapeHtml(deadline.title||"")}`:"—"}</div></div>
+    <div class="practice-progress">
+      <div class="progress-row"><span>Organizzazione fascicolo</span><b>${progress}%</b></div>
+      <div class="progress-bar"><i style="width:${progress}%"></i></div>
     </div>
-    <div class="practice-open-hint">Apri scheda completa ›</div>
+    <div class="next-row modern-next-row">
+      <div class="next-box">
+        <span class="label">Prossima udienza</span>
+        <div class="value">${hearing?`${fmtDate(hearing.event_date)}${hearing.start_time?` · ${escapeHtml(hearing.start_time)}`:''}`:"—"}</div>
+      </div>
+      <div class="next-box">
+        <span class="label">Prossima attività</span>
+        <div class="value">${deadline?`${fmtDate(deadline.event_date)} · ${escapeHtml(deadline.title||"")}`:"—"}</div>
+      </div>
+    </div>
+    <div class="practice-action-row">
+      <span class="practice-pill">Apri scheda</span>
+      <span class="practice-pill muted">Documenti e banca</span>
+    </div>
   </article>`;
 }
 function fieldHtml(label,value){
@@ -758,7 +836,13 @@ function renderPractices(){
     if(deadline&&!p.prossima_scadenza)return false;
     return true;
   });
-  $("practiceCount").textContent=`${practices.length} pratiche disponibili`;
+  const counts={
+    total:(snapshot.practices||[]).length,
+    penal:(snapshot.practices||[]).filter(p=>p.area==='PENALE').length,
+    civil:(snapshot.practices||[]).filter(p=>p.area==='CIVILE').length,
+    trib:(snapshot.practices||[]).filter(p=>p.area==='TRIBUTARIO').length,
+  };
+  $("practiceCount").innerHTML=`<div class="practices-overview"><span><b>${practices.length}</b> pratiche visualizzate</span><span>${counts.penal} penali · ${counts.civil} civili · ${counts.trib} tributarie</span></div>`;
   $("practiceCards").innerHTML=practices.length?practices.map(practiceCard).join(""):'<div class="empty">Nessuna pratica corrisponde ai filtri</div>';
   bindPracticeLinks($("practiceCards"));
 }
@@ -986,12 +1070,37 @@ function renderCresetTool(){
 function renderLegalResults(){
   const root=$("legalResults"); if(!root||!snapshot)return;
   const query=normalize($("legalSearch")?.value||"");
-  const rows=(snapshot.legalLibrary||[]).filter(r=>!query||normalize(`${r.code_name} ${r.article_number} ${r.heading} ${r.text_body} ${r.source_name}`).includes(query)).slice(0,30);
-  root.innerHTML=rows.length?rows.map(r=>`<div class="legal-hit"><strong>${escapeHtml([r.code_name,r.article_number&&`art. ${r.article_number}`,r.heading].filter(Boolean).join(" · "))}</strong><span class="muted">${escapeHtml([r.source_name,r.source_date,r.effective_from&&`dal ${r.effective_from}`,r.effective_to&&`al ${r.effective_to}`].filter(Boolean).join(" · "))}</span><p>${escapeHtml(r.text_body||"")}</p></div>`).join(""):'<div class="empty small">Nessun risultato nella banca locale sincronizzata.</div>';
+  const type=String($("legalTypeFilter")?.value||"").toUpperCase();
+  const rows=(snapshot.legalLibrary||[]).filter(r=>{
+    if(type&&String(r.item_type||"NORMA").toUpperCase()!==type)return false;
+    return !query||normalize([r.title,r.item_type,r.matter,r.submatter,r.keywords,r.code_name,r.article_number,r.heading,r.summary,r.text_body,r.notes,r.source_name,r.authority,r.decision_number].filter(Boolean).join(" ")).includes(query);
+  }).slice(0,80);
+  root.innerHTML=rows.length?rows.map(r=>{
+    const title=r.title||[r.code_name,r.article_number&&`art. ${r.article_number}`,r.heading].filter(Boolean).join(" · ")||"Voce banca giuridica";
+    const meta=[r.item_type,r.matter,r.authority||r.source_name,r.decision_number&&`n. ${r.decision_number}`,r.decision_date&&fmtDate(r.decision_date),r.effective_from&&`dal ${fmtDate(r.effective_from)}`,r.verification_status].filter(Boolean).join(" · ");
+    const preview=r.summary||r.text_body||r.notes||"";
+    return `<details class="legal-hit"><summary><span>${r.favorite?"★ ":""}${escapeHtml(title)}</span><small>${escapeHtml(meta)}</small></summary>${r.summary?`<div class="legal-summary"><strong>Sintesi</strong><p>${escapeHtml(r.summary)}</p></div>`:""}${r.text_body?`<div class="legal-full"><strong>Testo</strong><p>${escapeHtml(r.text_body)}</p></div>`:""}${r.notes?`<div class="legal-notes"><strong>Note Studio</strong><p>${escapeHtml(r.notes)}</p></div>`:""}${!r.summary&&!r.text_body&&preview?`<p>${escapeHtml(preview)}</p>`:""}</details>`;
+  }).join(""):'<div class="empty small">Nessun risultato nella banca giuridica sincronizzata.</div>';
 }
 function calculateQuickTerm(){
   const start=$("termStartDate").value; const days=Math.max(0,Number($("termDays").value||0)); const direction=Number($("termDirection").value||1); if(!start)return alert("Indicare la data di partenza.");
   const d=new Date(`${start}T12:00:00`); d.setDate(d.getDate()+direction*days); $("termResult").textContent=`${fmtDate(d.toISOString().slice(0,10))} · calcolo di calendario non certificato`;
+}
+function parseEuro(value){const raw=String(value||"").trim().replace(/\s/g,"");const normalized=raw.includes(",")?raw.replace(/\./g,"").replace(",","."):raw;return Number(normalized)||0}
+function euro(value){return new Intl.NumberFormat("it-IT",{style:"currency",currency:"EUR"}).format(Number(value||0))}
+function calculateMobileSplit(){
+  const total=parseEuro($("splitTotal")?.value); if(total<=0)return alert("Inserire un importo valido.");
+  const half=!!$("splitHalf")?.checked; const mode=$("splitMode")?.value||"thirds";
+  const base=half?total/2:total; const outside=total-base; const reserve=base*.19; const net=base-reserve;
+  let lines=[`Importo totale: ${euro(total)}`,`Base di riparto: ${euro(base)}`];
+  if(half)lines.push(`Quota residua non ripartita (50%): ${euro(outside)}`);
+  lines.push(`Accantonamento 19%: ${euro(reserve)}`,`Netto da ripartire: ${euro(net)}`);
+  if(mode==="tfc"){
+    lines.push(`Quota 30%: ${euro(net*.30)}`,`Quota 30%: ${euro(net*.30)}`,`Quota 10%: ${euro(net*.10)}`,`Quota 30%: ${euro(net*.30)}`);
+  }else{
+    lines.push(`Quota 1/3: ${euro(net/3)}`,`Quota 1/3: ${euro(net/3)}`,`Quota 1/3: ${euro(net/3)}`);
+  }
+  $("splitResult").innerHTML=lines.map((x,i)=>i===3||(!half&&i===2)?`<strong>${escapeHtml(x)}</strong>`:`<span>${escapeHtml(x)}</span>`).join("");
 }
 function renderPlugins(){
   if(!snapshot)return;
@@ -1000,26 +1109,24 @@ function renderPlugins(){
   const availableKeys=new Set(plugins.map(p=>String(p.key||"")));
   const oldArchive=plugins.length===0;
   const toolPlugin={hearing:"smart_hearings",creset:"creset",terms:"legal_tools",codes:"local_norms"};
+  const coreTools=new Set(["split","checklist"]);
   const buttons=[...document.querySelectorAll("[data-tool]")];
-  buttons.forEach(b=>{const enabled=oldArchive||availableKeys.has(toolPlugin[b.dataset.tool]);b.classList.toggle("hidden",!enabled)});
-  if(!oldArchive&&!availableKeys.has(toolPlugin[activeTool])){
-    const first=buttons.find(b=>!b.classList.contains("hidden")); if(first)activeTool=first.dataset.tool;
-  }
+  buttons.forEach(b=>{const required=toolPlugin[b.dataset.tool];const enabled=coreTools.has(b.dataset.tool)||oldArchive||!required||availableKeys.has(required);b.classList.toggle("hidden",!enabled)});
+  if(!buttons.some(b=>b.dataset.tool===activeTool&&!b.classList.contains("hidden"))){const first=buttons.find(b=>!b.classList.contains("hidden"));if(first)activeTool=first.dataset.tool}
   document.querySelectorAll(".plugin-tool").forEach(el=>el.classList.add("hidden"));
-  const map={hearing:"hearingTool",creset:"cresetTool",terms:"termsTool",codes:"codesTool"}; if($(map[activeTool]))$(map[activeTool]).classList.remove("hidden");
+  const map={hearing:"hearingTool",creset:"cresetTool",terms:"termsTool",codes:"codesTool",split:"splitTool",checklist:"checklistTool"}; if($(map[activeTool]))$(map[activeTool]).classList.remove("hidden");
   buttons.forEach(b=>b.classList.toggle("active",b.dataset.tool===activeTool));
   const pending=pendingMobileActions.filter(a=>a.sync_status!=="IMPORTATA_DAL_GESTIONALE").length;
   [$("exportPluginActions"),$("exportMobileActions")].filter(Boolean).forEach(b=>{b.textContent=pending?`Esporta modifiche (${pending}) per il gestionale`:"Esporta modifiche per il gestionale"});
   renderHearingTool(); renderCresetTool(); renderLegalResults();
   if($("termStartDate")&&!$("termStartDate").value)$("termStartDate").value=new Date().toISOString().slice(0,10);
 }
-
 async function exportMobileActions(){
   const actions=pendingMobileActions.filter(a=>a.sync_status!=="IMPORTATA_DAL_GESTIONALE");
   if(!actions.length){alert("Non ci sono modifiche da esportare.");return}
   const password=prompt("Password del file modifiche (almeno 8 caratteri)");
   if(!password||password.length<8){if(password)alert("La password deve avere almeno 8 caratteri.");return}
-  const payload={formatVersion:3,companionVersion:"13.6",sourceArchiveId:snapshot?.archive_id||"",sourceGeneratedAt:snapshot?.generated_at||"",deviceId:deviceId(),createdAt:new Date().toISOString(),actions:actions.map(a=>({actionId:a.action_id,actionType:a.action_type,actionAt:a.action_at,deviceId:a.device_id,...a}))};
+  const payload={formatVersion:3,companionVersion:"14.0",sourceArchiveId:snapshot?.archive_id||"",sourceGeneratedAt:snapshot?.generated_at||"",deviceId:deviceId(),createdAt:new Date().toISOString(),actions:actions.map(a=>({actionId:a.action_id,actionType:a.action_type,actionAt:a.action_at,deviceId:a.device_id,...a}))};
   const envelope=await encryptEnvelope(payload,password,"SCMR1","STUDIO-COSTA-COMPANION-SCMR1");
   downloadJson(envelope,`StudioCostaMobile_Risposte_${new Date().toISOString().slice(0,16).replace(/[:T]/g,"-")}.scmr`);
   for(const a of actions){a.sync_status="ESPORTATA";await storePut("pending_mobile_actions",a)}
@@ -1265,11 +1372,13 @@ function renderGlobalSearch(){
   const practices=(snapshot.practices||[]).filter(p=>searchBlob(p).includes(q)).slice(0,20);
   const events=calendarItems().filter(e=>normalize([e.title,e.practice_name,e.practice_code,e.location,e.notes,fmtDate(e.event_date)].filter(Boolean).join(" ")).includes(q)).slice(0,20);
   const documents=(snapshot.documents||[]).filter(d=>normalize([d.filename,d.category,d.document_type].filter(Boolean).join(" ")).includes(q)).slice(0,20);
+  const legal=(snapshot.legalLibrary||[]).filter(r=>normalize([r.title,r.item_type,r.matter,r.keywords,r.code_name,r.article_number,r.heading,r.summary,r.text_body,r.notes,r.source_name,r.authority,r.decision_number].filter(Boolean).join(" ")).includes(q)).slice(0,20);
   root.innerHTML=`
     ${practices.length?`<section class="search-group"><h3>Pratiche <span>${practices.length}</span></h3>${practices.map(practiceCard).join("")}</section>`:""}
     ${events.length?`<section class="search-group"><h3>Agenda <span>${events.length}</span></h3>${events.map(eventCard).join("")}</section>`:""}
     ${documents.length?`<section class="search-group"><h3>Documenti <span>${documents.length}</span></h3>${documents.map(d=>{const p=practiceById(d.practice_id);return `<article class="search-document"><strong>${escapeHtml(d.filename||"Documento")}</strong><span>${escapeHtml([p?.assistito,d.category,d.document_type].filter(Boolean).join(" · "))}</span>${p?`<button data-practice="${escapeHtml(p.id)}">Apri pratica</button>`:""}</article>`}).join("")}</section>`:""}
-    ${!practices.length&&!events.length&&!documents.length?'<div class="empty">Nessun risultato.</div>':""}`;
+    ${legal.length?`<section class="search-group"><h3>Banca giuridica <span>${legal.length}</span></h3>${legal.map(r=>`<article class="search-document"><strong>${escapeHtml(r.title||[r.code_name,r.article_number,r.heading].filter(Boolean).join(" · ")||"Voce giuridica")}</strong><span>${escapeHtml([r.item_type,r.matter,r.authority||r.source_name].filter(Boolean).join(" · "))}</span></article>`).join("")}</section>`:""}
+    ${!practices.length&&!events.length&&!documents.length&&!legal.length?'<div class="empty">Nessun risultato.</div>':""}`;
   bindPracticeLinks(root);
 }
 
@@ -1361,6 +1470,7 @@ function openPractice(id){
     ${extraContacts?`<details class="detail-disclosure"><summary>Altri dati già presenti</summary>${extraContacts}</details>`:""}
     ${section("Documenti disponibili offline",docs.length?docs.map(documentButton).join(""):`<p class="muted">Nessun documento autorizzato offline.</p>`)}
     ${section("Indice cartella fascicolo",folderDocs.length?folderDocs.map(d=>`<div class="detail-item"><strong>${escapeHtml(d.file_name||"")}</strong><span>${escapeHtml(d.relative_path||"")}</span></div>`).join(""):`<p class="muted">Nessun file indicizzato.</p>`)}
+    ${section("Fonti collegate",(snapshot.legalLibrary||[]).filter(r=>(r.practice_ids||[]).map(String).includes(String(p.id))).map(r=>`<div class="detail-item"><strong>${escapeHtml(r.title||"Fonte giuridica")}</strong><span>${escapeHtml([r.item_type,r.matter,r.authority||r.source_name].filter(Boolean).join(" · "))}</span></div>`).join(""))}
     ${(!privacy.hideNotes&&p.note)?section("Note autorizzate",`<div class="note-box">${escapeHtml(p.note)}</div>`):""}
   `;
   $("practiceModal").classList.remove("hidden");
@@ -1424,6 +1534,7 @@ function renderAll(){
   renderChecklists();
   renderPractices();
   renderGlobalSearch();
+  renderPlugins();
   renderPrivacy();
   updatePendingIndicator();
 }
@@ -1462,6 +1573,12 @@ $("companionImportButton").onclick=async()=>{
   finally{button.disabled=false;button.textContent="Importa aggiornamento"}
 };
 document.querySelectorAll(".bottom-nav button").forEach(button=>{button.onclick=()=>switchView(button.dataset.target)});
+document.querySelectorAll("[data-tool]").forEach(button=>{button.onclick=()=>{activeTool=button.dataset.tool;renderPlugins()}});
+$("legalSearch")?.addEventListener("input",renderLegalResults);
+$("legalTypeFilter")?.addEventListener("change",renderLegalResults);
+if($("calculateQuickTerm"))$("calculateQuickTerm").onclick=calculateQuickTerm;
+if($("calculateSplit"))$("calculateSplit").onclick=calculateMobileSplit;
+if($("openChecklistsFromTools"))$("openChecklistsFromTools").onclick=()=>switchView("checklistsView");
 document.querySelectorAll("[data-agenda-mode]").forEach(button=>{
   button.onclick=()=>{
     agendaMode=button.dataset.agendaMode;
@@ -1499,3 +1616,6 @@ $("exportLocalTasks").onclick=()=>exportLocalTasks().catch(e=>alert(e.message));
 $("importLocalTasks").onclick=async()=>{const file=$("localTasksFile").files[0];if(!file)return;const password=prompt("Password del backup attività locali");if(!password)return;try{await importLocalTasksFile(file,password);alert("Attività locali importate.")}catch(e){alert(e.message)}};
 $("exportCalendarIcs").onclick=exportCalendarIcs;
 boot().catch(error=>{$("emptyScreen").classList.remove("hidden");$("emptyScreen").querySelector("p").textContent=error.message});
+
+
+document.querySelectorAll("[data-top-target]").forEach(button=>button.addEventListener("click",()=>switchView(button.dataset.topTarget)));

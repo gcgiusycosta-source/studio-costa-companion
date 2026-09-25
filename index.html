@@ -7,10 +7,10 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Studio Costa">
-  <link rel="manifest" href="manifest.json?v=13.7">
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=13.7">
-  <link rel="stylesheet" href="styles.css?v=13.7">
-  <title>Studio Costa Companion V13</title>
+  <link rel="manifest" href="manifest.json?v=14.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=14.1">
+  <link rel="stylesheet" href="styles.css?v=14.1">
+  <title>Studio Costa Companion V14.1</title>
 </head>
 <body>
   <section id="pairScreen" class="screen hidden">
@@ -40,7 +40,7 @@
   <div id="app" class="hidden">
     <header>
       <div class="brand-lockup">
-        <div class="header-logo">GC</div>
+        <div class="header-logo image-logo" aria-hidden="true"></div>
         <div>
           <div class="eyebrow">STUDIO LEGALE COSTA</div>
           <h1 id="pageTitle">Home</h1>
@@ -56,6 +56,12 @@
       <span id="syncStatus">Ultima sincronizzazione: —</span>
       <button id="quickExportActions" class="text-button">0 modifiche</button>
     </div>
+
+    <div class="hero-switchbar">
+      <button class="hero-switch active" data-top-target="homeView"><span>Home</span></button>
+      <button class="hero-switch" data-top-target="agendaView"><span>Agenda</span></button>
+    </div>
+
 
     <main>
       <section id="homeView" class="view"></section>
@@ -111,21 +117,80 @@
         <div id="checklistsContent"></div>
       </section>
 
+      <section id="toolsView" class="view hidden">
+        <div class="section-head stacked">
+          <div><h2>Strumenti</h2><p class="muted">Le funzioni che servono fuori studio, sincronizzate con il desktop</p></div>
+          <div id="pluginStatus" class="plugin-status"></div>
+        </div>
+        <div class="tool-tabs">
+          <button data-tool="hearing" class="active">⚖️<span>Udienze</span></button>
+          <button data-tool="codes">§<span>Banca</span></button>
+          <button data-tool="terms">⌛<span>Termini</span></button>
+          <button data-tool="split">€<span>Riparto</span></button>
+          <button data-tool="creset">▦<span>Creset</span></button>
+          <button data-tool="checklist">☑<span>Checklist</span></button>
+        </div>
+
+        <section id="hearingTool" class="plugin-tool"></section>
+
+        <section id="codesTool" class="plugin-tool hidden">
+          <div class="tool-card">
+            <div class="section-head stacked compact-head"><div><h3>Banca giuridica</h3><p class="muted">Normativa, sentenze, prassi e note sincronizzate dal desktop</p></div></div>
+            <input id="legalSearch" class="tool-input" type="search" placeholder="Articolo, sentenza, argomento, parola chiave…">
+            <select id="legalTypeFilter" class="tool-input">
+              <option value="">Tutto</option><option value="NORMA">Normativa</option><option value="SENTENZA">Giurisprudenza</option><option value="PRASSI">Prassi</option><option value="FORMULA">Formule</option><option value="NOTA">Note</option>
+            </select>
+            <div id="legalResults"></div>
+          </div>
+        </section>
+
+        <section id="termsTool" class="plugin-tool hidden">
+          <div class="tool-card">
+            <h3>Calcolo rapido date</h3>
+            <p class="muted">Supporto di calendario. Non sostituisce il controllo del termine processuale nel desktop.</p>
+            <label>Data di partenza<input id="termStartDate" class="tool-input" type="date"></label>
+            <div class="two-cols"><label>Giorni<input id="termDays" class="tool-input" type="number" min="0" value="30"></label><label>Direzione<select id="termDirection" class="tool-input"><option value="1">In avanti</option><option value="-1">A ritroso</option></select></label></div>
+            <button id="calculateQuickTerm">Calcola</button>
+            <div id="termResult" class="tool-result">—</div>
+          </div>
+        </section>
+
+        <section id="splitTool" class="plugin-tool hidden">
+          <div class="tool-card">
+            <h3>Riparto Studio / TFC</h3>
+            <label>Importo totale (€)<input id="splitTotal" class="tool-input" inputmode="decimal" placeholder="0,00"></label>
+            <label class="setting-row"><span><strong>Riparto sul 50%</strong><small>Considera metà dell'importo, poi applica l'accantonamento del 19%.</small></span><input id="splitHalf" type="checkbox"></label>
+            <label>Schema<select id="splitMode" class="tool-input"><option value="thirds">Tre quote uguali</option><option value="tfc">TFC 30 / 30 / 10 / 30</option></select></label>
+            <button id="calculateSplit">Calcola riparto</button>
+            <div id="splitResult" class="tool-result">—</div>
+          </div>
+        </section>
+
+        <section id="cresetTool" class="plugin-tool hidden"></section>
+
+        <section id="checklistTool" class="plugin-tool hidden">
+          <div class="tool-card">
+            <h3>Checklist</h3>
+            <p class="muted">Apri le checklist operative sincronizzate con il gestionale.</p>
+            <button id="openChecklistsFromTools">Apri checklist</button>
+          </div>
+        </section>
+      </section>
+
       <section id="searchView" class="view hidden">
         <div class="section-head stacked">
-          <div><h2>Ricerca</h2><p class="muted">Pratiche, udienze, attività e documenti</p></div>
+          <div><h2>Ricerca</h2><p class="muted">Pratiche, udienze, attività, documenti e banca giuridica</p></div>
           <input id="globalSearch" type="search" autocomplete="off" placeholder="Scrivi un nome, RG, udienza, documento…">
         </div>
         <div id="globalSearchResults" class="search-results"></div>
       </section>
     </main>
 
-    <nav class="bottom-nav five-nav">
-      <button data-target="homeView" class="active"><span>⌂</span>Home</button>
-      <button data-target="agendaView"><span>◫</span>Agenda</button>
+    <nav class="bottom-nav four-nav">
+      <button data-target="practicesView"><span>◫</span>Pratiche</button>
       <button data-target="checklistsView"><span>☑</span>Checklist</button>
-      <button data-target="practicesView"><span>▤</span>Pratiche</button>
-      <button data-target="searchView"><span>⌕</span>Ricerca</button>
+      <button data-target="searchView"><span>⌕</span>Cerca</button>
+      <button data-target="toolsView"><span>◆</span>Strumenti</button>
     </nav>
   </div>
 
@@ -180,7 +245,7 @@
 
   <div id="settingsModal" class="modal hidden">
     <div class="modal-sheet compact-sheet">
-      <div class="modal-top"><button id="closeSettings" class="back-button">‹</button><div><div class="eyebrow dark">COMPANION V13</div><h2>Sincronizzazione e privacy</h2></div></div>
+      <div class="modal-top"><button id="closeSettings" class="back-button">‹</button><div><div class="eyebrow dark">COMPANION V14</div><h2>Sincronizzazione e privacy</h2></div></div>
       <div class="detail-section">
         <h3>Modifiche da riportare al PC</h3>
         <p id="pendingActionsInfo" class="muted"></p>
@@ -205,6 +270,6 @@
     </div>
   </div>
 
-  <script src="app.js?v=13.7"></script>
+  <script src="app.js?v=14.1"></script>
 </body>
 </html>

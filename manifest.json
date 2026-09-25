@@ -1,15 +1,23 @@
 {
-  "name": "Studio Costa Companion V13.7",
-  "short_name": "Costa Companion",
-  "description": "Agenda mobile cifrata di Studio Legale Costa: udienze, appuntamenti, pratiche e ricerca con write-back controllato.",
+  "name": "Studio Costa Companion V14",
+  "short_name": "Studio Costa",
+  "description": "Agenda legale mobile e Companion sincronizzato con Studio Legale Costa V14",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#f6f2ea",
   "theme_color": "#214e42",
   "icons": [
-    {"src":"icon-192.png","sizes":"192x192","type":"image/png"},
-    {"src":"icon-512.png","sizes":"512x512","type":"image/png"}
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
   ],
   "id": "./"
 }

@@ -1,13 +1,18 @@
-const CACHE="studio-costa-companion-v13-6-restored-20260921";
+const CACHE="studio-costa-companion-v14-1-visual-20260924";
 const APP_SHELL=[
   "./",
   "./index.html",
-  "./styles.css?v=13.7",
-  "./app.js?v=13.7",
-  "./manifest.json?v=13.7",
+  "./styles.css?v=14.1",
+  "./app.js?v=14.1",
+  "./manifest.json?v=14.1",
   "./icon-192.png",
   "./icon-512.png",
-  "./apple-touch-icon.png"
+  "./apple-touch-icon.png",
+  "./media/office.jpg",
+  "./media/logo-gc.png",
+  "./media/desk-view.jpg",
+  "./media/brand-wave.jpg",
+  "./media/ai-touch.jpg"
 ];
 async function cacheShell(){const cache=await caches.open(CACHE);await cache.addAll(APP_SHELL)}
 self.addEventListener("install",event=>{event.waitUntil(cacheShell());self.skipWaiting()});

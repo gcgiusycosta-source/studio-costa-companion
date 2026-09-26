@@ -407,6 +407,7 @@ function showApp(){
   if($("headerSync"))$("headerSync").textContent=fmtDateTime(snapshot.generated_at);
   if($("agendaDate"))$("agendaDate").value=new Date().toISOString().slice(0,10);
   populatePracticeSelect();
+  document.body.dataset.activeView = activeView || "homeView";
   renderAll();
   updatePendingIndicator();
   ensureOfflineShell().then(ready=>updateOfflineStatus(ready)).catch(()=>updateOfflineStatus(false));
@@ -414,6 +415,7 @@ function showApp(){
 
 function switchView(target){
   activeView=target;
+  document.body.dataset.activeView=target;
   document.querySelectorAll(".view").forEach(v=>v.classList.toggle("hidden",v.id!==target));
   document.querySelectorAll(".bottom-nav button").forEach(b=>b.classList.toggle("active",b.dataset.target===target));
   document.querySelectorAll("[data-top-target]").forEach(b=>b.classList.toggle("active",b.dataset.topTarget===target));
@@ -604,109 +606,112 @@ function quickToolCard(label, icon, view, badge=""){
 
 function renderHome(){
   const root=$("homeView");if(!root||!snapshot)return;
-  const today=new Date().toISOString().slice(0,10);
-  if(!homeAnchorDate)homeAnchorDate=today;
-  if(!homeMode)homeMode="week";
   const all=calendarItems().sort(eventSort);
-  const anchor=homeAnchorDate||today;
-
-  let periodStart=anchor;
-  let periodEnd=anchor;
-  let selected=homeSelectedDate||anchor;
-  let periodLabel="";
-  let content="";
-
-  if(homeMode==="day"){
-    selected=anchor; periodStart=anchor; periodEnd=anchor;
-    periodLabel=`${fmtWeekday(anchor)} ${fmtDate(anchor)}`;
-    content=`<div class="selected-day-label home-selected-label">${escapeHtml(periodLabel)}</div>${dayOperationalHtml(all,anchor)}`;
-  }else if(homeMode==="week"){
-    periodStart=startOfWeek(anchor); periodEnd=addDays(periodStart,6);
-    if(!selected||selected<periodStart||selected>periodEnd)selected=(today>=periodStart&&today<=periodEnd)?today:periodStart;
-    periodLabel=`Settimana ${fmtDate(periodStart)} – ${fmtDate(periodEnd)}`;
-    content=`${weekOverview(all,periodStart,selected,"data-home-day")}<div class="selected-agenda-day home-selected-label"><strong>${escapeHtml(fmtWeekday(selected))}</strong><span>${fmtDate(selected)}</span></div>${dayOperationalHtml(all,selected)}`;
-  }else{
-    const bounds=monthBounds(anchor); periodStart=bounds[0]; periodEnd=bounds[1];
-    if(!selected||selected<periodStart||selected>periodEnd)selected=anchor;
-    periodLabel=new Intl.DateTimeFormat("it-IT",{month:"long",year:"numeric"}).format(new Date(anchor+"T12:00:00"));
-    const monthEvents=all.filter(e=>e.event_date>=periodStart&&e.event_date<=periodEnd);
-    content=`${renderMonthGrid(monthEvents,selected).replaceAll('data-agenda-day','data-home-month-day')}<div class="selected-day-label home-selected-label">${escapeHtml(fmtWeekday(selected))} ${fmtDate(selected)}</div>${dayOperationalHtml(all,selected)}`;
-  }
-
-  homeSelectedDate=selected;
-
-  const inRange=all.filter(e=>e.event_date>=periodStart&&e.event_date<=periodEnd);
+  const today=new Date().toISOString().slice(0,10);
+  const weekEnd=addDays(today,6);
   const stats={
-    hearings:inRange.filter(e=>eventKind(e)==="UDIENZA").length,
-    appointments:inRange.filter(e=>eventKind(e)==="APPUNTAMENTO").length,
-    deadlines:inRange.filter(e=>["SCADENZA","PREPARAZIONE","ATTIVITÀ"].includes(eventKind(e))).length,
-    sync:pendingMobileActions.filter(a=>a.sync_status!=="IMPORTATA_DAL_GESTIONALE").length,
-    practices:(snapshot.practices||[]).filter(p=>!/(ARCHIVIAT|CHIUS|DEFINIT|ESTINT)/i.test(String(p.stato||""))).length || (snapshot.practices||[]).length
+    practices:(snapshot.practices||[]).filter(p=>!/(ARCHIVIAT|CHIUS|DEFINIT|ESTINT)/i.test(String(p.stato||""))).length || (snapshot.practices||[]).length,
+    hearings:all.filter(e=>eventKind(e)==="UDIENZA" && (e.event_date||"")>=today && (e.event_date||"")<=weekEnd).length,
+    deadlines:all.filter(e=>["SCADENZA","PREPARAZIONE","ATTIVITÀ"].includes(eventKind(e)) && (e.event_date||"")>=today && (e.event_date||"")<=weekEnd).length,
+    sync:pendingMobileActions.filter(a=>a.sync_status!=="IMPORTATA_DAL_GESTIONALE").length
   };
   const next=nextEventCardData();
   const linked=next?.practice_id&&practiceById(next.practice_id);
+  let syncTime='—';
+  try{syncTime=new Intl.DateTimeFormat('it-IT',{hour:'2-digit',minute:'2-digit'}).format(new Date(snapshot.generated_at));}catch(e){}
+  const longDate=new Intl.DateTimeFormat('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(new Date());
+
   root.innerHTML=`
-    <section class="lux-hero">
-      <div class="lux-hero-content">
-        <div class="hero-badge">Studio Costa Companion</div>
-        <h2>${homeGreeting()}<br>Avvocato Costa</h2>
-        <p>${new Intl.DateTimeFormat('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(new Date())}</p>
+    <section class="mobile-home-hero">
+      <div class="mobile-home-top">
+        <div class="mobile-brand-card">
+          <div class="mobile-brand-logo"></div>
+          <div>
+            <div class="mobile-brand-overline">Studio Legale Costa</div>
+            <div class="mobile-brand-subline">Companion</div>
+          </div>
+        </div>
+        <div class="mobile-home-actions">
+          <button class="circle-action" data-home-action="search" aria-label="Cerca">⌕</button>
+          <button class="circle-action has-dot" data-home-action="agenda" aria-label="Agenda">◌</button>
+          <button class="circle-action" data-home-action="settings" aria-label="Sistema">⋯</button>
+        </div>
       </div>
-      <div class="hero-glow"></div>
-    </section>
-
-    <div class="kpi-grid">
-      <button class="kpi-card emerald" data-open-view="practicesView"><span class="kpi-icon">◫</span><strong>${stats.practices}</strong><small>Pratiche attive</small></button>
-      <button class="kpi-card ruby" data-open-view="agendaView"><span class="kpi-icon">⚖</span><strong>${stats.hearings}</strong><small>Udienze</small></button>
-      <button class="kpi-card amber" data-open-view="agendaView"><span class="kpi-icon">⌛</span><strong>${stats.deadlines}</strong><small>Scadenze</small></button>
-      <button class="kpi-card jade" data-open-view="toolsView"><span class="kpi-icon">✓</span><strong>${stats.sync}</strong><small>Da sincronizzare</small></button>
-    </div>
-
-    <section class="next-focus-card">
-      <div class="next-focus-head"><span>Prossimo impegno</span>${next?`<b>${escapeHtml(countdownLabel(next))}</b>`:'<b>Nessun impegno imminente</b>'}</div>
-      ${next?`
-        <h3>${escapeHtml(next.title||eventKind(next))}</h3>
-        <div class="next-focus-meta">${escapeHtml(fmtDate(next.event_date))}${next.start_time?` · ${escapeHtml(next.start_time)}`:''} · ${escapeHtml(eventKind(next))}</div>
-        ${(linked||next.practice_name)?`<div class="next-focus-practice">${escapeHtml(linked?.assistito||next.practice_name||'')}</div>`:''}
-        <div class="next-focus-actions">
-          ${linked?`<button class="primary-soft" data-practice="${linked.id}">Apri pratica</button>`:''}
-          <button class="secondary-soft" data-top-target="agendaView">Vai all’agenda</button>
-        </div>`:`<p class="muted">Le attività e le udienze sincronizzate compariranno qui.</p>`}
-    </section>
-
-    <section class="section-head stacked agenda-heading home-heading">
-      <div class="agenda-title-row">
-        <div><h2>Il tuo ritmo</h2><p class="muted">${escapeHtml(periodLabel)}</p></div>
-        <button class="secondary-button" data-home-today>Oggi</button>
-      </div>
-      <div class="agenda-mode home-mode-switch" role="group" aria-label="Vista dashboard">
-        <button data-home-mode="day" class="${homeMode==="day"?"active":""}">Giorno</button>
-        <button data-home-mode="week" class="${homeMode==="week"?"active":""}">Settimana</button>
-        <button data-home-mode="month" class="${homeMode==="month"?"active":""}">Mese</button>
-      </div>
-      <div class="agenda-navigation home-navigation">
-        <button class="nav-square" data-home-nav="-1" aria-label="Periodo precedente">‹</button>
-        <input id="homeDate" type="date" value="${anchor}">
-        <button class="nav-square" data-home-nav="1" aria-label="Periodo successivo">›</button>
+      <div class="mobile-home-copy">
+        <p class="mobile-greeting">${homeGreeting()}</p>
+        <h2>Avvocato Costa</h2>
+        <p class="mobile-date">${escapeHtml(longDate)}</p>
+        <div class="sync-chip-home">✓ Sincronizzato oggi, ${escapeHtml(syncTime)}</div>
       </div>
     </section>
-    ${content}
-    <section class="quick-tools-strip">
-      <div class="section-head compact-head"><div><h3>Accessi rapidi</h3><p class="muted">Muoviti più velocemente fra le funzioni principali.</p></div></div>
-      <div class="quick-tools-grid">
-        ${quickToolCard('Pratiche','◫','practicesView','Fascicoli e schede')}
-        ${quickToolCard('Checklist','☑','checklistsView','Da fare e completate')}
-        ${quickToolCard('Ricerca','⌕','searchView','Pratiche e banca')}
-        ${quickToolCard('Strumenti','◆','toolsView','Udienze, banca, riparto')}
+
+    <section class="mobile-home-grid">
+      <button class="home-stat-card card-pratiche" data-open-view="practicesView">
+        <span class="home-stat-icon">◫</span>
+        <strong>${stats.practices}</strong>
+        <small>Pratiche attive</small>
+        <i>›</i>
+      </button>
+      <button class="home-stat-card card-udienze" data-open-view="agendaView">
+        <span class="home-stat-icon">⚖</span>
+        <strong>${stats.hearings}</strong>
+        <small>Udienze</small>
+        <i>›</i>
+      </button>
+      <button class="home-stat-card card-scadenze" data-open-view="agendaView">
+        <span class="home-stat-icon">⌛</span>
+        <strong>${stats.deadlines}</strong>
+        <small>Scadenze</small>
+        <i>›</i>
+      </button>
+      <button class="home-stat-card card-sync" data-open-view="toolsView">
+        <span class="home-stat-icon">✓</span>
+        <strong>${stats.sync}</strong>
+        <small>Da sincronizzare</small>
+        <i>›</i>
+      </button>
+    </section>
+
+    <section class="mobile-panel next-panel">
+      <div class="panel-head">
+        <h3>Prossimo impegno</h3>
+        <button class="panel-link" data-open-view="agendaView">Vedi agenda completa</button>
       </div>
-      <div class="ai-promo-card" data-open-view="toolsView">
-        <div><span class="ai-chip">Assistant AI</span><strong>Analizza, organizza e trova più rapidamente.</strong><small>Usa la banca giuridica, i termini rapidi e gli strumenti operativi.</small></div>
+      ${next?`<button class="next-engagement-card" ${linked?`data-practice="${linked.id}"`:'data-open-view="agendaView"'}>
+        <div class="next-engagement-icon">${eventKind(next)==='UDIENZA'?'⚖':eventKind(next)==='APPUNTAMENTO'?'☷':'⌛'}</div>
+        <div class="next-engagement-time">${escapeHtml(next.start_time||'—')}</div>
+        <div class="next-engagement-body">
+          <strong>${escapeHtml(next.title||eventKind(next))}</strong>
+          <span>${escapeHtml(linked?.assistito || next.practice_name || next.location || '')}</span>
+          ${(next.authority || next.location || linked?.autorita || linked?.tribunale)?`<small>${escapeHtml(next.authority || next.location || linked?.autorita || linked?.tribunale || '')}</small>`:''}
+        </div>
+        <div class="next-engagement-chevron">›</div>
+      </button>`:'<div class="empty home-empty">Nessun impegno imminente.</div>'}
+    </section>
+
+    <section class="mobile-panel quick-panel">
+      <div class="panel-head">
+        <h3>Strumenti rapidi</h3>
+        <button class="panel-link" data-open-view="toolsView">Tutti gli strumenti</button>
+      </div>
+      <div class="quick-tool-row">
+        <button class="quick-icon-card tone-red" data-open-view="agendaView"><span>⚖</span><em>Udienze</em></button>
+        <button class="quick-icon-card tone-sage" data-open-view="toolsView"><span>⌗</span><em>Creset</em></button>
+        <button class="quick-icon-card tone-green" data-open-view="searchView"><span>▤</span><em>Banca giuridica</em></button>
+        <button class="quick-icon-card tone-gold" data-open-view="toolsView"><span>⌛</span><em>Termini</em></button>
+        <button class="quick-icon-card tone-cream" data-open-view="toolsView"><span>€</span><em>Riparto</em></button>
+        <button class="quick-icon-card tone-deep" data-open-view="checklistsView"><span>✓</span><em>Checklist</em></button>
       </div>
     </section>`;
-  bindHomeControls(root);
+
   root.querySelectorAll('[data-open-view]').forEach(btn=>btn.onclick=()=>switchView(btn.dataset.openView));
-  root.querySelectorAll('[data-top-target]').forEach(btn=>btn.onclick=()=>switchView(btn.dataset.topTarget));
-  bindPracticeLinks(root);
+  root.querySelectorAll('[data-practice]').forEach(btn=>btn.onclick=()=>openPractice(btn.dataset.practice));
+  root.querySelectorAll('[data-home-action]').forEach(btn=>btn.onclick=()=>{
+    const action=btn.dataset.homeAction;
+    if(action==='search')switchView('searchView');
+    else if(action==='agenda')switchView('agendaView');
+    else if(action==='settings')$("settingsButton")?.click();
+  });
 }
 
 function groupedAgenda(items){

@@ -77,7 +77,7 @@ async function ensureOfflineShell(){
   if(!location.protocol.startsWith("http")) return false;
   if(!("serviceWorker" in navigator)) return false;
   const registration=await navigator.serviceWorker.register(
-    "service-worker.js?v=14.0",{scope:"./"}
+    "service-worker.js?v=15.2.1",{scope:"./"}
   );
   await navigator.serviceWorker.ready;
   if(registration.active){
@@ -416,6 +416,7 @@ function showApp(){
 function switchView(target){
   activeView=target;
   document.body.dataset.activeView=target;
+  document.body.classList.add('is-switching-view');
   document.querySelectorAll(".view").forEach(v=>v.classList.toggle("hidden",v.id!==target));
   document.querySelectorAll(".bottom-nav button").forEach(b=>b.classList.toggle("active",b.dataset.target===target));
   document.querySelectorAll("[data-top-target]").forEach(b=>b.classList.toggle("active",b.dataset.topTarget===target));
@@ -428,31 +429,73 @@ function switchView(target){
   if(target==="toolsView")renderPlugins();
   if(target==="searchView")renderGlobalSearch();
   window.scrollTo({top:0,behavior:"smooth"});
+  setTimeout(()=>document.body.classList.remove('is-switching-view'),220);
 }
 function eventSort(a,b){
   return `${a.event_date||""} ${a.start_time||""}`.localeCompare(`${b.event_date||""} ${b.start_time||""}`);
 }
+function daysUntil(dateString){
+  if(!dateString)return null;
+  const start=new Date(new Date().toISOString().slice(0,10)+"T12:00:00");
+  const target=new Date(dateString+"T12:00:00");
+  if(Number.isNaN(target.getTime()))return null;
+  return Math.round((target-start)/86400000);
+}
+function eventVisualMeta(event){
+  const kind=eventKind(event);
+  const map={
+    UDIENZA:{icon:"⚖",label:"Udienza",tone:"tone-hearing"},
+    SCADENZA:{icon:"⏳",label:"Scadenza",tone:"tone-deadline"},
+    PREPARAZIONE:{icon:"✦",label:"Preparazione",tone:"tone-preparation"},
+    APPUNTAMENTO:{icon:"◷",label:"Appuntamento",tone:"tone-appointment"},
+    CRESET:{icon:"▦",label:"Creset",tone:"tone-creset"},
+    ATTIVITÀ:{icon:"✓",label:"Attività",tone:"tone-activity"}
+  };
+  const base=map[kind]||map["ATTIVITÀ"];
+  const delta=daysUntil(event.event_date);
+  let urgency="";
+  if(delta!==null){
+    if(delta<0)urgency=`Scaduta da ${Math.abs(delta)} ${Math.abs(delta)===1?"giorno":"giorni"}`;
+    else if(delta===0)urgency="Oggi";
+    else if(delta===1)urgency="Domani";
+    else urgency=`Tra ${delta} giorni`;
+  }
+  return {...base,urgency};
+}
 
 function eventCard(event){
   const linked=event.practice_id&&practiceById(event.practice_id);
+  const kind=eventKind(event);
+  const meta=eventVisualMeta(event);
   const dateText=event.event_date?`${fmtWeekday(event.event_date)} ${fmtDate(event.event_date)}`:"Data non indicata";
   const overdue=(event.event_date||"")<new Date().toISOString().slice(0,10)&&["TASK","DEADLINE"].includes(String(event.source_type||"").toUpperCase());
   const hearingAction=event.source_type==="HEARING"
     ?`<button class="secondary-button compact-action" data-hearing-manage="${escapeHtml(event.source_id||"")}">Esito / rinvio</button>`:"";
-  return `<article class="event ${escapeHtml(eventKind(event))}">
-    <div class="event-date-row"><span class="event-date">${escapeHtml(dateText)}</span><span class="event-category">${escapeHtml(eventKind(event))}</span></div>
-    <div class="event-top"><span class="event-time">${escapeHtml(event.start_time||"Tutto il giorno")}${event.end_time?` – ${escapeHtml(event.end_time)}`:""}</span></div>
-    <h3>${escapeHtml(event.title||"Impegno")}</h3>
-    ${event.location?`<div class="event-meta">📍 ${escapeHtml(event.location)}</div>`:""}
-    ${overdue?`<div class="event-meta overdue">Scaduta / arretrata: ${escapeHtml(fmtDate(event.event_date))}</div>`:""}
-    ${event.notes?`<div class="event-meta">${escapeHtml(event.notes)}</div>`:""}
-    ${!linked&&event.practice_name?`<div class="event-meta practice-inline">⚖ ${escapeHtml(event.practice_name)}${event.practice_code?` · ${escapeHtml(event.practice_code)}`:""}</div>`:""}
-    <div class="local-actions">
-      ${hearingAction}
-      ${event.source_type==="LOCAL"?`<span class="local-badge">DA SINCRONIZZARE</span><span><button data-local-edit="${escapeHtml(event.id||"")}">Modifica</button></span>`:""}
-      ${(event.source_type==="TASK"||event.source_type==="DEADLINE")?`<button data-task-complete="${escapeHtml(event.source_id??event.task_id??event.id??"")}" data-task-updated="${escapeHtml(event.updated_at||"")}">Fatta</button>`:""}
+  const supporting=(linked?.autorita||linked?.tribunale||event.authority||event.location||"");
+  return `<article class="event ${escapeHtml(kind)} ${meta.tone}">
+    <div class="event-shell">
+      <div class="event-icon">${meta.icon}</div>
+      <div class="event-body">
+        <div class="event-headerline">
+          <span class="event-category-pill">${escapeHtml(meta.label)}</span>
+          <span class="event-urgency">${escapeHtml(meta.urgency||dateText)}</span>
+        </div>
+        <div class="event-date-row"><span class="event-date">${escapeHtml(dateText)}</span><span class="event-category">${escapeHtml(kind)}</span></div>
+        <div class="event-top"><span class="event-time">${escapeHtml(event.start_time||"Tutto il giorno")}${event.end_time?` – ${escapeHtml(event.end_time)}`:""}</span></div>
+        <h3>${escapeHtml(event.title||"Impegno")}</h3>
+        ${supporting?`<div class="event-meta emphasis">${escapeHtml(supporting)}</div>`:""}
+        ${event.location&&supporting!==event.location?`<div class="event-meta">📍 ${escapeHtml(event.location)}</div>`:""}
+        ${overdue?`<div class="event-meta overdue">Scaduta / arretrata: ${escapeHtml(fmtDate(event.event_date))}</div>`:""}
+        ${event.notes?`<div class="event-note-inline">${escapeHtml(event.notes)}</div>`:""}
+        ${!linked&&event.practice_name?`<div class="event-meta practice-inline">⚖ ${escapeHtml(event.practice_name)}${event.practice_code?` · ${escapeHtml(event.practice_code)}`:""}</div>`:""}
+        <div class="local-actions">
+          ${hearingAction}
+          ${event.source_type==="LOCAL"?`<span class="local-badge">DA SINCRONIZZARE</span><span><button data-local-edit="${escapeHtml(event.id||"")}">Modifica</button></span>`:""}
+          ${(event.source_type==="TASK"||event.source_type==="DEADLINE")?`<button data-task-complete="${escapeHtml(event.source_id??event.task_id??event.id??"")}" data-task-updated="${escapeHtml(event.updated_at||"")}">Fatta</button>`:""}
+        </div>
+        ${linked?`<button class="practice-link" data-practice="${linked.id}">Apri ${escapeHtml(linked.assistito||"pratica")}</button>`:""}
+      </div>
     </div>
-    ${linked?`<button class="practice-link" data-practice="${linked.id}">Apri ${escapeHtml(linked.assistito||"pratica")}</button>`:""}
   </article>`;
 }
 
@@ -515,6 +558,24 @@ function dayCounts(items,date){
   items.filter(e=>e.event_date===date).forEach(e=>{const k=eventKind(e);if(k in counts)counts[k]++});
   counts.CHECKLIST=openChecklistCount(date);
   return counts;
+}
+function agendaInsightsCard(events,label,focusDate){
+  const counts={UDIENZA:0,SCADENZA:0,ATTIVITÀ:0,PREPARAZIONE:0};
+  events.forEach(e=>{const k=eventKind(e);if(k==='UDIENZA')counts.UDIENZA++; else if(k==='SCADENZA')counts.SCADENZA++; else if(k==='PREPARAZIONE')counts.PREPARAZIONE++; else counts.ATTIVITÀ++;});
+  const focusCounts=focusDate?dayCounts(events,focusDate):{UDIENZA:0,SCADENZA:0,PREPARAZIONE:0,CHECKLIST:0};
+  return `<section class="agenda-lux-hero">
+    <div class="agenda-lux-copy">
+      <span class="agenda-kicker">Vista agenda</span>
+      <h3>${escapeHtml(label||'Agenda')}</h3>
+      <p>${focusDate?`Selezionato: ${escapeHtml(fmtWeekday(focusDate))} ${escapeHtml(fmtDate(focusDate))}`:'Controllo immediato di udienze, attività e scadenze.'}</p>
+    </div>
+    <div class="agenda-lux-stats">
+      <div class="agenda-mini-stat hearing"><strong>${counts.UDIENZA}</strong><span>udienze</span></div>
+      <div class="agenda-mini-stat deadline"><strong>${counts.SCADENZA}</strong><span>scadenze</span></div>
+      <div class="agenda-mini-stat task"><strong>${counts.ATTIVITÀ+counts.PREPARAZIONE}</strong><span>attività</span></div>
+      <div class="agenda-mini-stat checklist"><strong>${focusCounts.CHECKLIST||0}</strong><span>checklist</span></div>
+    </div>
+  </section>`;
 }
 function weekOverview(items,start,selected,attribute){
   const days=Array.from({length:7},(_,i)=>addDays(start,i));
@@ -733,20 +794,30 @@ function renderMonthGrid(items,selected){
 }
 function renderAgenda(){
   const today=new Date().toISOString().slice(0,10);
-  const anchor=$("agendaDate").value||today; const all=calendarItems().sort(eventSort); let events=[]; let periodLabel="";
+  const anchor=$("agendaDate").value||today; const all=calendarItems().sort(eventSort); let events=[]; let periodLabel=""; let contentHtml=""; let focusDate=anchor;
   if(agendaMode==="day"){
-    agendaSelectedDay=anchor;events=all.filter(e=>e.event_date===anchor);periodLabel=`${fmtWeekday(anchor)} ${fmtDate(anchor)}`;$("agendaContent").innerHTML=dayOperationalHtml(all,anchor);
+    agendaSelectedDay=anchor; focusDate=anchor; events=all.filter(e=>e.event_date===anchor); periodLabel=`${fmtWeekday(anchor)} ${fmtDate(anchor)}`;
+    contentHtml=agendaInsightsCard(events,periodLabel,focusDate)+dayOperationalHtml(all,anchor);
   }else if(agendaMode==="week"){
     const start=startOfWeek(anchor),end=addDays(start,6);
     if(!agendaSelectedDay||agendaSelectedDay<start||agendaSelectedDay>end)agendaSelectedDay=(today>=start&&today<=end)?today:start;
+    focusDate=agendaSelectedDay;
     events=all.filter(e=>e.event_date>=start&&e.event_date<=end);periodLabel=`Lun–Dom ${fmtDate(start)} – ${fmtDate(end)}`;
-    $("agendaContent").innerHTML=`${weekOverview(all,start,agendaSelectedDay,"data-agenda-week-day")}<div class="selected-agenda-day"><strong>${escapeHtml(fmtWeekday(agendaSelectedDay))}</strong><span>${fmtDate(agendaSelectedDay)}</span></div>${dayOperationalHtml(all,agendaSelectedDay)}`;
-    $("agendaContent").querySelectorAll("[data-agenda-week-day]").forEach(b=>b.onclick=()=>{agendaSelectedDay=b.dataset.agendaWeekDay;renderAgenda()});
+    contentHtml=agendaInsightsCard(events,periodLabel,focusDate)+`${weekOverview(all,start,agendaSelectedDay,"data-agenda-week-day")}<div class="selected-agenda-day"><strong>${escapeHtml(fmtWeekday(agendaSelectedDay))}</strong><span>${fmtDate(agendaSelectedDay)}</span></div>${dayOperationalHtml(all,agendaSelectedDay)}`;
   }else{
-    const [start,end]=monthBounds(anchor);if(!agendaSelectedDay||agendaSelectedDay<start||agendaSelectedDay>end)agendaSelectedDay=anchor;events=all.filter(e=>e.event_date>=start&&e.event_date<=end);periodLabel=new Intl.DateTimeFormat("it-IT",{month:"long",year:"numeric"}).format(new Date(anchor+"T12:00:00"));$("agendaContent").innerHTML=`${renderMonthGrid(events,agendaSelectedDay)}<div class="selected-day-label">${escapeHtml(fmtWeekday(agendaSelectedDay))} ${fmtDate(agendaSelectedDay)}</div>${dayOperationalHtml(all,agendaSelectedDay)}`;$("agendaContent").querySelectorAll("[data-agenda-day]").forEach(b=>b.onclick=()=>{agendaSelectedDay=b.dataset.agendaDay;renderAgenda()});
+    const [start,end]=monthBounds(anchor);
+    if(!agendaSelectedDay||agendaSelectedDay<start||agendaSelectedDay>end)agendaSelectedDay=anchor;
+    focusDate=agendaSelectedDay;
+    events=all.filter(e=>e.event_date>=start&&e.event_date<=end);
+    periodLabel=new Intl.DateTimeFormat("it-IT",{month:"long",year:"numeric"}).format(new Date(anchor+"T12:00:00"));
+    contentHtml=agendaInsightsCard(events,periodLabel,focusDate)+`${renderMonthGrid(events,agendaSelectedDay)}<div class="selected-day-label">${escapeHtml(fmtWeekday(agendaSelectedDay))} ${fmtDate(agendaSelectedDay)}</div>${dayOperationalHtml(all,agendaSelectedDay)}`;
   }
+  $("agendaContent").innerHTML=contentHtml;
+  if(agendaMode==="week")$("agendaContent").querySelectorAll("[data-agenda-week-day]").forEach(b=>b.onclick=()=>{agendaSelectedDay=b.dataset.agendaWeekDay;renderAgenda()});
+  if(agendaMode==="month")$("agendaContent").querySelectorAll("[data-agenda-day]").forEach(b=>b.onclick=()=>{agendaSelectedDay=b.dataset.agendaDay;renderAgenda()});
   $("agendaPeriodLabel").textContent=periodLabel; bindPracticeLinks($("agendaContent"));bindInlineChecklist($("agendaContent"));
 }
+
 
 function renderAppointments(){
   const root=$("appointmentsContent");if(!root||!snapshot)return;
@@ -789,15 +860,22 @@ function practiceCard(p){
   const deadline=p.prossima_scadenza;
   const progress = Math.min(100, Math.max(12, ((hearing?30:10)+(deadline?20:5)+(nonEmpty(p.numero_principale)?15:0)+(nonEmpty(p.autorita||p.tribunale)?15:0)+(nonEmpty(p.oggetto)?20:0))));
   const matter=(p.area||"PRATICA").toUpperCase();
-  return `<article class="practice-card ${escapeHtml(p.area||"")}" data-practice="${p.id}" role="button" tabindex="0" aria-label="Apri scheda pratica ${escapeHtml(p.assistito||'')}">
+  const theme={PENALE:"theme-penale",CIVILE:"theme-civile",TRIBUTARIO:"theme-tributario"}[matter]||"theme-generic";
+  const badgeStatus = hearing?`Udienza ${fmtDate(hearing.event_date)}${hearing.start_time?` · ${escapeHtml(hearing.start_time)}`:''}`:deadline?`Scadenza ${fmtDate(deadline.event_date)}`:"Nessuna imminenza";
+  return `<article class="practice-card ${escapeHtml(p.area||"")} ${theme}" data-practice="${p.id}" role="button" tabindex="0" aria-label="Apri scheda pratica ${escapeHtml(p.assistito||'')}">
+    <div class="practice-cover">
+      <div class="practice-cover-content">
+        <span class="area-badge area-${escapeHtml(matter)}">${escapeHtml(matter)}</span>
+        <span class="status-badge">${escapeHtml(p.stato||"In corso")}</span>
+      </div>
+    </div>
     <div class="practice-top">
       <div class="practice-heading">
-        <span class="area-badge area-${escapeHtml(matter)}">${escapeHtml(matter)}</span>
         <h3>${escapeHtml(p.assistito||"Assistito non indicato")}</h3>
         <div class="practice-subline">${escapeHtml(p.tipologia||p.tipologia_difesa||p.oggetto||"")}</div>
       </div>
-      <span class="status-badge">${escapeHtml(p.stato||"In corso")}</span>
     </div>
+    <div class="practice-spotlight">${escapeHtml(badgeStatus)}</div>
     <div class="practice-grid two-lines">
       ${fieldHtml("Numero",p.numero_principale)}
       ${fieldHtml("Autorità",p.autorita||p.tribunale)}
@@ -805,7 +883,7 @@ function practiceCard(p){
       ${fieldHtml("Fase",p.fase)}
     </div>
     <div class="practice-progress">
-      <div class="progress-row"><span>Organizzazione fascicolo</span><b>${progress}%</b></div>
+      <div class="progress-row"><span>Completezza scheda</span><b>${progress}%</b></div>
       <div class="progress-bar"><i style="width:${progress}%"></i></div>
     </div>
     <div class="next-row modern-next-row">
@@ -815,12 +893,12 @@ function practiceCard(p){
       </div>
       <div class="next-box">
         <span class="label">Prossima attività</span>
-        <div class="value">${deadline?`${fmtDate(deadline.event_date)} · ${escapeHtml(deadline.title||"")}`:"—"}</div>
+        <div class="value">${deadline?`${fmtDate(deadline.event_date)} · ${escapeHtml(deadline.title||"Attività")}`:"—"}</div>
       </div>
     </div>
     <div class="practice-action-row">
       <span class="practice-pill">Apri scheda</span>
-      <span class="practice-pill muted">Documenti e banca</span>
+      <span class="practice-pill muted">Dettagli e documenti</span>
     </div>
   </article>`;
 }
@@ -841,13 +919,23 @@ function renderPractices(){
     if(deadline&&!p.prossima_scadenza)return false;
     return true;
   });
+  const base=(snapshot.practices||[]);
   const counts={
-    total:(snapshot.practices||[]).length,
-    penal:(snapshot.practices||[]).filter(p=>p.area==='PENALE').length,
-    civil:(snapshot.practices||[]).filter(p=>p.area==='CIVILE').length,
-    trib:(snapshot.practices||[]).filter(p=>p.area==='TRIBUTARIO').length,
+    total:base.length,
+    penal:base.filter(p=>p.area==='PENALE').length,
+    civil:base.filter(p=>p.area==='CIVILE').length,
+    trib:base.filter(p=>p.area==='TRIBUTARIO').length,
+    hearings:practices.filter(p=>p.prossima_udienza).length,
+    deadlines:practices.filter(p=>p.prossima_scadenza).length,
+    office:practices.filter(p=>normalize(`${p.tipologia_difesa} ${p.stato_difesa}`).includes('ufficio')).length
   };
-  $("practiceCount").innerHTML=`<div class="practices-overview"><span><b>${practices.length}</b> pratiche visualizzate</span><span>${counts.penal} penali · ${counts.civil} civili · ${counts.trib} tributarie</span></div>`;
+  $("practiceCount").innerHTML=`<div class="practices-dashboard">
+      <div class="practice-mini-stat primary"><strong>${practices.length}</strong><span>visualizzate</span></div>
+      <div class="practice-mini-stat"><strong>${counts.hearings}</strong><span>con udienza</span></div>
+      <div class="practice-mini-stat"><strong>${counts.deadlines}</strong><span>con attività</span></div>
+      <div class="practice-mini-stat"><strong>${counts.office}</strong><span>ufficio</span></div>
+    </div>
+    <div class="practices-overview"><span><b>${counts.penal}</b> penali · <b>${counts.civil}</b> civili · <b>${counts.trib}</b> tributarie</span><span>${query||area||office||hearing||deadline?'filtri attivi':'tutte le pratiche'}</span></div>`;
   $("practiceCards").innerHTML=practices.length?practices.map(practiceCard).join(""):'<div class="empty">Nessuna pratica corrisponde ai filtri</div>';
   bindPracticeLinks($("practiceCards"));
 }
@@ -890,9 +978,13 @@ async function setChecklistItemStatus(item,newStatus){
   const previous=pendingStateFor(item.checklist_item_id)||item.status||"DA_FARE";
   await queueMobileAction({action_type:newStatus==="COMPLETATA"?"complete_checklist_item":"reopen_checklist_item",checklist_item_id:item.checklist_item_id,target_id:item.checklist_item_id,previous_status:previous,new_status:newStatus,base_updated_at:item.updated_at||"",completed_at:newStatus==="COMPLETATA"?new Date().toISOString():null});
   renderChecklists();
-  const toast=$("undoToast"); toast.classList.remove("hidden");
-  $("undoAction").onclick=async()=>{await setChecklistItemStatus(item,previous);toast.classList.add("hidden")};
-  setTimeout(()=>toast.classList.add("hidden"),5000);
+  const toast=$("undoToast");
+  const undo=$("undoAction");
+  if(toast&&undo){
+    toast.classList.remove("hidden");
+    undo.onclick=async()=>{await setChecklistItemStatus(item,previous);toast.classList.add("hidden")};
+    setTimeout(()=>toast.classList.add("hidden"),5000);
+  }
 }
 async function addMobileChecklist(){
   const title=prompt("Titolo della checklist");if(!title?.trim())return;
@@ -1121,6 +1213,26 @@ function renderPlugins(){
   document.querySelectorAll(".plugin-tool").forEach(el=>el.classList.add("hidden"));
   const map={hearing:"hearingTool",creset:"cresetTool",terms:"termsTool",codes:"codesTool",split:"splitTool",checklist:"checklistTool"}; if($(map[activeTool]))$(map[activeTool]).classList.remove("hidden");
   buttons.forEach(b=>b.classList.toggle("active",b.dataset.tool===activeTool));
+  const toolsView=$("toolsView");
+  const labels={hearing:"Udienze",codes:"Banca giuridica",terms:"Termini",split:"Riparto",creset:"Creset",checklist:"Checklist"};
+  const descriptions={
+    hearing:"Calendario udienze, checklist, esiti e rinvii da sincronizzare.",
+    codes:"Norme, giurisprudenza, prassi, formule e note Studio.",
+    terms:"Supporto rapido per il calcolo dei termini e delle date.",
+    split:"Riparto Studio / TFC con opzione 50% e accantonamento.",
+    creset:"Posizioni Creset, lavorazioni e costituzioni da segnare al volo.",
+    checklist:"Liste operative sincronizzate e voci da spuntare fuori studio."
+  };
+  if(toolsView){
+    let hero=toolsView.querySelector('.tools-lux-hero');
+    if(!hero){
+      hero=document.createElement('section');
+      hero.className='tools-lux-hero';
+      const tabs=toolsView.querySelector('.tool-tabs');
+      if(tabs)tabs.before(hero);
+    }
+    hero.innerHTML=`<div class="tools-lux-copy"><span class="tools-kicker">Dashboard strumenti</span><h3>${escapeHtml(labels[activeTool]||'Strumenti')}</h3><p>${escapeHtml(descriptions[activeTool]||'Tocca una scheda per aprire subito la funzione.')}</p></div><div class="tools-lux-side"><strong>${buttons.filter(b=>!b.classList.contains('hidden')).length}</strong><span>moduli attivi</span></div>`;
+  }
   const pending=pendingMobileActions.filter(a=>a.sync_status!=="IMPORTATA_DAL_GESTIONALE").length;
   [$("exportPluginActions"),$("exportMobileActions")].filter(Boolean).forEach(b=>{b.textContent=pending?`Esporta modifiche (${pending}) per il gestionale`:"Esporta modifiche per il gestionale"});
   renderHearingTool(); renderCresetTool(); renderLegalResults();

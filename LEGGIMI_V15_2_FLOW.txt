@@ -1,0 +1,9 @@
+COMPANION V15.2 FLOW REFINEMENT
+
+Ulteriore rifinitura grafica concentrata su:
+- barra inferiore più elegante e leggibile
+- passaggi tra schermate più fluidi
+- agenda più chiara con card riepilogo e statistiche
+- miglior equilibrio visivo delle viste settimanali e mensili
+
+La logica funzionale resta invariata.

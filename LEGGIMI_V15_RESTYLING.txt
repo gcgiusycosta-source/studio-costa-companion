@@ -1,0 +1,18 @@
+STUDIO LEGALE COSTA - COMPANION V15 RESTYLING
+
+Questa versione interviene solo sulla grafica della Companion, senza modificare la logica applicativa.
+
+Interventi principali:
+- nuova palette nero / verde / oro
+- card più moderne e più squadrate ma arrotondate
+- immagini integrate in Home, Pratiche e Strumenti
+- header e navigazione inferiore premium dark
+- miglioramento percezione dei passaggi tra schermate
+- nessuna modifica alla logica di import/export, pratiche, agenda, tool e sincronizzazione
+
+File modificati:
+- index.html
+- styles.css
+
+Versione cache-busting:
+- riferimenti aggiornati a v=15.0

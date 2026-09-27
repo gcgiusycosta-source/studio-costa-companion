@@ -1,0 +1,9 @@
+COMPANION V15.1 PREMIUM REFINEMENT
+
+Questa revisione migliora ulteriormente:
+- Strumenti: hero descrittiva + schede più leggibili e più premium
+- Pratiche: testata visiva, riepilogo numerico e card più forti
+- Attività / scadenze: card evento con priorità, urgenza e icona
+- Continuità grafica nero / verde / oro
+
+La logica applicativa resta invariata.

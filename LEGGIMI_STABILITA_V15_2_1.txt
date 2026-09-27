@@ -1,0 +1,10 @@
+COMPANION V15.2.1 - STABILITY PATCH
+
+Correzioni tecniche:
+- service worker e cache allineati alla V15.2.1
+- cache offline estesa a tutti gli asset grafici usati dalla V15
+- manifest aggiornato alla palette scura
+- protezione runtime del comando Annulla checklist
+- aggiunto toast Annulla mancante
+- cache busting coerente per index, CSS, JS, manifest e service worker
+- supporto prefers-reduced-motion

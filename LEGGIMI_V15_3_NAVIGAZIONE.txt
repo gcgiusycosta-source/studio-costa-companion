@@ -1,0 +1,9 @@
+COMPANION V15.3 — CORREZIONE NAVIGAZIONE E GERARCHIA
+
+- Home più compatta: Pratiche, Udienze, Scadenze, Appuntamenti.
+- Udienze separata dall’Agenda con calendario Giorno/Settimana/Mese e soli eventi di udienza.
+- Agenda senza card riepilogativa duplicata: controlli subito in alto e impegni direttamente sotto.
+- Udienze rimosse da Strumenti.
+- Collegamenti rapidi Home aprono direttamente Creset, Banca giuridica, Termini, Riparto e Checklist nel relativo modulo Strumenti.
+- Barra inferiore a 5 voci: Home, Udienze, Agenda, Pratiche, Strumenti.
+- Logiche di sincronizzazione/import/export non modificate.

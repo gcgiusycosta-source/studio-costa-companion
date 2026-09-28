@@ -7,10 +7,10 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Studio Costa">
-  <link rel="manifest" href="manifest.json?v=15.2.1">
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=15.2.1">
-  <link rel="stylesheet" href="styles.css?v=15.2.1">
-  <title>Studio Costa Companion V15.2.1</title>
+  <link rel="manifest" href="manifest.json?v=15.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=15.3.0">
+  <link rel="stylesheet" href="styles.css?v=15.3.0">
+  <title>Studio Costa Companion V15.3</title>
 </head>
 <body>
   <section id="pairScreen" class="screen hidden">
@@ -66,23 +66,41 @@
     <main>
       <section id="homeView" class="view"></section>
 
-      <section id="agendaView" class="view hidden">
-        <div class="section-head stacked agenda-heading">
-          <div class="agenda-title-row">
-            <div><h2>Agenda</h2><p id="agendaPeriodLabel" class="muted"></p></div>
-            <button id="agendaToday" class="secondary-button">Oggi</button>
+      <section id="hearingsView" class="view hidden">
+        <div class="calendar-compact-head hearings-compact-head">
+          <div class="calendar-mode compact-mode" role="group" aria-label="Vista udienze">
+            <button data-hearing-mode="day">Giorno</button>
+            <button data-hearing-mode="week" class="active">Settimana</button>
+            <button data-hearing-mode="month">Mese</button>
           </div>
-          <div class="agenda-mode" role="group" aria-label="Vista calendario">
+          <div class="calendar-compact-nav">
+            <button id="hearingPrev" class="nav-square" aria-label="Periodo precedente">‹</button>
+            <input id="hearingDate" type="date" aria-label="Data udienze">
+            <button id="hearingNext" class="nav-square" aria-label="Periodo successivo">›</button>
+            <button id="hearingToday" class="secondary-button compact-today">Oggi</button>
+          </div>
+          <div id="hearingPeriodLabel" class="compact-period-label"></div>
+        </div>
+        <div id="hearingsContent"></div>
+      </section>
+
+      <section id="agendaView" class="view hidden">
+        <div class="calendar-compact-head agenda-compact-head">
+          <div class="calendar-mode compact-mode" role="group" aria-label="Vista agenda">
             <button data-agenda-mode="day">Giorno</button>
             <button data-agenda-mode="week" class="active">Settimana</button>
             <button data-agenda-mode="month">Mese</button>
           </div>
-          <div class="agenda-navigation">
+          <div class="calendar-compact-nav">
             <button id="agendaPrev" class="nav-square" aria-label="Periodo precedente">‹</button>
-            <input id="agendaDate" type="date">
+            <input id="agendaDate" type="date" aria-label="Data agenda">
             <button id="agendaNext" class="nav-square" aria-label="Periodo successivo">›</button>
+            <button id="agendaToday" class="secondary-button compact-today">Oggi</button>
           </div>
-          <button id="exportCalendarIcs" class="secondary-button full-width">Esporta nel calendario iPhone</button>
+          <div class="compact-agenda-footer">
+            <span id="agendaPeriodLabel" class="compact-period-label"></span>
+            <button id="exportCalendarIcs" class="secondary-button compact-export">Esporta calendario</button>
+          </div>
         </div>
         <div id="agendaContent"></div>
       </section>
@@ -123,15 +141,12 @@
           <div id="pluginStatus" class="plugin-status"></div>
         </div>
         <div class="tool-tabs">
-          <button data-tool="hearing" class="active">⚖️<span>Udienze</span></button>
-          <button data-tool="codes">§<span>Banca</span></button>
+          <button data-tool="codes" class="active">§<span>Banca giuridica</span></button>
           <button data-tool="terms">⌛<span>Termini</span></button>
           <button data-tool="split">€<span>Riparto</span></button>
           <button data-tool="creset">▦<span>Creset</span></button>
           <button data-tool="checklist">☑<span>Checklist</span></button>
         </div>
-
-        <section id="hearingTool" class="plugin-tool"></section>
 
         <section id="codesTool" class="plugin-tool hidden">
           <div class="tool-card">
@@ -186,8 +201,9 @@
       </section>
     </main>
 
-    <nav class="bottom-nav four-nav companion-bottom-nav">
+    <nav class="bottom-nav five-nav companion-bottom-nav">
       <button data-target="homeView"><span>⌂</span>Home</button>
+      <button data-target="hearingsView"><span>⚖</span>Udienze</button>
       <button data-target="agendaView"><span>◷</span>Agenda</button>
       <button data-target="practicesView"><span>▣</span>Pratiche</button>
       <button data-target="toolsView"><span>✦</span>Strumenti</button>
@@ -245,7 +261,7 @@
 
   <div id="settingsModal" class="modal hidden">
     <div class="modal-sheet compact-sheet">
-      <div class="modal-top"><button id="closeSettings" class="back-button">‹</button><div><div class="eyebrow dark">COMPANION V15.2.1</div><h2>Sincronizzazione e privacy</h2></div></div>
+      <div class="modal-top"><button id="closeSettings" class="back-button">‹</button><div><div class="eyebrow dark">COMPANION V15.3</div><h2>Sincronizzazione e privacy</h2></div></div>
       <div class="detail-section">
         <h3>Modifiche da riportare al PC</h3>
         <p id="pendingActionsInfo" class="muted"></p>
@@ -275,6 +291,6 @@
     <button id="undoAction" type="button">Annulla</button>
   </div>
 
-  <script src="app.js?v=15.2.1"></script>
+  <script src="app.js?v=15.3.0"></script>
 </body>
 </html>

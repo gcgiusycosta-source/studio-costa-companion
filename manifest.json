@@ -1,12 +1,12 @@
 {
-  "name": "Studio Costa Companion V15.3",
+  "name": "Studio Costa Companion V15.4",
   "short_name": "Studio Costa",
-  "description": "Companion mobile Studio Legale Costa: Home, Udienze, Agenda, Pratiche e Strumenti",
+  "description": "Agenda legale mobile e Companion sincronizzato con Studio Legale Costa V15.4",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#0b0f10",
-  "theme_color": "#0b0f10",
+  "background_color": "#0d1112",
+  "theme_color": "#0d1112",
   "icons": [
     {
       "src": "icon-192.png",

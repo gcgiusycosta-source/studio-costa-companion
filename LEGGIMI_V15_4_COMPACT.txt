@@ -1,0 +1,9 @@
+COMPANION V15.4 COMPACT
+
+Correzioni principali:
+- Home più compatta; dashboard con pratiche, udienze, scadenze, appuntamenti
+- Udienze separate dall'Agenda
+- Agenda e Udienze in vista compatta, senza quadratoni riepilogativi
+- Pratiche semplificate: solo ricerca + filtri Tutte / Penale / Civile / Difese d'ufficio
+- Collegamenti rapidi della Home aprono direttamente il modulo corretto
+- Mantenute le funzionalità esistenti

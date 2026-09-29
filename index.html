@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#0b0f10">
+  <meta name="theme-color" content="#0d1112">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Studio Costa">
-  <link rel="manifest" href="manifest.json?v=15.3.0">
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=15.3.0">
-  <link rel="stylesheet" href="styles.css?v=15.3.0">
-  <title>Studio Costa Companion V15.3</title>
+  <link rel="manifest" href="manifest.json?v=15.4">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=15.4">
+  <link rel="stylesheet" href="styles.css?v=15.4">
+  <title>Studio Costa Companion V15.4</title>
 </head>
 <body>
   <section id="pairScreen" class="screen hidden">
@@ -59,7 +59,7 @@
 
     <div class="hero-switchbar">
       <button class="hero-switch active" data-top-target="homeView"><span>Home</span></button>
-      <button class="hero-switch" data-top-target="agendaView"><span>Agenda</span></button>
+      <button class="hero-switch" data-top-target="hearingsView"><span>Udienze</span></button>
     </div>
 
 
@@ -106,19 +106,16 @@
       </section>
 
       <section id="practicesView" class="view hidden">
-        <div class="section-head stacked">
+        <div class="section-head stacked practices-compact-head">
           <div><h2>Pratiche</h2><p class="muted">Fascicoli autorizzati per il telefono</p></div>
           <input id="practiceSearch" type="search" placeholder="Assistito, RG, RGNR, SIUS, SIEP, autorità, controparte">
         </div>
-        <div class="filters compact-filters">
-          <select id="areaFilter">
-            <option value="">Tutte</option><option value="PENALE">Penale</option><option value="CIVILE">Civile</option><option value="TRIBUTARIO">Tributario</option>
-          </select>
-          <label><input id="officeFilter" type="checkbox"> Ufficio</label>
-          <label><input id="hearingFilter" type="checkbox"> Udienza</label>
-          <label><input id="deadlineFilter" type="checkbox"> Scadenza</label>
+        <div id="practiceFilterBar" class="practice-simple-filters" role="group" aria-label="Filtri pratiche">
+          <button class="active" data-practice-filter="all">Tutte</button>
+          <button data-practice-filter="PENALE">Penale</button>
+          <button data-practice-filter="CIVILE">Civile</button>
+          <button data-practice-filter="office">Difese d'ufficio</button>
         </div>
-        <div id="practiceCount" class="result-count"></div>
         <div id="practiceCards"></div>
       </section>
 
@@ -141,12 +138,14 @@
           <div id="pluginStatus" class="plugin-status"></div>
         </div>
         <div class="tool-tabs">
-          <button data-tool="codes" class="active">§<span>Banca giuridica</span></button>
+          <button data-tool="codes">§<span>Banca</span></button>
           <button data-tool="terms">⌛<span>Termini</span></button>
           <button data-tool="split">€<span>Riparto</span></button>
           <button data-tool="creset">▦<span>Creset</span></button>
           <button data-tool="checklist">☑<span>Checklist</span></button>
         </div>
+
+        <section id="hearingTool" class="plugin-tool"></section>
 
         <section id="codesTool" class="plugin-tool hidden">
           <div class="tool-card">
@@ -201,7 +200,7 @@
       </section>
     </main>
 
-    <nav class="bottom-nav five-nav companion-bottom-nav">
+    <nav class="bottom-nav companion-bottom-nav five-nav">
       <button data-target="homeView"><span>⌂</span>Home</button>
       <button data-target="hearingsView"><span>⚖</span>Udienze</button>
       <button data-target="agendaView"><span>◷</span>Agenda</button>
@@ -210,7 +209,7 @@
     </nav>
   </div>
 
-  <button id="addLocalTask" class="floating-add" aria-label="Nuovo impegno">＋</button>
+  <button id="addLocalTask" class="floating-add compact-fab" aria-label="Nuovo impegno">＋</button>
 
   <div id="localTaskModal" class="modal hidden">
     <div class="modal-sheet compact-sheet">
@@ -261,7 +260,7 @@
 
   <div id="settingsModal" class="modal hidden">
     <div class="modal-sheet compact-sheet">
-      <div class="modal-top"><button id="closeSettings" class="back-button">‹</button><div><div class="eyebrow dark">COMPANION V15.3</div><h2>Sincronizzazione e privacy</h2></div></div>
+      <div class="modal-top"><button id="closeSettings" class="back-button">‹</button><div><div class="eyebrow dark">COMPANION V15.4</div><h2>Sincronizzazione e privacy</h2></div></div>
       <div class="detail-section">
         <h3>Modifiche da riportare al PC</h3>
         <p id="pendingActionsInfo" class="muted"></p>
@@ -286,11 +285,8 @@
     </div>
   </div>
 
-  <div id="undoToast" class="undo-toast hidden" role="status" aria-live="polite">
-    <span>Checklist aggiornata</span>
-    <button id="undoAction" type="button">Annulla</button>
-  </div>
+  <div id="undoToast" class="undo-toast hidden"><span>Checklist aggiornata</span><button id="undoAction" type="button">Annulla</button></div>
 
-  <script src="app.js?v=15.3.0"></script>
+  <script src="app.js?v=15.4"></script>
 </body>
 </html>

@@ -1,5 +1,5 @@
-const CACHE="studio-costa-companion-v16-1-black-professional";
-const APP_SHELL=["./","./index.html","./styles.css?v=16.1","./app.js?v=16.1","./manifest.json?v=16.1","./icon-192.png","./icon-512.png","./apple-touch-icon.png","./logo-gc.png","./courtroom.jpg","./digital-home.jpg","./sea-desk.jpg","./office-studio.jpg","./office.jpg","./desk-view.jpg","./ai-touch.jpg","./brand-wave.jpg"];
+const CACHE="studio-costa-companion-v16-2-executive-black";
+const APP_SHELL=["./","./index.html","./styles.css?v=16.2","./app.js?v=16.2","./manifest.json?v=16.2","./icon-192.png","./icon-512.png","./apple-touch-icon.png","./logo-gc.png","./courtroom.jpg","./digital-home.jpg","./sea-desk.jpg","./office-studio.jpg","./office.jpg","./desk-view.jpg","./ai-touch.jpg","./brand-wave.jpg"];
 async function cacheShell(){const cache=await caches.open(CACHE);await cache.addAll(APP_SHELL)}
 self.addEventListener("install",event=>{event.waitUntil(cacheShell());self.skipWaiting()});
 self.addEventListener("activate",event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith("studio-costa-companion-")&&key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim()))});

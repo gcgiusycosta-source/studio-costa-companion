@@ -75,13 +75,27 @@ function deviceId(){
   return value;
 }
 
+const COMPANION_BUILD="16.2";
+async function invalidateOldAppShell(){
+  const key="studioCostaCompanionBuild";
+  if(localStorage.getItem(key)===COMPANION_BUILD)return;
+  try{
+    if("caches" in window){
+      const keys=await caches.keys();
+      await Promise.all(keys.filter(k=>k.startsWith("studio-costa-companion-")).map(k=>caches.delete(k)));
+    }
+  }catch(e){}
+  localStorage.setItem(key,COMPANION_BUILD);
+}
+
 
 async function ensureOfflineShell(){
   if(!location.protocol.startsWith("http")) return false;
   if(!("serviceWorker" in navigator)) return false;
   const registration=await navigator.serviceWorker.register(
-    "service-worker.js?v=14.0",{scope:"./"}
+    "service-worker.js?v=16.2",{scope:"./",updateViaCache:"none"}
   );
+  await registration.update().catch(()=>{});
   await navigator.serviceWorker.ready;
   if(registration.active){
     registration.active.postMessage({type:"CACHE_APP_SHELL"});
@@ -616,7 +630,7 @@ function renderHome(){
   const all=calendarItems().sort(eventSort);
   const today=new Date().toISOString().slice(0,10);
   const weekEnd=addDays(today,6);
-  const todayItems=all.filter(e=>e.event_date===today).slice(0,4);
+  const todayItems=all.filter(e=>e.event_date===today).slice(0,5);
   const stats={
     practices:(snapshot.practices||[]).filter(p=>!/(ARCHIVIAT|CHIUS|DEFINIT|ESTINT)/i.test(String(p.stato||""))).length || (snapshot.practices||[]).length,
     hearings:all.filter(e=>eventKind(e)==="UDIENZA" && (e.event_date||"")>=today && (e.event_date||"")<=weekEnd).length,
@@ -628,71 +642,65 @@ function renderHome(){
   let syncTime='—';
   try{syncTime=new Intl.DateTimeFormat('it-IT',{hour:'2-digit',minute:'2-digit'}).format(new Date(snapshot.generated_at));}catch(e){}
   const dateShort=new Intl.DateTimeFormat('it-IT',{weekday:'long',day:'numeric',month:'long'}).format(new Date());
+  const dateCompact=next?.event_date?new Intl.DateTimeFormat('it-IT',{weekday:'short',day:'2-digit',month:'short'}).format(new Date(next.event_date+'T12:00:00')):'';
   const todayRows=todayItems.map(e=>{
     const p=e.practice_id&&practiceById(e.practice_id);
     const kind=eventKind(e);
-    return `<button class="today-row kind-${kind}" ${p?`data-practice="${p.id}"`:'data-open-view="agendaView"'}>
-      <span class="today-time">${escapeHtml(e.start_time||'—')}</span>
-      <span class="today-kind">${kind==='UDIENZA'?'⚖':kind==='APPUNTAMENTO'?'●':kind==='SCADENZA'?'!':'•'}</span>
-      <span class="today-main"><strong>${escapeHtml(e.title||kind)}</strong><small>${escapeHtml(p?.assistito||e.practice_name||e.location||e.authority||'')}</small></span>
-      <span class="today-go">›</span>
+    const mark=kind==='UDIENZA'?'U':kind==='SCADENZA'?'S':kind==='APPUNTAMENTO'?'A':'•';
+    return `<button class="executive-row kind-${kind}" ${p?`data-practice="${p.id}"`:'data-open-view="agendaView"'}>
+      <span class="executive-row-time">${escapeHtml(e.start_time||'—')}</span>
+      <span class="executive-row-mark">${mark}</span>
+      <span class="executive-row-copy"><strong>${escapeHtml(e.title||kind)}</strong><small>${escapeHtml(p?.assistito||e.practice_name||e.location||e.authority||'')}</small></span>
+      <span class="executive-row-arrow">›</span>
     </button>`;
   }).join('');
 
+  const iconFolder='<svg viewBox="0 0 24 24" fill="none"><path d="M4 8a2 2 0 0 1 2-2h4l2 2h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8Z"/><path d="M4 10h16"/></svg>';
+  const iconLaw='<svg viewBox="0 0 24 24" fill="none"><path d="M12 4v15M7 7h10M5 7c0 3-2 5-2 5h6s-2-2-2-5M19 7c0 3-2 5-2 5h6s-2-2-2-5M8 20h8"/></svg>';
+  const iconClock='<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8"/><path d="M12 8v5l3 2"/></svg>';
+  const iconCheck='<svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="m8 12 2.5 2.5L16 9"/></svg>';
+
   root.innerHTML=`
-    <section class="home-top-compact executive-home-head">
-      <div class="executive-heading">
-        <span>DASHBOARD</span>
-        <strong>${homeGreeting()}, Avvocato Costa</strong>
-        <small>${escapeHtml(dateShort)}</small>
-      </div>
-      <div class="home-top-actions">
-        <button class="mini-action" data-home-action="search" aria-label="Cerca">⌕</button>
-        <button class="mini-action" data-home-action="settings" aria-label="Sistema">⋯</button>
-      </div>
-      <div class="sync-mini"><i></i> Aggiornato ${escapeHtml(syncTime)}</div>
+    <section class="executive-welcome">
+      <div><span>STUDIO OPERATIVO</span><strong>${homeGreeting()}, Avvocato Costa</strong><small>${escapeHtml(dateShort)}</small></div>
+      <div class="executive-system"><i></i><b>${escapeHtml(syncTime)}</b><button data-home-action="settings" aria-label="Impostazioni">•••</button></div>
     </section>
 
-    <section class="home-kpi-strip">
-      <button class="home-kpi" data-open-view="practicesView"><b>${stats.practices}</b><span>Pratiche</span></button>
-      <button class="home-kpi judicial" data-open-view="hearingsView"><b>${stats.hearings}</b><span>Udienze</span></button>
-      <button class="home-kpi urgent" data-open-view="agendaView"><b>${stats.deadlines}</b><span>Scadenze</span></button>
-      <button class="home-kpi" data-open-view="agendaView"><b>${stats.appointments}</b><span>Appunt.</span></button>
+    <section class="executive-kpis" aria-label="Riepilogo studio">
+      <button data-open-view="practicesView"><span>Pratiche attive</span><b>${stats.practices}</b><i>fascicoli</i></button>
+      <button class="kpi-hearing" data-open-view="hearingsView"><span>Udienze</span><b>${stats.hearings}</b><i>7 giorni</i></button>
+      <button class="kpi-deadline" data-open-view="agendaView"><span>Scadenze</span><b>${stats.deadlines}</b><i>7 giorni</i></button>
+      <button data-open-view="agendaView"><span>Appuntamenti</span><b>${stats.appointments}</b><i>7 giorni</i></button>
     </section>
 
-    <section class="home-focus-panel">
-      <div class="home-section-title"><div><span>OGGI</span><h3>La tua giornata</h3></div><button data-open-view="agendaView">Apri agenda</button></div>
-      <div class="today-list">${todayRows||'<div class="home-empty-inline">Nessun impegno oggi.</div>'}</div>
+    <section class="executive-next">
+      <div class="executive-section-head"><span>PROSSIMO IMPEGNO</span><button data-open-view="agendaView">Agenda <i>›</i></button></div>
+      ${next?`<button class="executive-next-card ${eventKind(next)==='UDIENZA'?'is-hearing':''}" ${linked?`data-practice="${linked.id}"`:'data-open-view="agendaView"'}>
+        <span class="next-date"><b>${escapeHtml(dateCompact)}</b><em>${escapeHtml(next.start_time||'—')}</em></span>
+        <span class="next-copy"><small>${escapeHtml(eventKind(next))}</small><strong>${escapeHtml(next.title||eventKind(next))}</strong><em>${escapeHtml(linked?.assistito||next.practice_name||next.location||next.authority||'')}</em></span>
+        <span class="next-open">›</span>
+      </button>`:'<div class="executive-empty">Nessun impegno imminente.</div>'}
     </section>
 
-    <section class="home-next-compact">
-      <div class="home-section-title"><div><span>PROSSIMO</span><h3>Impegno in arrivo</h3></div></div>
-      ${next?`<button class="next-compact-card" ${linked?`data-practice="${linked.id}"`:'data-open-view="agendaView"'}>
-        <span class="next-badge">${eventKind(next)==='UDIENZA'?'⚖ UDIENZA':eventKind(next)==='APPUNTAMENTO'?'● APPUNTAMENTO':'! '+eventKind(next)}</span>
-        <strong>${escapeHtml(next.start_time||'—')}</strong>
-        <div><b>${escapeHtml(next.title||eventKind(next))}</b><small>${escapeHtml(linked?.assistito||next.practice_name||next.location||'')}</small></div><i>›</i>
-      </button>`:'<div class="home-empty-inline">Nessun impegno imminente.</div>'}
+    <section class="executive-today">
+      <div class="executive-section-head"><span>AGENDA DI OGGI</span><button data-open-view="agendaView">Vedi tutto <i>›</i></button></div>
+      <div class="executive-list">${todayRows||'<div class="executive-empty">Nessun impegno per oggi.</div>'}</div>
     </section>
 
-    <section class="home-tools-compact">
-      <div class="home-section-title"><div><span>AZIONI</span><h3>Accesso rapido</h3></div><button data-open-view="toolsView">Tutti</button></div>
-      <div class="home-action-grid">
-        <button data-open-tool="creset"><span>⌗</span><em>Creset</em></button>
-        <button data-open-tool="codes"><span>§</span><em>Banca giuridica</em></button>
-        <button data-open-tool="terms"><span>⌛</span><em>Termini</em></button>
-        <button data-open-view="checklistsView"><span>✓</span><em>Checklist</em></button>
+    <section class="executive-shortcuts">
+      <div class="executive-section-head"><span>ACCESSO RAPIDO</span></div>
+      <div class="executive-shortcut-grid">
+        <button data-open-view="practicesView"><span>${iconFolder}</span><b>Pratiche</b><small>Fascicoli</small></button>
+        <button data-open-tool="codes"><span>${iconLaw}</span><b>Banca</b><small>Giuridica</small></button>
+        <button data-open-tool="terms"><span>${iconClock}</span><b>Termini</b><small>Calcolo rapido</small></button>
+        <button data-open-view="checklistsView"><span>${iconCheck}</span><b>Checklist</b><small>Promemoria</small></button>
       </div>
     </section>`;
 
   root.querySelectorAll('[data-open-view]').forEach(btn=>btn.onclick=()=>switchView(btn.dataset.openView));
   root.querySelectorAll('[data-open-tool]').forEach(btn=>btn.onclick=()=>openTool(btn.dataset.openTool));
   root.querySelectorAll('[data-practice]').forEach(btn=>btn.onclick=()=>openPractice(btn.dataset.practice));
-  root.querySelectorAll('[data-home-action]').forEach(btn=>btn.onclick=()=>{
-    const action=btn.dataset.homeAction;
-    if(action==='search')switchView('searchView');
-    else if(action==='agenda')switchView('agendaView');
-    else if(action==='settings')$("settingsButton")?.click();
-  });
+  root.querySelectorAll('[data-home-action]').forEach(btn=>btn.onclick=()=>{if(btn.dataset.homeAction==='settings')$("settingsButton")?.click();});
 }
 
 function groupedAgenda(items){
@@ -1606,6 +1614,7 @@ function bindChecklistNavigation(){
   if(done)done.onclick=()=>{checklistMode="done";done.classList.add("active");todo?.classList.remove("active");renderChecklists();};
 }
 async function boot(){
+  await invalidateOldAppShell();
   bindChecklistNavigation();
   const hasCache=await loadCached();
   if(hasCache){

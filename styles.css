@@ -705,3 +705,17 @@ main{padding:12px 12px calc(132px + env(safe-area-inset-bottom))!important;max-w
 /* Small screen */
 @media(max-width:390px){
   #app>header .brand-studio{font-size:15px!important}.executive-welcome strong{font-size:17px!important}.executive-kpis{gap:5px!important}.executive-kpis button{padding:10px 7px 9px!important}.executive-kpis b{font-size:22px!important}.executive-kpis span{font-size:7px!important}.executive-shortcut-grid{gap:6px!important}.executive-shortcut-grid button{padding:10px 4px!important}.week-strip{gap:4px!important}.docket-card{grid-template-columns:31px 44px 1fr 14px!important;gap:6px!important}.companion-bottom-nav.five-nav button{font-size:8px!important}}
+
+/* V16.3 — functional alignment only; Executive Black visual language preserved */
+.tool-subcard{margin:12px 0;padding:14px;border:1px solid #26302c;border-radius:15px;background:#0f1412}
+.tool-subcard>strong{display:block;margin-bottom:9px;color:#efede7;font-size:13px}
+.tool-subcard label{display:block;margin:10px 0}
+.compact-result{margin-top:10px!important}
+.tfc-role-grid{margin-top:8px;padding-top:4px}
+.result-divider{height:1px;background:#28322e;margin:10px 0}
+.tax-result span,.tax-result strong,#splitResult span,#splitResult strong,#splitReserveResult span,#splitReserveResult strong,#splitHalfResult span,#splitHalfResult strong{display:block;margin:5px 0;line-height:1.4}
+.creset-status-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;margin-top:12px}
+.creset-status-row .tool-input{margin:0!important}
+#documentsToolResults{display:grid;gap:8px;margin-top:10px}
+#documentsToolResults .search-document{margin:0!important}
+@media(max-width:390px){.creset-status-row{grid-template-columns:1fr}.tool-subcard{padding:12px}}

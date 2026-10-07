@@ -1,0 +1,21 @@
+STUDIO COSTA COMPANION V16.3 — FUNCTIONAL SYNC / EXECUTIVE BLACK
+
+Questa versione parte integralmente dalla V16.2 Executive Black e ne conserva la grafica.
+
+FUNZIONI ALLINEATE ALLA BASELINE DESKTOP V14.18:
+- nuovo Riparto Studio/TFC in tre passaggi distinti: 50%, accantonamento 19%, riparto;
+- scelta di chi ha fatturato;
+- riparto in tre quote uguali oppure quote TFC con Titolare, Firmatario e Redattore selezionabili;
+- quota Studio TFC 30% evidenziata separatamente;
+- nuova utility Tributi locali: decadenza, riscossione, accertamento esecutivo e prescrizione;
+- hub Documenti offline con ricerca e filtro;
+- Creset con cambio stato DA LAVORARE / IN LAVORAZIONE / LAVORATA / COSTITUITA / ARCHIVIATA;
+- ricerca globale estesa a Checklist e Creset;
+- metadati/build Companion allineati alla V16.3; protocollo write-back invariato (formatVersion 3).
+
+NON MODIFICATO:
+- grafica Executive Black V16.2;
+- struttura dell'archivio .scmobile;
+- protocollo crittografico;
+- database desktop;
+- Companion/desktop PEC: il flusso PEC resta sul desktop per non alterare la baseline stabile V14.18.

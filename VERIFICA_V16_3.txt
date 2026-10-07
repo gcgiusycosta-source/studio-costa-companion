@@ -1,0 +1,18 @@
+VERIFICA TECNICA COMPANION V16.3
+
+- app.js: controllo sintattico Node superato.
+- Nuovo Riparto/TFC testato su importo fatturato € 2.000:
+  * accantonamento 19% = € 380;
+  * residuo = € 1.620;
+  * tre quote = € 540 / € 540 / € 540;
+  * se fattura Avv. Giusy Costa, totale in terzi = € 920 a Costa, € 540 a Fazio, € 540 a Tomassoni;
+  * TFC con Fazio titolare, Tomassoni firmatario, Costa redattore: Studio € 486; Fazio € 486; Tomassoni € 162; Costa € 866 comprensivi del 19%.
+- Calcolo 50% testato: € 5.000 -> € 2.500.
+- Tributi locali testato sul caso annualità 2018 con sospensione COVID/IFEL: termine risultante 25/03/2024.
+- Creset: generazione azione creset_set_status e riconciliazione per stati terminali/non terminali testate.
+- Documenti: ricerca/lista offline testata a livello logico.
+- Ricerca globale: Checklist e Creset testati a livello logico.
+- Tutti gli asset grafici della V16.2 hanno hash identico; il CSS V16.2 è conservato integralmente e sono state solo aggiunte le regole per i nuovi controlli.
+- Manifest e service worker allineati alla V16.3.
+
+Nota: il browser Chromium dell'ambiente di verifica blocca per policy amministrativa l'apertura di URL locali/file locali; non è stato quindi possibile eseguire un test end-to-end visuale nel browser reale. Sono stati eseguiti controlli sintattici e test diretti sulla logica JavaScript effettivamente inclusa nel pacchetto.

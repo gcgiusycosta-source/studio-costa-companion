@@ -75,7 +75,7 @@ function deviceId(){
   return value;
 }
 
-const COMPANION_BUILD="16.2";
+const COMPANION_BUILD="16.3";
 async function invalidateOldAppShell(){
   const key="studioCostaCompanionBuild";
   if(localStorage.getItem(key)===COMPANION_BUILD)return;
@@ -93,7 +93,7 @@ async function ensureOfflineShell(){
   if(!location.protocol.startsWith("http")) return false;
   if(!("serviceWorker" in navigator)) return false;
   const registration=await navigator.serviceWorker.register(
-    "service-worker.js?v=16.2",{scope:"./",updateViaCache:"none"}
+    "service-worker.js?v=16.3",{scope:"./",updateViaCache:"none"}
   );
   await registration.update().catch(()=>{});
   await navigator.serviceWorker.ready;
@@ -809,7 +809,7 @@ function exportCalendarIcs(){
   const rows=calendarItems().filter(e=>e.event_date>=today&&e.event_date<=limit&&["UDIENZA","APPUNTAMENTO","SCADENZA","CRESET"].includes(eventKind(e))).sort(eventSort);
   if(!rows.length){alert("Nessun evento da esportare nel calendario.");return}
   const now=new Date().toISOString().replace(/[-:]/g,"").replace(/\.\d{3}Z$/,"Z");
-  const chunks=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Studio Legale Costa//Companion V14//IT","CALSCALE:GREGORIAN","METHOD:PUBLISH","X-WR-CALNAME:Studio Legale Costa"];
+  const chunks=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//Studio Legale Costa//Companion V16.3//IT","CALSCALE:GREGORIAN","METHOD:PUBLISH","X-WR-CALNAME:Studio Legale Costa"];
   for(const e of rows){const kind=eventKind(e);const uidBase=e.uid||`${e.source_type||"EVENT"}-${e.source_id||e.id||uid()}`;const title=`Studio Costa · ${e.title||kind}`;chunks.push("BEGIN:VEVENT",`UID:${icsEscape(uidBase)}@studio-costa`,`DTSTAMP:${now}`);
     if(e.start_time){chunks.push(`DTSTART;TZID=Europe/Rome:${icsDateTime(e.event_date,e.start_time)}`);if(e.end_time)chunks.push(`DTEND;TZID=Europe/Rome:${icsDateTime(e.event_date,e.end_time)}`)}else chunks.push(`DTSTART;VALUE=DATE:${String(e.event_date).replaceAll("-","")}`);
     chunks.push(`SUMMARY:${icsEscape(title)}`);if(e.location)chunks.push(`LOCATION:${icsEscape(e.location)}`);const desc=[e.practice_name,e.practice_code,e.notes].filter(Boolean).join(" · ");if(desc)chunks.push(`DESCRIPTION:${icsEscape(desc)}`);
@@ -910,7 +910,7 @@ function pendingStateFor(itemId){
 async function queueMobileAction(action){
   const normalized={
     action_id:uid(),action_at:new Date().toISOString(),device_id:deviceId(),sync_status:"DA_ESPORTARE",
-    source_archive_id:snapshot?.archive_id||"",source_generated_at:snapshot?.generated_at||"",companion_version:"13",
+    source_archive_id:snapshot?.archive_id||"",source_generated_at:snapshot?.generated_at||"",companion_version:COMPANION_BUILD,
     ...action
   };
   if(!normalized.target_id)normalized.target_id=normalized.mobile_uid||normalized.checklist_item_id||normalized.hearing_checklist_item_id||normalized.position_id||normalized.hearing_id||normalized.task_id||"";
@@ -1006,20 +1006,24 @@ async function setHearingChecklistItemStatus(item,newStatus){
   await queueMobileAction({action_type:"hearing_checklist_status",hearing_checklist_item_id:item.id,target_id:item.id,hearing_id:item.hearing_id,practice_id:item.practice_id,previous_status:previous,new_status:newStatus,base_updated_at:item.updated_at||"",completed_at:newStatus==="COMPLETATA"?new Date().toISOString():null});
   renderPlugins();
 }
-function cresetWorkedLocally(id){return !!latestAction("creset_mark_worked",id)}
-function cresetConstitutedLocally(id){return !!latestAction("creset_mark_constituted",id)}
-async function markCresetWorked(item){
-  if(cresetWorkedLocally(item.id))return;
-  if(!confirm(`Segnare come LAVORATA la posizione ${item.taxpayer||item.rg_number||item.id}? La modifica sarà applicata al gestionale dopo l'importazione del file risposte.`))return;
-  await queueMobileAction({action_type:"creset_mark_worked",position_id:item.id,target_id:item.id,new_status:"LAVORATA",base_updated_at:item.updated_at||""});
+function latestCresetStatusAction(id){
+  const actions=pendingMobileActions.filter(a=>["creset_mark_worked","creset_mark_constituted","creset_set_status"].includes(a.action_type)&&String(a.position_id??a.target_id)===String(id)).sort((a,b)=>String(a.action_at||"").localeCompare(String(b.action_at||"")));
+  return actions.length?actions[actions.length-1]:null;
+}
+function effectiveCresetStatus(item){
+  return String(latestCresetStatusAction(item.id)?.new_status||item.status||"DA LAVORARE").toUpperCase().replace(/_/g," ");
+}
+async function setCresetStatus(item,status){
+  const desired=String(status||"").toUpperCase().replace(/_/g," ");
+  const allowed=new Set(["DA LAVORARE","IN LAVORAZIONE","LAVORATA","COSTITUITA","ARCHIVIATA"]);
+  if(!allowed.has(desired))return alert("Stato Creset non valido.");
+  const terminal=new Set(["LAVORATA","COSTITUITA","ARCHIVIATA"]);
+  if(terminal.has(desired)&&!confirm(`Impostare ${item.taxpayer||item.rg_number||item.id} come ${desired}? La modifica sarà applicata al desktop dopo l'importazione del file risposte.`))return;
+  await queueMobileAction({action_type:"creset_set_status",position_id:item.id,target_id:item.id,new_status:desired,base_updated_at:item.updated_at||""});
   renderPlugins();
 }
-async function markCresetConstituted(item){
-  if(cresetConstitutedLocally(item.id))return;
-  if(!confirm(`Segnare come COSTITUITA la posizione ${item.taxpayer||item.rg_number||item.id}? La posizione uscirà dall'elenco attivo dopo la sincronizzazione.`))return;
-  await queueMobileAction({action_type:"creset_mark_constituted",position_id:item.id,target_id:item.id,new_status:"COSTITUITA",base_updated_at:item.updated_at||""});
-  renderPlugins();
-}
+async function markCresetWorked(item){return setCresetStatus(item,"LAVORATA")}
+async function markCresetConstituted(item){return setCresetStatus(item,"COSTITUITA")}
 function pluginChip(p){return `<span class="plugin-chip">${escapeHtml(p.icon||"◇")} ${escapeHtml(p.label||p.name||p.key||"Plugin")}</span>`}
 function hearingEventById(id){return (snapshot?.events||[]).find(e=>e.source_type==="HEARING"&&String(e.source_id)===String(id))}
 function diagnosticBadge(d){
@@ -1125,10 +1129,13 @@ function renderHearingTool(){
 function renderCresetTool(){
   const root=$("cresetTool"); if(!root||!snapshot)return;
   const all=snapshot.creset||[];
-  const items=all.filter(item=>!cresetWorkedLocally(item.id)&&!cresetConstitutedLocally(item.id));
-  root.innerHTML=items.length?items.map(item=>`<article class="creset-mobile-card"><div class="readiness-row"><h3>${escapeHtml(item.taxpayer||"Posizione Creset")}</h3><span class="readiness-badge">${escapeHtml(item.status||"DA LAVORARE")}</span></div><div class="creset-meta">${escapeHtml([item.municipality,item.rg_number&&`RG ${item.rg_number}`,item.hearing_date&&`Udienza ${fmtDate(item.hearing_date)}`,item.participation_mode&&`Partecipazione: ${item.participation_mode}`,item.preparation_due_date&&`Memoria ${fmtDate(item.preparation_due_date)}`,item.filing_due_date&&`Deposito ${fmtDate(item.filing_due_date)}`].filter(Boolean).join(" · "))}</div>${item.notes?`<p>${escapeHtml(item.notes)}</p>`:""}<div class="mobile-action-row"><button data-creset-worked="${escapeHtml(item.id)}">Segna Lavorata</button><button class="secondary-button" data-creset-constituted="${escapeHtml(item.id)}">Segna Costituita</button></div></article>`).join(""):'<div class="empty">Nessuna posizione Creset da lavorare.</div>';
-  root.querySelectorAll("[data-creset-worked]").forEach(btn=>btn.onclick=()=>{const item=all.find(x=>String(x.id)===String(btn.dataset.cresetWorked));if(item)markCresetWorked(item)});
-  root.querySelectorAll("[data-creset-constituted]").forEach(btn=>btn.onclick=()=>{const item=all.find(x=>String(x.id)===String(btn.dataset.cresetConstituted));if(item)markCresetConstituted(item)});
+  const terminal=new Set(["LAVORATA","COSTITUITA","ARCHIVIATA","COMPLETATA","CHIUSA"]);
+  const items=all.filter(item=>!terminal.has(effectiveCresetStatus(item)));
+  root.innerHTML=`<div class="tool-card"><div class="section-head stacked compact-head"><div><h3>Creset</h3><p class="muted">Gestione operativa delle posizioni sincronizzate. Le modifiche vengono applicate al desktop solo dopo l'importazione del file risposte.</p></div></div>${items.length?items.map(item=>{
+    const current=effectiveCresetStatus(item);
+    return `<article class="creset-mobile-card"><div class="readiness-row"><h3>${escapeHtml(item.taxpayer||"Posizione Creset")}</h3><span class="readiness-badge">${escapeHtml(current)}</span></div><div class="creset-meta">${escapeHtml([item.municipality,item.rg_number&&`RG ${item.rg_number}`,item.verification_due_date&&`Verifica ${fmtDate(item.verification_due_date)}`,item.preparation_due_date&&`Preparazione ${fmtDate(item.preparation_due_date)}`,item.filing_due_date&&`Deposito ${fmtDate(item.filing_due_date)}`,item.hearing_date&&`Udienza ${fmtDate(item.hearing_date)}${item.hearing_time?` ${item.hearing_time}`:""}`,item.participation_mode&&`Partecipazione: ${item.participation_mode}`].filter(Boolean).join(" · "))}</div>${item.criticality?`<p><strong>Criticità:</strong> ${escapeHtml(item.criticality)}</p>`:""}${item.notes?`<p>${escapeHtml(item.notes)}</p>`:""}<div class="creset-status-row"><select class="tool-input" data-creset-status="${escapeHtml(item.id)}"><option ${current==="DA LAVORARE"?"selected":""}>DA LAVORARE</option><option ${current==="IN LAVORAZIONE"?"selected":""}>IN LAVORAZIONE</option><option ${current==="LAVORATA"?"selected":""}>LAVORATA</option><option ${current==="COSTITUITA"?"selected":""}>COSTITUITA</option><option ${current==="ARCHIVIATA"?"selected":""}>ARCHIVIATA</option></select><button data-creset-save="${escapeHtml(item.id)}">Aggiorna stato</button></div></article>`;
+  }).join(""):'<div class="empty">Nessuna posizione Creset attiva.</div>'}</div>`;
+  root.querySelectorAll("[data-creset-save]").forEach(btn=>btn.onclick=()=>{const item=all.find(x=>String(x.id)===String(btn.dataset.cresetSave));const card=btn.closest(".creset-mobile-card");const select=card?.querySelector("[data-creset-status]");if(item&&select)setCresetStatus(item,select.value)});
 }
 
 function renderLegalResults(){
@@ -1150,47 +1157,103 @@ function calculateQuickTerm(){
   const start=$("termStartDate").value; const days=Math.max(0,Number($("termDays").value||0)); const direction=Number($("termDirection").value||1); if(!start)return alert("Indicare la data di partenza.");
   const d=new Date(`${start}T12:00:00`); d.setDate(d.getDate()+direction*days); $("termResult").textContent=`${fmtDate(d.toISOString().slice(0,10))} · calcolo di calendario non certificato`;
 }
-function parseEuro(value){const raw=String(value||"").trim().replace(/\s/g,"");const normalized=raw.includes(",")?raw.replace(/\./g,"").replace(",","."):raw;return Number(normalized)||0}
+function parseEuro(value){const raw=String(value||"").trim().replace(/\s/g,"").replace(/€/g,"");const normalized=raw.includes(",")?raw.replace(/\./g,"").replace(",","."):raw;const n=Number(normalized);return Number.isFinite(n)?n:0}
 function euro(value){return new Intl.NumberFormat("it-IT",{style:"currency",currency:"EUR"}).format(Number(value||0))}
-function calculateMobileSplit(){
-  const total=parseEuro($("splitTotal")?.value); if(total<=0)return alert("Inserire un importo valido.");
-  const half=!!$("splitHalf")?.checked; const mode=$("splitMode")?.value||"thirds";
-  const base=half?total/2:total; const outside=total-base; const reserve=base*.19; const net=base-reserve;
-  let lines=[`Importo totale: ${euro(total)}`,`Base di riparto: ${euro(base)}`];
-  if(half)lines.push(`Quota residua non ripartita (50%): ${euro(outside)}`);
-  lines.push(`Accantonamento 19%: ${euro(reserve)}`,`Netto da ripartire: ${euro(net)}`);
-  if(mode==="tfc"){
-    lines.push(`Quota 30%: ${euro(net*.30)}`,`Quota 30%: ${euro(net*.30)}`,`Quota 10%: ${euro(net*.10)}`,`Quota 30%: ${euro(net*.30)}`);
-  }else{
-    lines.push(`Quota 1/3: ${euro(net/3)}`,`Quota 1/3: ${euro(net/3)}`,`Quota 1/3: ${euro(net/3)}`);
-  }
-  $("splitResult").innerHTML=lines.map((x,i)=>i===3||(!half&&i===2)?`<strong>${escapeHtml(x)}</strong>`:`<span>${escapeHtml(x)}</span>`).join("");
+function euroFromCents(cents){return euro((Number(cents)||0)/100)}
+function centsFromInput(value){return Math.round(parseEuro(value)*100)}
+const TFC_LAWYERS=["Avv. Giusy Costa","Avv. Maria Fazio","Avv. Maria Elena Tomassoni"];
+function fillTfcLawyerSelects(){
+  ["splitBilledBy","splitHolder","splitSigner","splitDrafter"].forEach(id=>{const el=$(id);if(!el)return;const current=el.value;el.innerHTML=TFC_LAWYERS.map(name=>`<option>${escapeHtml(name)}</option>`).join("");if(current&&TFC_LAWYERS.includes(current))el.value=current});
 }
+function calculateHalfInvoiceMobile(){
+  const total=centsFromInput($("splitHalfTotal")?.value);if(total<=0)return alert("Inserire un importo totale valido.");
+  const half=Math.round(total*50/100);$("splitHalfResult").innerHTML=`<span>Importo totale: ${euroFromCents(total)}</span><strong>50% da fatturare: ${euroFromCents(half)}</strong>`;
+}
+function reserveDataMobile(){
+  const billed=centsFromInput($("splitBilledAmount")?.value);if(billed<=0)throw new Error("Inserire l'importo effettivamente fatturato.");
+  const reserve=Math.round(billed*19/100);return {billed,reserve,net:billed-reserve,billedBy:$("splitBilledBy")?.value||TFC_LAWYERS[0]};
+}
+function calculateReserveMobile(){
+  try{const x=reserveDataMobile();$("splitReserveResult").innerHTML=`<span>Importo fatturato: ${euroFromCents(x.billed)}</span><span>19% accantonato a ${escapeHtml(x.billedBy)}: ${euroFromCents(x.reserve)}</span><strong>Residuo da ripartire: ${euroFromCents(x.net)}</strong>`}catch(e){alert(e.message)}
+}
+function calculateMobileSplit(){
+  let x;try{x=reserveDataMobile()}catch(e){return alert(e.message)}
+  const mode=$("splitMode")?.value||"thirds";const allocations=[];
+  if(mode==="thirds"){
+    const q1=Math.round(x.net/3),q2=Math.round(x.net/3),q3=x.net-q1-q2;
+    TFC_LAWYERS.forEach((name,i)=>allocations.push({name,pct:i<2?"33,333333":"33,333334",value:[q1,q2,q3][i],role:"Quota uguale"}));
+  }else{
+    const holder=$("splitHolder")?.value,signer=$("splitSigner")?.value,drafter=$("splitDrafter")?.value;
+    if(!holder||!signer||!drafter)return alert("Selezionare titolare, firmatario e redattore.");
+    const roleRows=[{name:"Studio TFC",pct:30,role:"Studio"},{name:holder,pct:30,role:"Titolare della pratica"},{name:signer,pct:10,role:"Firmatario"},{name:drafter,pct:30,role:"Redattore dell'atto"}];
+    const order=[];const agg={};const roles={};
+    roleRows.forEach(r=>{if(!(r.name in agg)){agg[r.name]=0;roles[r.name]=[];order.push(r.name)}agg[r.name]+=r.pct;roles[r.name].push(r.role)});
+    let running=0;order.forEach((name,i)=>{const value=i<order.length-1?Math.round(x.net*agg[name]/100):x.net-running;running+=value;allocations.push({name,pct:agg[name],value,role:roles[name].join(" + ")})});
+  }
+  const totals={};allocations.forEach(a=>totals[a.name]=(totals[a.name]||0)+a.value);totals[x.billedBy]=(totals[x.billedBy]||0)+x.reserve;
+  const allocationLines=allocations.map(a=>`<span>${escapeHtml(a.name)} — ${String(a.pct).replace(".",",")}%${a.role?` (${escapeHtml(a.role)})`:""}: ${euroFromCents(a.value)}${a.name==="Studio TFC"?' · resta allo Studio':''}</span>`).join("");
+  const totalLines=Object.entries(totals).map(([name,value])=>`<strong>${escapeHtml(name)}: ${euroFromCents(value)}${name===x.billedBy?' · comprende il 19% accantonato':''}${name==="Studio TFC"?' · quota Studio':''}</strong>`).join("");
+  $("splitResult").innerHTML=`<span>Fatturato: ${euroFromCents(x.billed)}</span><span>Accantonamento 19% → ${escapeHtml(x.billedBy)}: ${euroFromCents(x.reserve)}</span><span>Residuo da ripartire: ${euroFromCents(x.net)}</span><div class="result-divider"></div>${allocationLines}<div class="result-divider"></div>${totalLines}`;
+}
+function updateSplitMode(){const tfc=$("splitMode")?.value==="tfc";$("splitTfcRoles")?.classList.toggle("hidden",!tfc)}
+
+function renderDocumentsTool(){
+  const root=$("documentsToolResults");if(!root||!snapshot)return;
+  if(privacySettings().hideDocuments){root.innerHTML='<div class="empty">La visualizzazione dei documenti è disattivata nelle impostazioni privacy.</div>';return}
+  const docs=snapshot.documents||[];const filter=$("documentCategoryFilter");
+  if(filter){const selected=filter.value||"";const cats=[...new Set(docs.map(d=>d.category||d.document_type).filter(Boolean))].sort((a,b)=>String(a).localeCompare(String(b),"it"));filter.innerHTML='<option value="">Tutte le categorie</option>'+cats.map(c=>`<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join("");if(cats.includes(selected))filter.value=selected}
+  const q=normalize($("documentSearch")?.value||"");const cat=filter?.value||"";
+  const rows=docs.filter(d=>{const p=practiceById(d.practice_id);const blob=normalize([d.filename,d.category,d.document_type,p?.assistito,p?.numero_principale].filter(Boolean).join(" "));return (!q||blob.includes(q))&&(!cat||(d.category||d.document_type)===cat)}).slice(0,120);
+  root.innerHTML=rows.length?rows.map(d=>{const p=practiceById(d.practice_id);return `<article class="search-document"><strong>${escapeHtml(d.filename||"Documento")}</strong><span>${escapeHtml([p?.assistito,d.category,d.document_type,d.size_bytes?`${Math.max(1,Math.round(d.size_bytes/1024))} KB`:""].filter(Boolean).join(" · "))}</span><div class="mobile-action-row"><button data-open-doc="${escapeHtml(d.id)}">Apri</button>${p?`<button class="secondary-button" data-practice="${escapeHtml(p.id)}">Pratica</button>`:""}</div></article>`}).join(""):'<div class="empty">Nessun documento corrispondente.</div>';
+  root.querySelectorAll("[data-open-doc]").forEach(btn=>btn.onclick=()=>openDocument(btn.dataset.openDoc));bindPracticeLinks(root);
+}
+
+function isoDateFromParts(y,m,d){const dt=new Date(Date.UTC(y,m-1,d));return dt.toISOString().slice(0,10)}
+function addDaysIso(iso,days){const d=new Date(`${iso}T12:00:00Z`);d.setUTCDate(d.getUTCDate()+Number(days||0));return d.toISOString().slice(0,10)}
+function addYearsIso(iso,years){const d=new Date(`${iso}T12:00:00Z`);const month=d.getUTCMonth(),day=d.getUTCDate();d.setUTCFullYear(d.getUTCFullYear()+Number(years||0));if(d.getUTCMonth()!==month)d.setUTCDate(0);return d.toISOString().slice(0,10)}
+function calculateLocalTaxesMobile(){
+  const y=Number($("taxYear")?.value);if(!Number.isInteger(y)||y<1990||y>2100)return alert("Indicare un'annualità valida.");
+  const declaration=$("taxViolation")?.value==="DECLARATION";let ref=y;if(declaration){const dy=Number($("taxDeclarationYear")?.value||y+1);if(!Number.isInteger(dy))return alert("Indicare l'anno in cui la dichiarazione era dovuta.");ref=dy}
+  const ordinary=isoDateFromParts(ref+5,12,31);const covid=!!$("taxCovid")?.checked;const covidApplicable=covid&&ref>=2015&&ref<=2019&&ordinary>="2020-03-08";const finalDeadline=covidApplicable?addDaysIso(ordinary,85):ordinary;
+  const lines=[];lines.push(`<strong>${escapeHtml($("taxType")?.value||"Tributo locale")} — annualità ${y}</strong>`);lines.push(`<span>Base decadenza: ${declaration?`anno dichiarazione dovuta ${ref}`:`anno del versamento ${ref}`}</span>`);lines.push(`<span>Termine ordinario ex art. 1, c. 161, L. 296/2006: ${fmtDate(ordinary)}</span>`);lines.push(`<strong>Termine risultante: ${fmtDate(finalDeadline)}${covidApplicable?' · +85 giorni COVID/IFEL':covid?' · sospensione COVID non applicabile automaticamente':''}</strong>`);
+  const regime=$("taxRegime")?.value||"EXECUTIVE";const definitive=$("taxDefinitiveDate")?.value;const payment=$("taxPaymentDeadline")?.value;const notice=$("taxNoticeDate")?.value;
+  lines.push('<div class="result-divider"></div><strong>Riscossione / esecutività</strong>');
+  if(regime==="PREVIOUS"){
+    if(definitive){let ordinaryTitle=isoDateFromParts(Number(definitive.slice(0,4))+3,12,31),title=ordinaryTitle,note="";const dy=Number(definitive.slice(0,4));if(covid&&[2017,2018].includes(dy)){title="2023-12-31";note=" · proroga COVID/IFEL"}else if(covid&&dy===2019){title="2024-06-25";note=" · proroga COVID/IFEL"}lines.push(`<span>Accertamento definitivo: ${fmtDate(definitive)}</span><span>Termine ordinario titolo coattivo: ${fmtDate(ordinaryTitle)}</span><strong>Termine titolo coattivo: ${fmtDate(title)}${note}</strong>`)}else lines.push('<span>Per il titolo coattivo separato indicare la data di definitività dell’accertamento.</span>');
+  }else if(regime==="EXECUTIVE"){
+    lines.push('<span>Accertamento esecutivo locale ex art. 1, c. 792, L. 160/2019: il medesimo avviso può costituire titolo esecutivo senza successiva cartella/ingiunzione.</span>');if(notice)lines.push(`<span>Notifica indicata: ${fmtDate(notice)}</span>`);if(payment){const entrusted=addDaysIso(payment,30),reference=addDaysIso(payment,60);lines.push(`<span>Scadenza ricorso/pagamento: ${fmtDate(payment)}</span><span>Affidamento in carico decorsi 30 giorni: ${fmtDate(entrusted)}</span><span>Riferimento 60 giorni per la riscossione: ${fmtDate(reference)}</span>`);const cm=$("taxCollectorMode")?.value;if(cm==="SAME"||cm==="OTHER"){const days=cm==="SAME"?120:180;lines.push(`<strong>Sospensione teorica esecuzione dall'affidamento: ${days} giorni → ${fmtDate(addDaysIso(entrusted,days))}</strong>`)}}else lines.push('<span>Per la timeline operativa indicare la scadenza del termine di ricorso/pagamento già verificata.</span>');
+  }else lines.push('<span>Regime da verificare: nessun termine di riscossione viene applicato automaticamente.</span>');
+  lines.push('<div class="result-divider"></div><strong>Prescrizione</strong>');const last=$("taxLastActDate")?.value;if(last){const years=$("taxJudgment")?.checked?10:5;lines.push(`<span>Ultimo atto interruttivo: ${fmtDate(last)}</span><strong>Termine teorico ${years} anni: ${fmtDate(addYearsIso(last,years))}</strong>`)}else lines.push('<span>Indicare l’ultimo atto interruttivo validamente notificato per ottenere il calcolo.</span>');
+  lines.push('<div class="result-divider"></div><span>Supporto generale: verificare sempre disciplina speciale, regolamento del tributo, notificazioni, sospensioni, impugnazioni e atti interruttivi del caso concreto.</span>');$("taxResult").innerHTML=lines.join("");
+}
+function syncTaxFields(){const decl=$("taxViolation")?.value==="DECLARATION";$("taxDeclarationYearRow")?.classList.toggle("hidden",!decl);const act=$("taxActType")?.value;if(act==="EXECUTIVE"&&$("taxRegime"))$("taxRegime").value="EXECUTIVE";else if(["ORDINARY","TITLE"].includes(act)&&$("taxRegime"))$("taxRegime").value="PREVIOUS"}
 function renderPlugins(){
   if(!snapshot)return;
   const plugins=snapshot.plugins||[];
   const status=$("pluginStatus"); if(status)status.innerHTML=plugins.map(pluginChip).join("")||'<span class="plugin-chip">Core Companion</span>';
   const availableKeys=new Set(plugins.map(p=>String(p.key||"")));
   const oldArchive=plugins.length===0;
-  const toolPlugin={creset:"creset",terms:"legal_tools",codes:"local_norms"};
-  const coreTools=new Set(["split","checklist"]);
+  const toolPlugin={creset:"creset",terms:"legal_tools",codes:"local_norms",taxes:"legal_tools"};
+  const coreTools=new Set(["split","checklist","documents","taxes"]);
   const buttons=[...document.querySelectorAll("[data-tool]")];
   buttons.forEach(b=>{const required=toolPlugin[b.dataset.tool];const enabled=coreTools.has(b.dataset.tool)||oldArchive||!required||availableKeys.has(required);b.classList.toggle("hidden",!enabled)});
   if(!buttons.some(b=>b.dataset.tool===activeTool&&!b.classList.contains("hidden"))){const first=buttons.find(b=>!b.classList.contains("hidden"));if(first)activeTool=first.dataset.tool}
   document.querySelectorAll(".plugin-tool").forEach(el=>el.classList.add("hidden"));
-  const map={creset:"cresetTool",terms:"termsTool",codes:"codesTool",split:"splitTool",checklist:"checklistTool"}; if(map[activeTool]&&$(map[activeTool]))$(map[activeTool]).classList.remove("hidden");
+  const map={creset:"cresetTool",terms:"termsTool",taxes:"taxesTool",codes:"codesTool",split:"splitTool",documents:"documentsTool",checklist:"checklistTool"}; if(map[activeTool]&&$(map[activeTool]))$(map[activeTool]).classList.remove("hidden");
   buttons.forEach(b=>b.classList.toggle("active",b.dataset.tool===activeTool));
   const pending=pendingMobileActions.filter(a=>a.sync_status!=="IMPORTATA_DAL_GESTIONALE").length;
   [$("exportPluginActions"),$("exportMobileActions")].filter(Boolean).forEach(b=>{b.textContent=pending?`Esporta modifiche (${pending}) per il gestionale`:"Esporta modifiche per il gestionale"});
-  renderHearingTool(); renderCresetTool(); renderLegalResults();
+  renderHearingTool(); renderCresetTool(); renderLegalResults(); renderDocumentsTool(); fillTfcLawyerSelects(); updateSplitMode();
   if($("termStartDate")&&!$("termStartDate").value)$("termStartDate").value=new Date().toISOString().slice(0,10);
+  if($("taxYear")&&!$("taxYear").value)$("taxYear").value=String(new Date().getFullYear()-1);
+  syncTaxFields();
 }
 async function exportMobileActions(){
   const actions=pendingMobileActions.filter(a=>a.sync_status!=="IMPORTATA_DAL_GESTIONALE");
   if(!actions.length){alert("Non ci sono modifiche da esportare.");return}
   const password=prompt("Password del file modifiche (almeno 8 caratteri)");
   if(!password||password.length<8){if(password)alert("La password deve avere almeno 8 caratteri.");return}
-  const payload={formatVersion:3,companionVersion:"14.0",sourceArchiveId:snapshot?.archive_id||"",sourceGeneratedAt:snapshot?.generated_at||"",deviceId:deviceId(),createdAt:new Date().toISOString(),actions:actions.map(a=>({actionId:a.action_id,actionType:a.action_type,actionAt:a.action_at,deviceId:a.device_id,...a}))};
+  const payload={formatVersion:3,companionVersion:COMPANION_BUILD,sourceArchiveId:snapshot?.archive_id||"",sourceGeneratedAt:snapshot?.generated_at||"",deviceId:deviceId(),createdAt:new Date().toISOString(),actions:actions.map(a=>({actionId:a.action_id,actionType:a.action_type,actionAt:a.action_at,deviceId:a.device_id,...a}))};
   const envelope=await encryptEnvelope(payload,password,"SCMR1","STUDIO-COSTA-COMPANION-SCMR1");
   downloadJson(envelope,`StudioCostaMobile_Risposte_${new Date().toISOString().slice(0,16).replace(/[:T]/g,"-")}.scmr`);
   for(const a of actions){a.sync_status="ESPORTATA";await storePut("pending_mobile_actions",a)}
@@ -1324,7 +1387,7 @@ async function reconcilePendingActions(candidate){
   const taskMobile=new Set((candidate.tasks||[]).map(i=>String(i.mobile_uid||"")).filter(Boolean));
   const apptMobile=new Set((candidate.events||[]).filter(e=>e.source_type==="APPOINTMENT").map(e=>String(e.mobile_uid||"")).filter(Boolean));
   const hearingMobile=new Set((candidate.events||[]).filter(e=>e.source_type==="HEARING").map(e=>String(e.mobile_uid||"")).filter(Boolean));
-  const cresetIds=new Set((candidate.creset||[]).map(i=>String(i.id)));
+  const cresetMap=new Map((candidate.creset||[]).map(i=>[String(i.id),String(i.status||"").toUpperCase().replace(/_/g," ")]));
   const hearings=new Map((candidate.events||[]).filter(e=>e.source_type==="HEARING").map(e=>[String(e.source_id),e]));
   const kept=[];
   const confirmedLocalIds=new Set();
@@ -1336,7 +1399,7 @@ async function reconcilePendingActions(candidate){
     else if(action.action_type==="upsert_task")applied=taskMobile.has(String(action.mobile_uid||action.target_id));
     else if(action.action_type==="upsert_appointment")applied=apptMobile.has(String(action.mobile_uid||action.target_id));
     else if(action.action_type==="upsert_hearing")applied=hearingMobile.has(String(action.mobile_uid||action.target_id));
-    else if(["creset_mark_worked","creset_mark_constituted"].includes(action.action_type))applied=!cresetIds.has(String(action.position_id||action.target_id));
+    else if(["creset_mark_worked","creset_mark_constituted","creset_set_status"].includes(action.action_type)){const id=String(action.position_id||action.target_id);const desired=String(action.new_status||"").toUpperCase().replace(/_/g," ");const terminal=["LAVORATA","COSTITUITA","ARCHIVIATA"].includes(desired);applied=terminal?!cresetMap.has(id):cresetMap.get(id)===desired;}
     else if(action.action_type==="hearing_outcome"){
       const h=hearings.get(String(action.hearing_id||action.target_id));
       applied=!!h&&(!action.outcome||normalize(h.status)===normalize(action.outcome)||normalize(h.outcome_category)===normalize(action.outcome_category));
@@ -1432,18 +1495,22 @@ async function saveHearingOutcome(){
 function renderGlobalSearch(){
   const root=$("globalSearchResults");if(!root||!snapshot)return;
   const q=normalize($("globalSearch")?.value||"");
-  if(!q){root.innerHTML='<div class="empty">Cerca un assistito, un numero di ruolo, un’udienza, un’attività o un documento.</div>';return}
+  if(!q){root.innerHTML='<div class="empty">Cerca un assistito, un numero di ruolo, un’udienza, un documento, una checklist o una posizione Creset.</div>';return}
   const practices=(snapshot.practices||[]).filter(p=>searchBlob(p).includes(q)).slice(0,20);
   const events=calendarItems().filter(e=>normalize([e.title,e.practice_name,e.practice_code,e.location,e.notes,fmtDate(e.event_date)].filter(Boolean).join(" ")).includes(q)).slice(0,20);
-  const documents=(snapshot.documents||[]).filter(d=>normalize([d.filename,d.category,d.document_type].filter(Boolean).join(" ")).includes(q)).slice(0,20);
+  const documents=(snapshot.documents||[]).filter(d=>{const p=practiceById(d.practice_id);return normalize([d.filename,d.category,d.document_type,p?.assistito].filter(Boolean).join(" ")).includes(q)}).slice(0,20);
   const legal=(snapshot.legalLibrary||[]).filter(r=>normalize([r.title,r.item_type,r.matter,r.keywords,r.code_name,r.article_number,r.heading,r.summary,r.text_body,r.notes,r.source_name,r.authority,r.decision_number].filter(Boolean).join(" ")).includes(q)).slice(0,20);
+  const checklists=(snapshot.checklists||[]).filter(c=>{const items=(snapshot.checklistItems||[]).filter(i=>String(i.checklist_id)===String(c.checklist_id));return normalize([c.title,c.practice_name,c.priority,...items.map(i=>i.title)].filter(Boolean).join(" ")).includes(q)}).slice(0,20);
+  const creset=(snapshot.creset||[]).filter(c=>normalize([c.taxpayer,c.municipality,c.rg_number,c.status,c.notes,c.participation_mode].filter(Boolean).join(" ")).includes(q)).slice(0,20);
   root.innerHTML=`
     ${practices.length?`<section class="search-group"><h3>Pratiche <span>${practices.length}</span></h3>${practices.map(practiceCard).join("")}</section>`:""}
     ${events.length?`<section class="search-group"><h3>Agenda <span>${events.length}</span></h3>${events.map(eventCard).join("")}</section>`:""}
-    ${documents.length?`<section class="search-group"><h3>Documenti <span>${documents.length}</span></h3>${documents.map(d=>{const p=practiceById(d.practice_id);return `<article class="search-document"><strong>${escapeHtml(d.filename||"Documento")}</strong><span>${escapeHtml([p?.assistito,d.category,d.document_type].filter(Boolean).join(" · "))}</span>${p?`<button data-practice="${escapeHtml(p.id)}">Apri pratica</button>`:""}</article>`}).join("")}</section>`:""}
+    ${documents.length?`<section class="search-group"><h3>Documenti <span>${documents.length}</span></h3>${documents.map(d=>{const p=practiceById(d.practice_id);return `<article class="search-document"><strong>${escapeHtml(d.filename||"Documento")}</strong><span>${escapeHtml([p?.assistito,d.category,d.document_type].filter(Boolean).join(" · "))}</span><div class="mobile-action-row"><button data-open-doc="${escapeHtml(d.id)}">Apri</button>${p?`<button class="secondary-button" data-practice="${escapeHtml(p.id)}">Pratica</button>`:""}</div></article>`}).join("")}</section>`:""}
+    ${checklists.length?`<section class="search-group"><h3>Checklist <span>${checklists.length}</span></h3>${checklists.map(c=>`<article class="search-document"><strong>${escapeHtml(c.title||"Checklist")}</strong><span>${escapeHtml([c.date,c.priority,c.practice_name].filter(Boolean).join(" · "))}</span><button data-open-checklists>Apri checklist</button></article>`).join("")}</section>`:""}
+    ${creset.length?`<section class="search-group"><h3>Creset <span>${creset.length}</span></h3>${creset.map(c=>`<article class="search-document"><strong>${escapeHtml(c.taxpayer||"Posizione Creset")}</strong><span>${escapeHtml([c.municipality,c.rg_number&&`RG ${c.rg_number}`,effectiveCresetStatus(c)].filter(Boolean).join(" · "))}</span><button data-open-creset>Apri Creset</button></article>`).join("")}</section>`:""}
     ${legal.length?`<section class="search-group"><h3>Banca giuridica <span>${legal.length}</span></h3>${legal.map(r=>`<article class="search-document"><strong>${escapeHtml(r.title||[r.code_name,r.article_number,r.heading].filter(Boolean).join(" · ")||"Voce giuridica")}</strong><span>${escapeHtml([r.item_type,r.matter,r.authority||r.source_name].filter(Boolean).join(" · "))}</span></article>`).join("")}</section>`:""}
-    ${!practices.length&&!events.length&&!documents.length&&!legal.length?'<div class="empty">Nessun risultato.</div>':""}`;
-  bindPracticeLinks(root);
+    ${!practices.length&&!events.length&&!documents.length&&!checklists.length&&!creset.length&&!legal.length?'<div class="empty">Nessun risultato.</div>':""}`;
+  bindPracticeLinks(root);root.querySelectorAll("[data-open-doc]").forEach(btn=>btn.onclick=()=>openDocument(btn.dataset.openDoc));root.querySelectorAll("[data-open-checklists]").forEach(btn=>btn.onclick=()=>switchView("checklistsView"));root.querySelectorAll("[data-open-creset]").forEach(btn=>btn.onclick=()=>{activeTool="creset";switchView("toolsView");renderPlugins()});
 }
 
 function detailField(label,value){
@@ -1646,7 +1713,15 @@ document.querySelectorAll("[data-tool]").forEach(button=>{button.onclick=()=>{ac
 $("legalSearch")?.addEventListener("input",renderLegalResults);
 $("legalTypeFilter")?.addEventListener("change",renderLegalResults);
 if($("calculateQuickTerm"))$("calculateQuickTerm").onclick=calculateQuickTerm;
+if($("calculateHalfInvoice"))$("calculateHalfInvoice").onclick=calculateHalfInvoiceMobile;
+if($("calculateReserve"))$("calculateReserve").onclick=calculateReserveMobile;
 if($("calculateSplit"))$("calculateSplit").onclick=calculateMobileSplit;
+$("splitMode")?.addEventListener("change",updateSplitMode);
+if($("calculateLocalTaxes"))$("calculateLocalTaxes").onclick=calculateLocalTaxesMobile;
+$("taxViolation")?.addEventListener("change",syncTaxFields);
+$("taxActType")?.addEventListener("change",syncTaxFields);
+$("documentSearch")?.addEventListener("input",renderDocumentsTool);
+$("documentCategoryFilter")?.addEventListener("change",renderDocumentsTool);
 if($("openChecklistsFromTools"))$("openChecklistsFromTools").onclick=()=>switchView("checklistsView");
 $("checklistComposerModal")?.addEventListener("click",event=>{if(event.target.id==="checklistComposerModal")closeChecklistComposer()});
 document.addEventListener("keydown",event=>{if(event.key==="Escape")closeChecklistComposer()});

@@ -7,10 +7,10 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Studio Costa">
-  <link rel="manifest" href="manifest.json?v=16.2">
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=16.2">
-  <link rel="stylesheet" href="styles.css?v=16.2">
-  <title>Studio Costa Companion V16.2</title>
+  <link rel="manifest" href="manifest.json?v=16.3">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=16.3">
+  <link rel="stylesheet" href="styles.css?v=16.3">
+  <title>Studio Costa Companion V16.3</title>
 </head>
 <body>
   <section id="pairScreen" class="screen hidden">
@@ -150,8 +150,10 @@
         </div>
         <div class="tool-tabs">
           <button data-tool="codes">§<span>Banca</span></button>
-          <button data-tool="terms">⌛<span>Termini</span></button>
+          <button data-tool="terms">⌛<span>Calendario</span></button>
+          <button data-tool="taxes">⌁<span>Tributi</span></button>
           <button data-tool="split">€<span>Riparto</span></button>
+          <button data-tool="documents">▤<span>Documenti</span></button>
           <button data-tool="creset">▦<span>Creset</span></button>
           <button data-tool="checklist">☑<span>Checklist</span></button>
         </div>
@@ -171,8 +173,8 @@
 
         <section id="termsTool" class="plugin-tool hidden">
           <div class="tool-card">
-            <h3>Calcolo rapido date</h3>
-            <p class="muted">Supporto di calendario. Non sostituisce il controllo del termine processuale nel desktop.</p>
+            <h3>Calcolo calendario</h3>
+            <p class="muted">Somma o sottrae giorni da una data. Il calcolo dei tributi locali è disponibile nella voce Tributi.</p>
             <label>Data di partenza<input id="termStartDate" class="tool-input" type="date"></label>
             <div class="two-cols"><label>Giorni<input id="termDays" class="tool-input" type="number" min="0" value="30"></label><label>Direzione<select id="termDirection" class="tool-input"><option value="1">In avanti</option><option value="-1">A ritroso</option></select></label></div>
             <button id="calculateQuickTerm">Calcola</button>
@@ -180,14 +182,75 @@
           </div>
         </section>
 
+        <section id="taxesTool" class="plugin-tool hidden">
+          <div class="tool-card">
+            <h3>Tributi locali</h3>
+            <p class="muted">Decadenza dell'accertamento, riscossione ed eventuale prescrizione secondo il medesimo motore della versione desktop V14.18.</p>
+            <div class="tool-subcard">
+              <strong>1. Tributo e decadenza</strong>
+              <label>Tributo<select id="taxType" class="tool-input"><option>IMU</option><option>TARI</option><option>TASI</option><option>ICP/CANONE (verificare disciplina propria)</option><option>ALTRO TRIBUTO LOCALE</option></select></label>
+              <div class="two-cols"><label>Annualità<input id="taxYear" class="tool-input" type="number" min="1990" max="2100"></label><label>Violazione<select id="taxViolation" class="tool-input"><option value="PAYMENT">Omesso/parziale pagamento</option><option value="DECLARATION">Omessa/infedele dichiarazione</option></select></label></div>
+              <label id="taxDeclarationYearRow" class="hidden">Anno in cui la dichiarazione era dovuta<input id="taxDeclarationYear" class="tool-input" type="number" min="1990" max="2100"></label>
+              <label class="setting-row"><span><strong>Sospensione COVID/IFEL</strong><small>Applica +85 giorni soltanto quando il motore la ritiene pertinente.</small></span><input id="taxCovid" type="checkbox" checked></label>
+            </div>
+            <div class="tool-subcard">
+              <strong>2. Atto / riscossione</strong>
+              <label>Atto o fase<select id="taxActType" class="tool-input"><option value="ORDINARY">Avviso di accertamento ordinario / non esecutivo</option><option value="EXECUTIVE" selected>Accertamento esecutivo ex L. 160/2019</option><option value="TITLE">Ingiunzione / cartella / titolo coattivo</option><option value="INTERRUPTIVE">Sollecito / intimazione / atto interruttivo</option><option value="PRESCRIPTION">Prescrizione del credito</option><option value="FULL">Quadro completo</option></select></label>
+              <label>Regime<select id="taxRegime" class="tool-input"><option value="EXECUTIVE" selected>Accertamento esecutivo locale ex L. 160/2019</option><option value="PREVIOUS">Regime previgente / titolo separato</option><option value="OTHER">Altro / da verificare</option></select></label>
+              <label>Data notifica accertamento<input id="taxNoticeDate" class="tool-input" type="date"></label>
+              <label>Data definitività / esecutività verificata<input id="taxDefinitiveDate" class="tool-input" type="date"></label>
+              <label>Scadenza termine ricorso/pagamento (se nota)<input id="taxPaymentDeadline" class="tool-input" type="date"></label>
+              <label>Riscossione dopo l'affidamento<select id="taxCollectorMode" class="tool-input"><option value="UNKNOWN">Da verificare</option><option value="SAME">Stesso soggetto che ha notificato — 120 giorni</option><option value="OTHER">Soggetto diverso / affidatario — 180 giorni</option></select></label>
+            </div>
+            <div class="tool-subcard">
+              <strong>3. Prescrizione</strong>
+              <label>Ultimo atto interruttivo validamente notificato<input id="taxLastActDate" class="tool-input" type="date"></label>
+              <label class="setting-row"><span><strong>Credito consacrato in giudicato</strong><small>Verifica indicativa del termine decennale ex art. 2953 c.c.</small></span><input id="taxJudgment" type="checkbox"></label>
+            </div>
+            <button id="calculateLocalTaxes">Calcola termini</button>
+            <div id="taxResult" class="tool-result tax-result">—</div>
+          </div>
+        </section>
+
         <section id="splitTool" class="plugin-tool hidden">
           <div class="tool-card">
             <h3>Riparto Studio / TFC</h3>
-            <label>Importo totale (€)<input id="splitTotal" class="tool-input" inputmode="decimal" placeholder="0,00"></label>
-            <label class="setting-row"><span><strong>Riparto sul 50%</strong><small>Considera metà dell'importo, poi applica l'accantonamento del 19%.</small></span><input id="splitHalf" type="checkbox"></label>
-            <label>Schema<select id="splitMode" class="tool-input"><option value="thirds">Tre quote uguali</option><option value="tfc">TFC 30 / 30 / 10 / 30</option></select></label>
-            <button id="calculateSplit">Calcola riparto</button>
-            <div id="splitResult" class="tool-result">—</div>
+            <p class="muted">Tre passaggi distinti, come nel desktop: 50% eventuale, accantonamento 19%, riparto del residuo.</p>
+            <div class="tool-subcard">
+              <strong>1. Calcolo eventuale del 50%</strong>
+              <label>Importo totale (€)<input id="splitHalfTotal" class="tool-input" inputmode="decimal" placeholder="0,00"></label>
+              <button id="calculateHalfInvoice" class="secondary-button">Calcola 50%</button>
+              <div id="splitHalfResult" class="tool-result compact-result">—</div>
+            </div>
+            <div class="tool-subcard">
+              <strong>2. Fatturato e accantonamento 19%</strong>
+              <label>Importo effettivamente fatturato (€)<input id="splitBilledAmount" class="tool-input" inputmode="decimal" placeholder="0,00"></label>
+              <label>Chi ha fatturato?<select id="splitBilledBy" class="tool-input"></select></label>
+              <button id="calculateReserve" class="secondary-button">Calcola accantonamento</button>
+              <div id="splitReserveResult" class="tool-result compact-result">—</div>
+            </div>
+            <div class="tool-subcard">
+              <strong>3. Riparto del residuo</strong>
+              <label>Schema<select id="splitMode" class="tool-input"><option value="thirds">Tre quote uguali</option><option value="tfc">Quote TFC — Studio 30% · Titolare 30% · Firmatario 10% · Redattore 30%</option></select></label>
+              <div id="splitTfcRoles" class="tfc-role-grid hidden">
+                <label>Titolare della pratica (30%)<select id="splitHolder" class="tool-input"></select></label>
+                <label>Firmatario (10%)<select id="splitSigner" class="tool-input"></select></label>
+                <label>Redattore dell'atto (30%)<select id="splitDrafter" class="tool-input"></select></label>
+                <p class="muted">La quota Studio TFC del 30% viene accantonata separatamente e resta allo Studio.</p>
+              </div>
+              <button id="calculateSplit">Calcola riparto</button>
+              <div id="splitResult" class="tool-result">—</div>
+            </div>
+          </div>
+        </section>
+
+        <section id="documentsTool" class="plugin-tool hidden">
+          <div class="tool-card">
+            <h3>Documenti</h3>
+            <p class="muted">Documenti autorizzati e disponibili offline nel pacchetto sincronizzato.</p>
+            <input id="documentSearch" class="tool-input" type="search" placeholder="Nome file, pratica, categoria, tipo…">
+            <select id="documentCategoryFilter" class="tool-input"><option value="">Tutte le categorie</option></select>
+            <div id="documentsToolResults"></div>
           </div>
         </section>
 
@@ -204,7 +267,7 @@
 
       <section id="searchView" class="view hidden">
         <div class="section-head stacked">
-          <div><h2>Ricerca</h2><p class="muted">Pratiche, udienze, attività, documenti e banca giuridica</p></div>
+          <div><h2>Ricerca</h2><p class="muted">Pratiche, agenda, documenti, checklist, Creset e banca giuridica</p></div>
           <input id="globalSearch" type="search" autocomplete="off" placeholder="Scrivi un nome, RG, udienza, documento…">
         </div>
         <div id="globalSearchResults" class="search-results"></div>
@@ -271,7 +334,7 @@
 
   <div id="settingsModal" class="modal hidden">
     <div class="modal-sheet compact-sheet">
-      <div class="modal-top"><button id="closeSettings" class="back-button">‹</button><div><div class="eyebrow dark">COMPANION V16.2</div><h2>Sincronizzazione e privacy</h2></div></div>
+      <div class="modal-top"><button id="closeSettings" class="back-button">‹</button><div><div class="eyebrow dark">COMPANION V16.3</div><h2>Sincronizzazione e privacy</h2></div></div>
       <div class="detail-section">
         <h3>Modifiche da riportare al PC</h3>
         <p id="pendingActionsInfo" class="muted"></p>
@@ -311,6 +374,6 @@
 
 <div id="undoToast" class="undo-toast hidden"><span>Checklist aggiornata</span><button id="undoAction" type="button">Annulla</button></div>
 
-  <script src="app.js?v=16.2"></script>
+  <script src="app.js?v=16.3"></script>
 </body>
 </html>

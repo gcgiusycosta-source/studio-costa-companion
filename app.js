@@ -921,26 +921,49 @@ async function setChecklistItemStatus(item,newStatus){
   $("undoAction").onclick=async()=>{await setChecklistItemStatus(item,previous);toast.classList.add("hidden")};
   setTimeout(()=>toast.classList.add("hidden"),5000);
 }
-async function addMobileChecklist(){
-  const title=prompt("Titolo della checklist");if(!title?.trim())return;
-  const checklistDate=prompt("Data (AAAA-MM-GG)",new Date().toISOString().slice(0,10));if(!isoDate(checklistDate)){alert("Data non valida.");return}
-  const practiceText=prompt("Assistito o codice pratica (facoltativo)","")?.trim()||"";
+function openChecklistComposer(){
+  const today=new Date().toISOString().slice(0,10);
+  if($("checklistComposerTitle"))$("checklistComposerTitle").value="";
+  if($("checklistComposerDate"))$("checklistComposerDate").value=today;
+  if($("checklistComposerPriority"))$("checklistComposerPriority").value="MEDIA";
+  if($("checklistComposerPractice"))$("checklistComposerPractice").value="";
+  if($("checklistComposerItems"))$("checklistComposerItems").value="";
+  $("checklistComposerModal")?.classList.remove("hidden");
+  setTimeout(()=>$("checklistComposerTitle")?.focus(),20);
+}
+function closeChecklistComposer(){
+  $("checklistComposerModal")?.classList.add("hidden");
+}
+async function saveChecklistComposer(){
+  const title=$("checklistComposerTitle")?.value?.trim();
+  if(!title){alert("Indicare il titolo della checklist.");return}
+  const checklistDate=isoDate($("checklistComposerDate")?.value);
+  if(!checklistDate){alert("Data non valida.");return}
+  const practiceText=$("checklistComposerPractice")?.value?.trim()||"";
   let practiceId="";
   if(practiceText){
-    const needle=normalize(practiceText);const matches=(snapshot?.practices||[]).filter(p=>normalize([p.client,p.internal_code,p.rgnr,p.sius,p.siep].filter(Boolean).join(" ")).includes(needle));
-    if(matches.length!==1){alert(matches.length?"Sono state trovate più pratiche: indicare un codice più preciso.":"Pratica non riconosciuta. Lasciare vuoto oppure indicare assistito/codice esatto.");return}
+    const needle=normalize(practiceText);
+    const matches=(snapshot?.practices||[]).filter(p=>normalize([p.client,p.internal_code,p.rgnr,p.sius,p.siep].filter(Boolean).join(" ")).includes(needle));
+    if(matches.length!==1){alert(matches.length?"Sono state trovate più pratiche: indicare un codice più preciso oppure lasciare il campo vuoto.":"Pratica non riconosciuta. Lasciare vuoto oppure indicare assistito/codice esatto.");return}
     practiceId=matches[0].id||matches[0].practice_id||"";
   }
-  const pasted=prompt("Incolla le voci: una riga corrisponde a una voce. Puoi iniziare con data e ora.","");
-  const items=String(pasted||"").split(/\r?\n/).map(x=>parseMobileChecklistLine(x,isoDate(checklistDate))).filter(Boolean);
-  if(!items.length){alert("Inserire almeno una voce.");return}
+  const pasted=$("checklistComposerItems")?.value||"";
+  const items=String(pasted).split(/\r?\n/).map(x=>parseMobileChecklistLine(x,checklistDate)).filter(Boolean);
+  if(!items.length){alert("Incolla almeno una voce della checklist.");return}
   const mobileUid=uid();
-  await queueMobileAction({action_type:"upsert_checklist",mobile_uid:mobileUid,target_id:mobileUid,payload:{title:title.trim(),date:isoDate(checklistDate),priority:"MEDIA",practice_id:practiceId,items}});
+  await queueMobileAction({action_type:"upsert_checklist",mobile_uid:mobileUid,target_id:mobileUid,payload:{title,date:checklistDate,priority:$("checklistComposerPriority")?.value||"MEDIA",practice_id:practiceId,items}});
+  closeChecklistComposer();
+  checklistMode="todo";
+  $("checklistTodo")?.classList.add("active");
+  $("checklistDone")?.classList.remove("active");
   renderChecklists();
-  alert("Checklist registrata. Esporta le modifiche per inserirla nel gestionale.");
+  switchView("checklistsView");
+  alert("Checklist registrata. Potrai spuntarla dal telefono ed esportarla poi verso il gestionale.");
+}
+async function addMobileChecklist(){openChecklistComposer();
 }
 function parseMobileChecklistLine(raw,commonDate){
-  let text=String(raw||"").trim().replace(/^[-•*☐☑✓]+\s*/,"");if(!text)return null;
+  let text=String(raw||"").trim().replace(/^\s*(?:[-•*☐☑✓]+|\d+[.)]|\[[ xX]?\])\s*/,"");if(!text)return null;
   let dueDate=commonDate||"",dueTime="";
   const dm=text.match(/\b(\d{1,2})[/.\-](\d{1,2})(?:[/.\-](\d{2,4}))?\b/);
   if(dm){let year=dm[3]?Number(dm[3]):Number((commonDate||new Date().toISOString()).slice(0,4));if(year<100)year+=2000;dueDate=`${year}-${String(Number(dm[2])).padStart(2,"0")}-${String(Number(dm[1])).padStart(2,"0")}`;text=text.replace(dm[0]," ")}
@@ -1574,6 +1597,9 @@ function renderAll(){
 
 function bindChecklistNavigation(){
   const add=$("addChecklistMobile"); if(add)add.onclick=()=>addMobileChecklist();
+  const close=$("closeChecklistComposer"); if(close)close.onclick=()=>closeChecklistComposer();
+  const clear=$("clearChecklistComposer"); if(clear)clear.onclick=()=>{$("checklistComposerItems").value="";$("checklistComposerTitle").focus();};
+  const save=$("saveChecklistComposer"); if(save)save.onclick=()=>saveChecklistComposer();
   const todo=$("checklistTodo"),done=$("checklistDone");
   if(todo)todo.onclick=()=>{checklistMode="todo";todo.classList.add("active");done?.classList.remove("active");renderChecklists();};
   if(done)done.onclick=()=>{checklistMode="done";done.classList.add("active");todo?.classList.remove("active");renderChecklists();};
@@ -1612,6 +1638,9 @@ $("legalTypeFilter")?.addEventListener("change",renderLegalResults);
 if($("calculateQuickTerm"))$("calculateQuickTerm").onclick=calculateQuickTerm;
 if($("calculateSplit"))$("calculateSplit").onclick=calculateMobileSplit;
 if($("openChecklistsFromTools"))$("openChecklistsFromTools").onclick=()=>switchView("checklistsView");
+$("checklistComposerModal")?.addEventListener("click",event=>{if(event.target.id==="checklistComposerModal")closeChecklistComposer()});
+document.addEventListener("keydown",event=>{if(event.key==="Escape")closeChecklistComposer()});
+
 document.querySelectorAll("[data-agenda-mode]").forEach(button=>{
   button.onclick=()=>{
     agendaMode=button.dataset.agendaMode;

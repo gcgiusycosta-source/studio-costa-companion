@@ -7,10 +7,10 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Studio Costa">
-  <link rel="manifest" href="manifest.json?v=15.7">
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=15.7">
-  <link rel="stylesheet" href="styles.css?v=15.7">
-  <title>Studio Costa Companion V15.7</title>
+  <link rel="manifest" href="manifest.json?v=16.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=16.0">
+  <link rel="stylesheet" href="styles.css?v=16.0">
+  <title>Studio Costa Companion V16.0</title>
 </head>
 <body>
   <section id="pairScreen" class="screen hidden">
@@ -38,17 +38,18 @@
   </section>
 
   <div id="app" class="hidden">
-    <header>
-      <div class="brand-lockup">
+    <header class="companion-topbar">
+      <div class="brand-lockup brand-lockup-redesigned">
         <div class="header-logo image-logo" aria-hidden="true"></div>
-        <div>
-          <div class="eyebrow">STUDIO LEGALE COSTA</div>
+        <div class="brand-copy">
+          <div class="brand-person">Avv. Giusy Costa</div>
+          <div class="brand-studio">Studio Legale Costa</div>
           <h1 id="pageTitle">Home</h1>
         </div>
       </div>
-      <div class="header-actions">
-        <button id="settingsButton" class="icon-button" aria-label="Sincronizzazione e privacy">⋯</button>
+      <div class="header-actions compact-actions">
         <div class="sync-pill" id="headerSync">—</div>
+        <button id="settingsButton" class="icon-button" aria-label="Sincronizzazione e privacy">⋯</button>
       </div>
     </header>
 
@@ -132,12 +133,13 @@
       <section id="checklistsView" class="view hidden">
         <div class="section-head">
           <div><h2>Checklist</h2><p class="muted">Attività da spuntare e sincronizzare con il gestionale</p></div>
-          <button id="addChecklistMobile" class="secondary-button">＋ Nuova</button>
+          <button id="addChecklistMobile" class="secondary-button">＋ Incolla checklist</button>
         </div>
         <div class="filters checklist-filters">
           <button id="checklistTodo" class="active">Da fare</button>
           <button id="checklistDone">Completate</button>
         </div>
+        <div class="checklist-quick-tip">Incolla una checklist scritta anche con ChatGPT: una riga = una voce spuntabile.</div>
         <div id="checklistsContent"></div>
       </section>
 
@@ -210,11 +212,11 @@
     </main>
 
     <nav class="bottom-nav companion-bottom-nav five-nav">
-      <button data-target="homeView"><span>⌂</span>Home</button>
-      <button data-target="hearingsView"><span>⚖</span>Udienze</button>
-      <button data-target="agendaView"><span>◷</span>Agenda</button>
-      <button data-target="practicesView"><span>▣</span>Pratiche</button>
-      <button data-target="toolsView"><span>✦</span>Strumenti</button>
+      <button data-target="homeView"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 10.5L12 4l8 6.5"/><path d="M6.5 9.5V20h11V9.5"/><path d="M10 20v-5.5h4V20"/></svg></span><em>Home</em></button>
+      <button data-target="hearingsView"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 4v15"/><path d="M7 7h10"/><path d="M5 7c0 3-2 5-2 5h6c0 0-2-2-2-5"/><path d="M19 7c0 3-2 5-2 5h6c0 0-2-2-2-5"/><path d="M8 20h8"/></svg></span><em>Udienze</em></button>
+      <button data-target="agendaView"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16"/><path d="M8 14h3M13 14h3M8 17h3"/></svg></span><em>Agenda</em></button>
+      <button data-target="practicesView"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 7.5A2.5 2.5 0 0 1 6.5 5H10l1.7 2H17.5A2.5 2.5 0 0 1 20 9.5v8A2.5 2.5 0 0 1 17.5 20h-11A2.5 2.5 0 0 1 4 17.5v-10Z"/><path d="M4 9h16"/></svg></span><em>Pratiche</em></button>
+      <button data-target="toolsView"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l1.6 3.9L17.5 8.5l-3.1 2.5.9 4-3.3-2-3.3 2 .9-4L6.5 8.5l3.9-1.6L12 3Z"/><path d="M18.5 15.5l.8 1.9 1.9.8-1.9.8-.8 1.9-.8-1.9-1.9-.8 1.9-.8.8-1.9Z"/></svg></span><em>Strumenti</em></button>
     </nav>
   </div>
 
@@ -269,7 +271,7 @@
 
   <div id="settingsModal" class="modal hidden">
     <div class="modal-sheet compact-sheet">
-      <div class="modal-top"><button id="closeSettings" class="back-button">‹</button><div><div class="eyebrow dark">COMPANION V15.7</div><h2>Sincronizzazione e privacy</h2></div></div>
+      <div class="modal-top"><button id="closeSettings" class="back-button">‹</button><div><div class="eyebrow dark">COMPANION V16.0</div><h2>Sincronizzazione e privacy</h2></div></div>
       <div class="detail-section">
         <h3>Modifiche da riportare al PC</h3>
         <p id="pendingActionsInfo" class="muted"></p>
@@ -294,8 +296,21 @@
     </div>
   </div>
 
-  <div id="undoToast" class="undo-toast hidden"><span>Checklist aggiornata</span><button id="undoAction" type="button">Annulla</button></div>
+    <div id="checklistComposerModal" class="modal hidden">
+    <div class="modal-sheet compact-sheet checklist-composer-sheet">
+      <div class="modal-top"><button id="closeChecklistComposer" class="back-button">‹</button><div><div class="eyebrow dark">CHECKLIST RAPIDA</div><h2>Incolla elenco</h2></div></div>
+      <p class="muted">Puoi incollare una checklist scritta anche con ChatGPT. Ogni riga diventa una voce spuntabile. Se una riga contiene una data o un orario, il Companion li riconosce automaticamente.</p>
+      <label>Titolo checklist<input id="checklistComposerTitle" type="text" placeholder="Es. Adempimenti udienza / documenti da preparare"></label>
+      <div class="two-cols"><label>Data di riferimento<input id="checklistComposerDate" type="date"></label><label>Priorità<select id="checklistComposerPriority"><option>BASSA</option><option selected>MEDIA</option><option>ALTA</option><option>URGENTE</option></select></label></div>
+      <label>Assistito o codice pratica (facoltativo)<input id="checklistComposerPractice" type="text" placeholder="Es. Rossi Mario / RGNR 1234/2026"></label>
+      <label>Voci da creare<textarea id="checklistComposerItems" rows="10" placeholder="Incolla qui la checklist, una voce per riga.&#10;Esempio:&#10;07/10 ore 09:30 - chiamare il cliente&#10;depositare memoria conclusionale&#10;recuperare marca da bollo"></textarea></label>
+      <div class="checklist-composer-actions"><button id="clearChecklistComposer" class="secondary-button" type="button">Svuota</button><button id="saveChecklistComposer" type="button">Crea checklist</button></div>
+      <p class="muted">Dopo la creazione, potrai flaggare le voci direttamente dal telefono e poi esportare le modifiche verso il desktop.</p>
+    </div>
+  </div>
 
-  <script src="app.js?v=15.7"></script>
+<div id="undoToast" class="undo-toast hidden"><span>Checklist aggiornata</span><button id="undoAction" type="button">Annulla</button></div>
+
+  <script src="app.js?v=16.0"></script>
 </body>
 </html>

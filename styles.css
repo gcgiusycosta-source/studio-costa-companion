@@ -611,3 +611,509 @@ body[data-active-view="homeView"] main{
   #app > header .brand-lockup h1{font-size:16px!important}
   #app > header .icon-button{width:32px!important;height:32px!important;min-height:32px!important}
 }
+
+
+/* V15.8 — header leggibile, icone più curate, checklist composer */
+:root{--brand-green:#1d4b3d;--brand-green-2:#285d4c;--brand-cream:#f6f2ea;--ink-soft:#33443e}
+body{background:linear-gradient(180deg,#f5f2ec 0%,#f7f5f1 38%,#f3f5f3 100%)!important}
+#app{padding-top:0!important}
+#app > header.companion-topbar{position:sticky;top:0;z-index:18;padding:calc(10px + env(safe-area-inset-top)) 14px 10px!important;background:linear-gradient(180deg,rgba(248,245,240,.96) 0%,rgba(246,243,238,.94) 100%)!important;border-bottom:1px solid rgba(30,75,61,.08)!important;box-shadow:0 4px 16px rgba(31,53,44,.06)!important;color:#10261f!important}
+#app > header.companion-topbar .brand-lockup-redesigned{align-items:center;gap:10px!important}
+#app > header.companion-topbar .header-logo.image-logo{width:46px!important;height:46px!important;flex-basis:46px!important;border-radius:15px!important;background-size:cover!important;box-shadow:0 8px 18px rgba(17,40,33,.12)!important;border:1px solid rgba(29,75,61,.12)!important}
+#app > header.companion-topbar .brand-copy{min-width:0;display:flex;flex-direction:column;gap:1px}
+#app > header.companion-topbar .brand-person{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:#587267;line-height:1.15}
+#app > header.companion-topbar .brand-studio{font-size:19px;font-weight:700;letter-spacing:-.02em;color:#10261f;line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#app > header.companion-topbar h1#pageTitle{display:inline-flex;align-items:center;align-self:flex-start;margin:4px 0 0!important;padding:5px 10px;border-radius:999px;background:rgba(29,75,61,.08);color:#1d4b3d!important;font-size:11px!important;font-weight:800!important;letter-spacing:.04em;text-transform:uppercase;line-height:1.1}
+#app > header.companion-topbar .compact-actions{display:flex;align-items:center;gap:8px!important}
+#app > header.companion-topbar .icon-button{width:42px;height:42px;border-radius:14px;background:#ffffff!important;color:#1d4b3d!important;border:1px solid rgba(29,75,61,.12)!important;box-shadow:0 6px 16px rgba(16,38,31,.06)!important}
+#app > header.companion-topbar .sync-pill{max-width:92px!important;border-radius:999px;background:rgba(29,75,61,.08)!important;color:#42675a!important;border:1px solid rgba(29,75,61,.10)!important;font-size:10px!important;padding:7px 8px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:430px){#app > header.companion-topbar .sync-pill{display:none!important}#app > header.companion-topbar .brand-studio{font-size:17px}#app > header.companion-topbar .brand-person{font-size:10px}#app > header.companion-topbar .header-logo.image-logo{width:42px!important;height:42px!important;flex-basis:42px!important}#app > header.companion-topbar h1#pageTitle{font-size:10px!important;padding:4px 9px}}
+
+/* spazio prima sezione dopo header */
+main{padding-top:10px!important;padding-bottom:140px!important}
+#hearingsView .hearings-command-head,#agendaView .agenda-planner-head,#homeView .lux-hero,#homeView .home-hero{margin-top:0!important}
+
+/* bottom nav redesigned with inline svg icons */
+.companion-bottom-nav.five-nav{display:grid!important;grid-template-columns:repeat(5,1fr)!important;gap:8px!important;left:10px!important;right:10px!important;bottom:8px!important;padding:10px 10px calc(10px + env(safe-area-inset-bottom))!important;border-radius:28px!important;background:rgba(247,245,240,.96)!important;border:1px solid rgba(33,78,66,.10)!important;box-shadow:0 -10px 28px rgba(14,39,31,.11)!important;backdrop-filter:blur(18px)}
+.companion-bottom-nav.five-nav button{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:5px!important;padding:8px 4px 10px!important;border-radius:18px!important;background:transparent!important;color:#66796f!important;font-size:10.5px!important;font-weight:800!important;min-height:70px}
+.companion-bottom-nav.five-nav button em{font-style:normal!important;line-height:1.05;display:block}
+.companion-bottom-nav.five-nav button .nav-svg{width:26px;height:26px;display:grid;place-items:center;border-radius:14px;transition:all .18s ease}
+.companion-bottom-nav.five-nav button .nav-svg svg{width:22px;height:22px;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.companion-bottom-nav.five-nav button.active{background:linear-gradient(180deg,#e7efe9 0%,#dae6df 100%)!important;color:#1d4b3d!important;box-shadow:inset 0 0 0 1px rgba(29,75,61,.10)!important}
+.companion-bottom-nav.five-nav button.active .nav-svg{background:rgba(255,255,255,.72);box-shadow:0 6px 14px rgba(29,75,61,.10)}
+@media(max-width:430px){.companion-bottom-nav.five-nav{gap:5px!important;padding-left:8px!important;padding-right:8px!important}.companion-bottom-nav.five-nav button{font-size:9.5px!important;min-height:66px}.companion-bottom-nav.five-nav button .nav-svg{width:24px;height:24px}.companion-bottom-nav.five-nav button .nav-svg svg{width:20px;height:20px}}
+
+/* checklist UX */
+#checklistsView .section-head{align-items:flex-start!important}
+.checklist-quick-tip{margin:6px 0 14px;background:linear-gradient(180deg,#eef4ef 0%,#f8fbf8 100%);border:1px solid rgba(33,78,66,.10);color:#325548;border-radius:16px;padding:12px 14px;font-size:12px;line-height:1.45}
+.checklist-composer-sheet textarea,.checklist-composer-sheet input,.checklist-composer-sheet select{font-size:14px}
+.checklist-composer-sheet textarea{min-height:220px;resize:vertical}
+.checklist-composer-actions{display:grid;grid-template-columns:1fr 1.2fr;gap:10px;margin-top:12px}
+.checklist-card{border-radius:22px!important;box-shadow:0 8px 24px rgba(23,57,47,.05)}
+.checklist-head h3{font-size:18px!important;color:#17392f}
+.check-item{border-top:1px solid #edf0ec!important;padding:11px 0!important}
+.check-item span{font-size:13px;line-height:1.45;color:#33443e}
+.check-item input{accent-color:#1d4b3d;transform:translateY(1px)}
+#addChecklistMobile.secondary-button{white-space:nowrap}
+
+/* hearings panel more readable under new header */
+.hearings-command-head{background:linear-gradient(180deg,#7a3241 0%,#8c4350 100%)!important;border-radius:26px!important;box-shadow:0 14px 30px rgba(122,50,65,.16)!important;margin-top:0!important}
+.hearings-command-head h2{color:#fff!important}
+.hearings-command-head p,.hearing-period-label,.view-kicker{color:rgba(255,255,255,.86)!important}
+.hearing-view-row .hearing-mode,.hearing-today{background:rgba(255,255,255,.12)!important}
+.hearing-view-row .hearing-mode button.active,.hearing-today{color:#6f2634!important;background:#fff!important}
+.hearing-period-control input{box-shadow:none!important}
+
+/* floating add lifted above new nav */
+.floating-add.compact-fab{bottom:calc(98px + env(safe-area-inset-bottom))!important;right:18px!important;left:auto!important;transform:none!important}
+
+
+/* V15.9 — professional refinement */
+:root{
+  --pro-bg-1:#f6f2eb;
+  --pro-bg-2:#f2f4f1;
+  --pro-paper:#fffdfa;
+  --pro-ink:#1b2a25;
+  --pro-muted:#66746d;
+  --pro-green:#1f4c3e;
+  --pro-green-2:#2c5f4f;
+  --pro-bronze:#b69052;
+  --pro-bronze-soft:#e9ddc7;
+  --pro-burgundy:#7b3946;
+  --pro-border:rgba(26,53,45,.09);
+  --pro-shadow:0 10px 28px rgba(22,40,34,.06);
+  --pro-shadow-soft:0 6px 18px rgba(22,40,34,.04);
+}
+body{background:linear-gradient(180deg,var(--pro-bg-1) 0%, #f8f6f2 26%, var(--pro-bg-2) 100%)!important;color:var(--pro-ink)!important}
+button,input,select,textarea{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+#app > header.companion-topbar{
+  padding:calc(10px + env(safe-area-inset-top)) 14px 12px!important;
+  background:linear-gradient(180deg,rgba(255,252,247,.98) 0%, rgba(249,246,240,.95) 100%)!important;
+  border-bottom:1px solid rgba(31,76,62,.08)!important;
+  box-shadow:0 8px 26px rgba(26,45,37,.05)!important;
+}
+#app > header.companion-topbar .header-logo.image-logo{
+  width:48px!important;height:48px!important;flex-basis:48px!important;
+  border-radius:16px!important;
+  border:1px solid rgba(31,76,62,.12)!important;
+  background-color:#fffdf9!important;
+}
+#app > header.companion-topbar .brand-person{color:#7b877f!important;letter-spacing:.12em!important}
+#app > header.companion-topbar .brand-studio{font-size:20px!important;font-weight:750!important;color:#182922!important}
+#app > header.companion-topbar h1#pageTitle{
+  background:linear-gradient(180deg,#f3ede2 0%, #efe6d6 100%)!important;
+  color:#5d503c!important;
+  border:1px solid rgba(182,144,82,.22);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.7);
+}
+#app > header.companion-topbar .icon-button{
+  background:linear-gradient(180deg,#fffefd 0%,#f3efe8 100%)!important;
+  color:var(--pro-green)!important;border:1px solid rgba(31,76,62,.10)!important;
+}
+#app > header.companion-topbar .sync-pill{
+  background:#f6f2e9!important;color:#6b6b61!important;border:1px solid rgba(182,144,82,.16)!important;
+}
+main{padding-top:12px!important;padding-left:14px!important;padding-right:14px!important;padding-bottom:146px!important}
+
+/* home */
+.home-top-compact,.home-focus-panel,.home-next-compact,.home-tools-compact,
+.tool-card,.practice-card,.detail-section,.checklist-card,.agenda-day-group,
+.hearings-command-head,.agenda-planner-head,.docket-card,.planner-item,.event{
+  box-shadow:var(--pro-shadow-soft)!important;
+}
+.home-top-compact{
+  background:linear-gradient(180deg,#fffdfa 0%,#f8f2e9 100%)!important;
+  border:1px solid rgba(182,144,82,.16)!important;
+  border-radius:24px!important;
+  padding:14px 15px!important;
+}
+.home-logo-mini{background:url('logo-gc.png') center/cover no-repeat,#fff!important;border:1px solid rgba(31,76,62,.10)!important;box-shadow:0 8px 18px rgba(26,45,37,.07)}
+.home-brand-mini span{color:#7b877f!important;letter-spacing:.13em!important}
+.home-brand-mini strong{color:#172720!important;font-size:17px!important}
+.home-brand-mini small{color:#6c7972!important}
+.mini-action{background:#fffdfa!important;color:var(--pro-green)!important;border:1px solid rgba(31,76,62,.10)!important;box-shadow:none!important}
+.sync-mini{background:#eff3ee!important;color:#466055!important;border:1px solid rgba(31,76,62,.09)!important}
+.home-kpi-strip{gap:10px!important;margin:12px 0 16px!important}
+.home-kpi{
+  background:linear-gradient(180deg,#fffdfa 0%,#faf6ef 100%)!important;
+  border:1px solid var(--pro-border)!important;border-radius:22px!important;
+  padding:14px 10px!important;
+}
+.home-kpi b{font-size:26px!important;color:var(--pro-green)!important;font-family:Georgia,serif}
+.home-kpi span{color:#67766f!important;font-size:11px!important;font-weight:700!important}
+.home-kpi.judicial{background:linear-gradient(180deg,#fff7f8 0%,#faecee 100%)!important;border-color:rgba(123,57,70,.14)!important}
+.home-kpi.judicial b{color:var(--pro-burgundy)!important}
+.home-kpi.urgent{background:linear-gradient(180deg,#fffaf1 0%,#f9f0df 100%)!important;border-color:rgba(182,144,82,.18)!important}
+.home-kpi.urgent b{color:#8d6531!important}
+.home-focus-panel,.home-next-compact,.home-tools-compact{
+  background:var(--pro-paper)!important;
+  border:1px solid var(--pro-border)!important;
+  border-radius:26px!important;
+  padding:16px!important;
+  margin-bottom:14px!important;
+}
+.home-section-title span{color:#8b8a81!important;letter-spacing:.12em!important}
+.home-section-title h3{color:#162821!important;font-size:21px!important}
+.home-section-title button{background:#f4efe5!important;color:#67573f!important;border:1px solid rgba(182,144,82,.18)!important}
+.today-row,.next-compact-card,.home-action-grid button{
+  background:linear-gradient(180deg,#fff 0%,#fcfbf8 100%)!important;
+  border:1px solid rgba(31,76,62,.08)!important;
+  border-radius:20px!important;
+}
+.today-row{padding:12px!important}
+.today-row .today-time{color:#183a2f!important;font-weight:800!important}
+.today-row .today-kind{width:28px;height:28px;border-radius:10px;background:#eef3f0;color:#1f4c3e!important;display:grid;place-items:center}
+.today-row.kind-UDIENZA .today-kind{background:#f8ebee;color:#7b3946!important}
+.today-row.kind-SCADENZA .today-kind{background:#f9f0df;color:#8c6331!important}
+.today-row strong,.next-compact-card b{color:#162821!important}
+.today-row small,.next-compact-card small{color:#6a7871!important}
+.next-compact-card{padding:16px!important;display:grid!important;grid-template-columns:auto auto 1fr auto!important;align-items:center!important;gap:12px!important}
+.next-badge{background:#eff3ee!important;color:#426255!important;border:1px solid rgba(31,76,62,.09)!important}
+.next-compact-card i{color:#8f978f!important;font-style:normal!important;font-size:24px!important}
+.home-action-grid{gap:10px!important}
+.home-action-grid button{padding:14px 12px!important;box-shadow:none!important}
+.home-action-grid button span{background:#eef3ef;border-radius:12px;width:36px;height:36px;display:grid;place-items:center;color:#1f4c3e!important;font-size:17px!important;margin:0 auto 7px!important}
+.home-action-grid button em{color:#20332d!important;font-style:normal!important;font-weight:700!important}
+
+/* hearings */
+.hearings-command-head{
+  background:linear-gradient(180deg,#7d3946 0%, #6d2d3c 100%)!important;
+  border:1px solid rgba(255,255,255,.1)!important;
+  padding:18px!important;
+  border-radius:28px!important;
+}
+.hearings-command-head .view-kicker{color:#f2d4d8!important}
+.hearings-command-head h2{font-size:28px!important;letter-spacing:-.03em!important}
+.hearings-command-head p{color:#f3e6e8!important}
+.hearing-period-control input,.agenda-navigation-line input,.agenda-navigation input,#practiceSearch,.tool-input,.compact-sheet input,.compact-sheet select,.compact-sheet textarea{
+  background:#fffdfa!important;border:1px solid rgba(31,76,62,.10)!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.8)!important
+}
+.hearing-mode,.agenda-mode{background:rgba(255,255,255,.12)!important;border:1px solid rgba(255,255,255,.08)!important}
+.hearing-mode button,.agenda-mode button{font-weight:700!important}
+.hearing-mode button.active{background:#fff!important;color:#6f2f3d!important}
+.hearing-today{background:#fff!important;color:#6f2f3d!important;border:0!important}
+.hearing-period-label{font-weight:700!important}
+.week-strip{gap:10px!important;margin:14px 0 16px!important}
+.week-day-card{
+  background:linear-gradient(180deg,#fffdfa 0%,#fbf7f1 100%)!important;
+  border:1px solid rgba(31,76,62,.08)!important;
+  border-radius:22px!important;
+  box-shadow:none!important;
+}
+.week-day-card.selected{background:linear-gradient(180deg,#264f42 0%,#1e4136 100%)!important;color:#fff!important}
+.week-day-card strong{font-family:Georgia,serif;font-size:22px!important}
+.docket-card{
+  background:linear-gradient(180deg,#fffdfa 0%,#fcfaf6 100%)!important;
+  border:1px solid rgba(31,76,62,.08)!important;
+  border-radius:24px!important;
+  padding:14px 16px!important;
+  display:grid!important;grid-template-columns:40px 56px 1fr auto!important;align-items:center!important;gap:12px!important;
+  margin-bottom:10px!important;
+}
+.docket-number{background:#f4ede2!important;color:#735634!important;border:1px solid rgba(182,144,82,.18)!important;border-radius:14px!important;width:40px!important;height:40px!important;display:grid!important;place-items:center!important;font-weight:800!important}
+.docket-time{color:#1f4c3e!important;font-weight:800!important}
+.docket-body strong{color:#162821!important;font-size:15px!important}
+.docket-body small{color:#60716a!important;margin-top:2px!important}
+.docket-body em{color:#7c6a58!important;margin-top:4px!important;font-style:normal!important;font-size:12px!important}
+.docket-chevron{color:#9aa39d!important;font-size:24px!important}
+.docket-empty{background:#fffdfa!important;border:1px dashed rgba(31,76,62,.14)!important;border-radius:22px!important;padding:24px!important;color:#6c7772!important}
+
+/* agenda */
+.agenda-planner-head{
+  background:linear-gradient(180deg,#fffdfa 0%,#f8f2e9 100%)!important;
+  border:1px solid rgba(182,144,82,.16)!important;border-radius:28px!important;padding:16px!important;
+}
+.agenda-title-line h2{font-size:28px!important;color:#162821!important;letter-spacing:-.03em!important}
+.agenda-today,.agenda-export,.nav-square,.secondary-button,.text-button{
+  border-radius:14px!important;
+}
+.agenda-today,.agenda-export{background:#f2ece1!important;color:#62543f!important;border:1px solid rgba(182,144,82,.16)!important}
+.nav-square{background:linear-gradient(180deg,#264f42 0%,#1e4136 100%)!important;color:#fff!important}
+.planner-item{
+  background:linear-gradient(180deg,#fff 0%,#fcfbf8 100%)!important;
+  border:1px solid rgba(31,76,62,.08)!important;border-radius:22px!important;padding:13px 14px!important;
+}
+.planner-time{color:#1c4437!important;font-weight:800!important}
+.planner-body small{color:#7d8a84!important;letter-spacing:.06em!important}
+.planner-body strong{color:#162821!important}
+.planner-body em{color:#6a7871!important;font-style:normal!important}
+.planner-line i{background:linear-gradient(180deg,#c6d7cf 0%,#95b1a4 100%)!important}
+.planner-item.kind-UDIENZA .planner-line i{background:linear-gradient(180deg,#d69ca6 0%,#8a4351 100%)!important}
+.planner-item.kind-SCADENZA .planner-line i{background:linear-gradient(180deg,#e4c997 0%,#ae7c33 100%)!important}
+.planner-empty,.empty{background:#fffdfa!important;border:1px dashed rgba(31,76,62,.12)!important;border-radius:22px!important;color:#6c7772!important}
+
+/* practices/checklists/tools */
+.practice-card,.tool-card,.checklist-card,.detail-section,.search-card,.search-document,.detail-disclosure,.hearing-mobile-card,.creset-mobile-card{
+  background:linear-gradient(180deg,#fffdfa 0%,#fcfaf6 100%)!important;
+  border:1px solid rgba(31,76,62,.08)!important;
+  border-radius:24px!important;
+}
+.practice-simple-filters button,.filters button,.tool-tabs button,.home-section-title button,.secondary-button{
+  box-shadow:none!important;
+}
+.practice-simple-filters button.active,.filters button.active,.tool-tabs button.active{background:linear-gradient(180deg,#edf4f0 0%,#e0ebe5 100%)!important;color:#1f4c3e!important;border-color:rgba(31,76,62,.12)!important}
+.tool-tabs button{background:linear-gradient(180deg,#fffdfa 0%,#f7f2e8 100%)!important;border:1px solid rgba(182,144,82,.14)!important;border-radius:20px!important;color:#5d614f!important}
+.tool-tabs button.active{background:linear-gradient(180deg,#264f42 0%,#1f4338 100%)!important;color:#fff!important}
+.checklist-quick-tip{background:linear-gradient(180deg,#fff8ee 0%,#f8f2e7 100%)!important;border:1px solid rgba(182,144,82,.16)!important;color:#6a5b42!important}
+.check-item input{accent-color:#1f4c3e!important}
+.progress{background:#ece6dc!important}.progress span{background:linear-gradient(90deg,#2a5f4f 0%,#1f4c3e 100%)!important}
+
+/* bottom nav premium */
+.companion-bottom-nav.five-nav{
+  left:12px!important;right:12px!important;bottom:8px!important;
+  background:rgba(253,251,246,.96)!important;
+  border:1px solid rgba(182,144,82,.14)!important;
+  box-shadow:0 -12px 28px rgba(20,39,32,.10)!important;
+}
+.companion-bottom-nav.five-nav button{
+  color:#6c7a73!important;
+  border-radius:18px!important;
+}
+.companion-bottom-nav.five-nav button .nav-svg{background:transparent!important}
+.companion-bottom-nav.five-nav button.active{
+  background:linear-gradient(180deg,#f2ece1 0%,#e9dfcf 100%)!important;
+  color:#5d503c!important;
+  box-shadow:inset 0 0 0 1px rgba(182,144,82,.16)!important;
+}
+.companion-bottom-nav.five-nav button.active .nav-svg{background:rgba(255,255,255,.7)!important;color:var(--pro-green)!important}
+
+/* fab */
+.floating-add.compact-fab{
+  width:60px!important;height:60px!important;border-radius:50%!important;
+  background:linear-gradient(180deg,#2a5f4f 0%,#1f4c3e 100%)!important;
+  border:3px solid rgba(255,255,255,.75)!important;
+  box-shadow:0 14px 28px rgba(26,63,51,.18)!important;
+}
+
+@media(max-width:430px){
+  main{padding-left:12px!important;padding-right:12px!important}
+  #app > header.companion-topbar .brand-studio{font-size:18px!important}
+  .home-kpi b{font-size:24px!important}
+  .docket-card{grid-template-columns:38px 52px 1fr auto!important;padding:12px 13px!important}
+  .home-action-grid button em{font-size:11px!important}
+}
+
+
+/* V16.0 — DIGITAL PREMIUM */
+:root{
+  --dp-bg:#eef2ef;
+  --dp-paper:rgba(255,253,249,.86);
+  --dp-paper-solid:#fffdf9;
+  --dp-ink:#162721;
+  --dp-green:#173f34;
+  --dp-green-2:#245a49;
+  --dp-green-3:#2f6e59;
+  --dp-bronze:#b58b4c;
+  --dp-bronze-soft:#e8dcc7;
+  --dp-burgundy:#793746;
+  --dp-line:rgba(29,75,61,.09);
+  --dp-glow:0 18px 45px rgba(20,58,46,.10);
+  --dp-soft:0 8px 24px rgba(16,45,36,.06);
+}
+html{background:#eef2ef!important}
+body{
+  background:
+    radial-gradient(circle at 92% 3%,rgba(181,139,76,.12),transparent 20%),
+    radial-gradient(circle at 0% 18%,rgba(47,110,89,.10),transparent 23%),
+    linear-gradient(180deg,#f4f0e8 0%,#f5f4ef 26%,#eef2ef 100%)!important;
+  min-height:100vh;
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opacity:.38;
+  background-image:linear-gradient(rgba(31,76,62,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(31,76,62,.018) 1px,transparent 1px);
+  background-size:24px 24px;
+}
+
+/* premium top bar */
+#app > header.companion-topbar{
+  background:linear-gradient(180deg,rgba(255,253,249,.92) 0%,rgba(248,247,243,.86) 100%)!important;
+  backdrop-filter:blur(22px) saturate(130%)!important;
+  -webkit-backdrop-filter:blur(22px) saturate(130%)!important;
+  border-bottom:1px solid rgba(31,76,62,.08)!important;
+  box-shadow:0 10px 30px rgba(24,48,40,.055)!important;
+  overflow:hidden;
+}
+#app > header.companion-topbar::before{
+  content:"";position:absolute;left:14px;right:14px;top:calc(env(safe-area-inset-top) + 4px);height:1px;
+  background:linear-gradient(90deg,transparent,rgba(181,139,76,.75),rgba(47,110,89,.35),transparent);
+  opacity:.8;
+}
+#app > header.companion-topbar::after{
+  content:"";position:absolute;width:110px;height:110px;border-radius:50%;right:-35px;top:-45px;
+  background:radial-gradient(circle,rgba(47,110,89,.12),rgba(47,110,89,0) 70%);pointer-events:none;
+}
+#app > header.companion-topbar>*{position:relative;z-index:1}
+#app > header.companion-topbar .header-logo.image-logo{
+  box-shadow:0 10px 28px rgba(19,63,51,.12), inset 0 0 0 1px rgba(255,255,255,.7)!important;
+  transition:transform .2s ease,box-shadow .2s ease;
+}
+#app > header.companion-topbar .brand-person{font-size:10px!important;color:#77837d!important;letter-spacing:.14em!important}
+#app > header.companion-topbar .brand-studio{font-size:19px!important;color:#13251f!important;letter-spacing:-.025em!important}
+#app > header.companion-topbar h1#pageTitle{
+  background:rgba(255,255,255,.64)!important;color:#586b62!important;
+  border:1px solid rgba(31,76,62,.08)!important;box-shadow:0 4px 12px rgba(26,55,45,.04)!important;
+  backdrop-filter:blur(8px);
+}
+#app > header.companion-topbar .icon-button{
+  background:rgba(255,255,255,.72)!important;backdrop-filter:blur(12px);
+  border:1px solid rgba(31,76,62,.10)!important;box-shadow:0 8px 20px rgba(17,48,38,.065)!important;
+  transition:transform .16s ease,box-shadow .16s ease,background .16s ease;
+}
+#app > header.companion-topbar .icon-button:active{transform:scale(.94)}
+
+/* global card glass */
+.home-top-compact,.home-focus-panel,.home-next-compact,.home-tools-compact,
+.tool-card,.practice-card,.detail-section,.checklist-card,.agenda-planner-head,.docket-card,.planner-item,
+.search-card,.search-document,.detail-disclosure,.hearing-mobile-card,.creset-mobile-card{
+  background:linear-gradient(180deg,rgba(255,254,251,.92) 0%,rgba(251,250,246,.86) 100%)!important;
+  border:1px solid rgba(31,76,62,.075)!important;
+  box-shadow:var(--dp-soft)!important;
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+}
+
+/* Home digital dashboard */
+.home-top-compact{
+  border-radius:28px!important;padding:15px 16px!important;position:relative;overflow:hidden;
+}
+.home-top-compact::after{
+  content:"";position:absolute;right:-35px;bottom:-45px;width:130px;height:130px;border-radius:50%;
+  background:radial-gradient(circle,rgba(47,110,89,.10),rgba(47,110,89,0) 72%);pointer-events:none;
+}
+.home-brand-mini{position:relative;z-index:1}
+.home-logo-mini{box-shadow:0 10px 22px rgba(21,64,51,.10)!important}
+.home-brand-mini strong{font-size:17px!important;letter-spacing:-.02em!important}
+.home-brand-mini span{font-size:9px!important;letter-spacing:.15em!important}
+.home-top-actions{position:relative;z-index:1}
+.mini-action{
+  background:rgba(255,255,255,.72)!important;border:1px solid rgba(31,76,62,.08)!important;
+  box-shadow:0 6px 16px rgba(16,47,37,.04)!important;transition:transform .15s ease,background .15s ease;
+}
+.mini-action:active{transform:scale(.94);background:#fff!important}
+.sync-mini{background:rgba(232,241,236,.72)!important;color:#416154!important;backdrop-filter:blur(8px)}
+.home-kpi-strip{gap:9px!important}
+.home-kpi{
+  position:relative;overflow:hidden;background:rgba(255,255,255,.74)!important;
+  border:1px solid rgba(31,76,62,.08)!important;box-shadow:0 8px 20px rgba(17,49,39,.045)!important;
+  transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+}
+.home-kpi::after{content:"";position:absolute;left:10px;right:10px;bottom:7px;height:2px;border-radius:99px;background:linear-gradient(90deg,rgba(47,110,89,.12),rgba(181,139,76,.30),rgba(47,110,89,.08))}
+.home-kpi:active{transform:translateY(1px) scale(.985)}
+.home-kpi b{font-size:25px!important}
+.home-kpi.judicial{background:linear-gradient(180deg,rgba(255,249,250,.95),rgba(250,238,241,.88))!important}
+.home-kpi.urgent{background:linear-gradient(180deg,rgba(255,251,243,.96),rgba(249,240,221,.88))!important}
+.home-focus-panel,.home-next-compact,.home-tools-compact{border-radius:28px!important}
+.home-section-title span{font-size:9px!important;letter-spacing:.15em!important;color:#839087!important}
+.home-section-title h3{font-size:20px!important;letter-spacing:-.025em!important}
+.home-section-title button{background:rgba(244,239,229,.76)!important;backdrop-filter:blur(8px)}
+.today-row,.next-compact-card,.home-action-grid button{
+  background:rgba(255,255,255,.66)!important;backdrop-filter:blur(10px);
+  box-shadow:0 5px 14px rgba(23,55,44,.035)!important;transition:transform .17s ease,box-shadow .17s ease,border-color .17s ease;
+}
+.today-row:active,.next-compact-card:active,.home-action-grid button:active{transform:scale(.988)}
+.today-row:hover,.next-compact-card:hover,.home-action-grid button:hover{border-color:rgba(47,110,89,.18)!important;box-shadow:0 8px 20px rgba(23,55,44,.055)!important}
+.today-kind{box-shadow:inset 0 0 0 1px rgba(31,76,62,.05)}
+.home-action-grid button span{
+  background:linear-gradient(180deg,#edf4f0 0%,#e4eee9 100%)!important;
+  box-shadow:inset 0 0 0 1px rgba(31,76,62,.055);
+}
+
+/* Hearings more digital but authoritative */
+.hearings-command-head{
+  position:relative;overflow:hidden;
+  background:linear-gradient(145deg,#6f2e3c 0%,#7d3946 48%,#5f2633 100%)!important;
+  border:1px solid rgba(255,255,255,.10)!important;box-shadow:0 18px 38px rgba(96,38,51,.18)!important;
+}
+.hearings-command-head::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(120deg,rgba(255,255,255,.05),transparent 32%,transparent 70%,rgba(255,255,255,.04));
+}
+.hearings-command-head::after{
+  content:"";position:absolute;right:-45px;top:-45px;width:160px;height:160px;border-radius:50%;
+  background:radial-gradient(circle,rgba(232,220,199,.14),rgba(232,220,199,0) 70%);pointer-events:none;
+}
+.hearings-command-head>*{position:relative;z-index:1}
+.hearing-period-control input{background:rgba(255,255,255,.95)!important}
+.hearing-mode{backdrop-filter:blur(8px)}
+.week-day-card{transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease;background:rgba(255,255,255,.78)!important}
+.week-day-card:active{transform:scale(.97)}
+.week-day-card.selected{background:linear-gradient(180deg,#28594a 0%,#1b4337 100%)!important;box-shadow:0 10px 24px rgba(25,67,54,.18)!important}
+.docket-card{position:relative;overflow:hidden;background:rgba(255,255,255,.82)!important;transition:transform .16s ease,box-shadow .16s ease}
+.docket-card::before{content:"";position:absolute;left:0;top:12px;bottom:12px;width:3px;border-radius:99px;background:linear-gradient(180deg,#9b5060,#6d2d3c)}
+.docket-card:active{transform:scale(.99)}
+.docket-number{background:linear-gradient(180deg,#f3eadb 0%,#eee1cc 100%)!important;box-shadow:inset 0 0 0 1px rgba(181,139,76,.08)}
+
+/* Agenda digital planner */
+.agenda-planner-head{position:relative;overflow:hidden;background:linear-gradient(180deg,rgba(255,254,251,.92),rgba(247,243,235,.88))!important}
+.agenda-planner-head::after{content:"";position:absolute;right:-40px;bottom:-50px;width:130px;height:130px;border-radius:50%;background:radial-gradient(circle,rgba(181,139,76,.11),transparent 72%);pointer-events:none}
+.agenda-planner-head>*{position:relative;z-index:1}
+.agenda-title-line h2{font-size:27px!important}
+.planner-item{background:rgba(255,255,255,.76)!important;transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease}
+.planner-item:active{transform:scale(.989)}
+.planner-line{position:relative}
+.planner-line::after{content:"";position:absolute;top:0;bottom:0;left:50%;width:1px;transform:translateX(-50%);background:linear-gradient(180deg,rgba(47,110,89,.20),rgba(47,110,89,.04))}
+.planner-line i{position:relative;z-index:1;box-shadow:0 0 0 4px rgba(47,110,89,.06)}
+
+/* checklist premium */
+.checklist-quick-tip{position:relative;overflow:hidden;background:linear-gradient(135deg,rgba(255,250,241,.94),rgba(246,242,233,.88))!important}
+.checklist-quick-tip::after{content:"";position:absolute;right:-25px;top:-30px;width:90px;height:90px;border-radius:50%;background:radial-gradient(circle,rgba(181,139,76,.13),transparent 70%)}
+.checklist-card{position:relative;overflow:hidden}
+.checklist-card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,#2e6a56,#b58b4c)}
+.check-item{transition:background .15s ease,padding-left .15s ease}
+.check-item:has(input:checked){background:rgba(232,241,236,.52);padding-left:4px!important;border-radius:10px}
+.check-item input{width:18px;height:18px}
+.checklist-composer-sheet{background:linear-gradient(180deg,#fffdf9 0%,#f5f2eb 100%)!important}
+.checklist-composer-actions button{min-height:48px}
+
+/* Tools and practices */
+.tool-tabs button,.practice-simple-filters button,.filters button{transition:transform .15s ease,background .15s ease,border-color .15s ease}
+.tool-tabs button:active,.practice-simple-filters button:active,.filters button:active{transform:scale(.97)}
+.tool-tabs button{background:rgba(255,255,255,.72)!important;backdrop-filter:blur(8px);box-shadow:0 6px 18px rgba(21,50,40,.04)!important}
+.tool-tabs button.active{background:linear-gradient(180deg,#2d6452 0%,#1e483b 100%)!important;box-shadow:0 10px 24px rgba(28,73,59,.16)!important}
+.practice-card{transition:transform .16s ease,box-shadow .16s ease,border-color .16s ease}
+.practice-card:active{transform:scale(.992)}
+
+/* premium bottom navigation */
+.companion-bottom-nav.five-nav{
+  background:rgba(250,248,243,.88)!important;
+  backdrop-filter:blur(24px) saturate(125%)!important;
+  -webkit-backdrop-filter:blur(24px) saturate(125%)!important;
+  border:1px solid rgba(31,76,62,.10)!important;
+  box-shadow:0 -14px 34px rgba(20,49,39,.12)!important;
+}
+.companion-bottom-nav.five-nav::before{
+  content:"";position:absolute;left:28px;right:28px;top:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(181,139,76,.58),rgba(47,110,89,.25),transparent);
+}
+.companion-bottom-nav.five-nav button{transition:transform .16s ease,background .16s ease,color .16s ease}
+.companion-bottom-nav.five-nav button:active{transform:scale(.96)}
+.companion-bottom-nav.five-nav button.active{
+  background:linear-gradient(180deg,rgba(237,231,219,.94),rgba(229,220,204,.90))!important;
+  box-shadow:inset 0 0 0 1px rgba(181,139,76,.14),0 6px 18px rgba(82,63,36,.05)!important;
+}
+.companion-bottom-nav.five-nav button.active .nav-svg{
+  background:rgba(255,255,255,.76)!important;box-shadow:0 6px 14px rgba(35,63,53,.07)!important;
+}
+.companion-bottom-nav.five-nav button.active .nav-svg svg{stroke:#1f4c3e!important}
+
+/* FAB */
+.floating-add.compact-fab{
+  background:linear-gradient(145deg,#34715c 0%,#1e493b 72%)!important;
+  box-shadow:0 16px 34px rgba(25,73,58,.24),inset 0 1px 0 rgba(255,255,255,.24)!important;
+  transition:transform .16s ease,box-shadow .16s ease!important;
+}
+.floating-add.compact-fab:active{transform:scale(.93)!important;box-shadow:0 8px 20px rgba(25,73,58,.18)!important}
+
+/* interaction polish */
+button{-webkit-tap-highlight-color:transparent}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid rgba(47,110,89,.35)!important;outline-offset:2px!important}
+.view{animation:dpEnter .24s ease both!important}
+@keyframes dpEnter{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+@media(max-width:430px){
+  main{padding-top:10px!important}
+  .home-top-compact,.home-focus-panel,.home-next-compact,.home-tools-compact,.agenda-planner-head,.hearings-command-head{border-radius:25px!important}
+  .home-kpi{border-radius:20px!important}
+  .companion-bottom-nav.five-nav{left:10px!important;right:10px!important}
+}

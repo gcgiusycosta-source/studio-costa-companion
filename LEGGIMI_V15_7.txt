@@ -1,0 +1,15 @@
+STUDIO COSTA COMPANION V15.7 — GITHUB FLAT
+
+PACCHETTO PIATTO:
+Tutti i file sono nella cartella principale. Non esistono sottocartelle.
+Caricare su GitHub esattamente i file contenuti nello ZIP.
+
+CORREZIONI V15.7:
+- safe area superiore iPhone ripristinata;
+- testata superiore resa più bassa;
+- logo, titolo e pulsanti compattati;
+- contenuto non sale sotto orologio/notch;
+- media spostati nella radice e riferimenti aggiornati;
+- service worker/cache aggiornati alla V15.7.
+
+La logica dati e i calcoli non sono stati modificati.

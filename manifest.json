@@ -1,7 +1,7 @@
 {
-  "name": "Studio Costa Companion V15.4",
+  "name": "Studio Costa Companion V15.7",
   "short_name": "Studio Costa",
-  "description": "Agenda legale mobile e Companion sincronizzato con Studio Legale Costa V15.4",
+  "description": "Agenda legale mobile e Companion sincronizzato con Studio Legale Costa V15.7",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

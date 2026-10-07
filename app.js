@@ -616,6 +616,7 @@ function renderHome(){
   const all=calendarItems().sort(eventSort);
   const today=new Date().toISOString().slice(0,10);
   const weekEnd=addDays(today,6);
+  const todayItems=all.filter(e=>e.event_date===today).slice(0,4);
   const stats={
     practices:(snapshot.practices||[]).filter(p=>!/(ARCHIVIAT|CHIUS|DEFINIT|ESTINT)/i.test(String(p.stato||""))).length || (snapshot.practices||[]).length,
     hearings:all.filter(e=>eventKind(e)==="UDIENZA" && (e.event_date||"")>=today && (e.event_date||"")<=weekEnd).length,
@@ -626,87 +627,59 @@ function renderHome(){
   const linked=next?.practice_id&&practiceById(next.practice_id);
   let syncTime='—';
   try{syncTime=new Intl.DateTimeFormat('it-IT',{hour:'2-digit',minute:'2-digit'}).format(new Date(snapshot.generated_at));}catch(e){}
-  const longDate=new Intl.DateTimeFormat('it-IT',{weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(new Date());
+  const dateShort=new Intl.DateTimeFormat('it-IT',{weekday:'long',day:'numeric',month:'long'}).format(new Date());
+  const todayRows=todayItems.map(e=>{
+    const p=e.practice_id&&practiceById(e.practice_id);
+    const kind=eventKind(e);
+    return `<button class="today-row kind-${kind}" ${p?`data-practice="${p.id}"`:'data-open-view="agendaView"'}>
+      <span class="today-time">${escapeHtml(e.start_time||'—')}</span>
+      <span class="today-kind">${kind==='UDIENZA'?'⚖':kind==='APPUNTAMENTO'?'●':kind==='SCADENZA'?'!':'•'}</span>
+      <span class="today-main"><strong>${escapeHtml(e.title||kind)}</strong><small>${escapeHtml(p?.assistito||e.practice_name||e.location||e.authority||'')}</small></span>
+      <span class="today-go">›</span>
+    </button>`;
+  }).join('');
 
   root.innerHTML=`
-    <section class="mobile-home-hero compact-hero">
-      <div class="mobile-home-top">
-        <div class="mobile-brand-card">
-          <div class="mobile-brand-logo"></div>
-          <div>
-            <div class="mobile-brand-overline">Studio Legale Costa</div>
-            <div class="mobile-brand-subline">Companion</div>
-          </div>
-        </div>
-        <div class="mobile-home-actions">
-          <button class="circle-action" data-home-action="search" aria-label="Cerca">⌕</button>
-          <button class="circle-action has-dot" data-home-action="agenda" aria-label="Agenda">◌</button>
-          <button class="circle-action" data-home-action="settings" aria-label="Sistema">⋯</button>
-        </div>
+    <section class="home-top-compact">
+      <div class="home-brand-mini">
+        <div class="home-logo-mini"></div>
+        <div><span>STUDIO LEGALE COSTA</span><strong>${homeGreeting()}, Avvocato Costa</strong><small>${escapeHtml(dateShort)}</small></div>
       </div>
-      <div class="mobile-home-copy home-copy-tight">
-        <p class="mobile-greeting">${homeGreeting()}</p>
-        <h2>Avvocato Costa</h2>
-        <p class="mobile-date">${escapeHtml(longDate)}</p>
-        <div class="sync-chip-home">✓ Sincronizzato oggi, ${escapeHtml(syncTime)}</div>
+      <div class="home-top-actions">
+        <button class="mini-action" data-home-action="search" aria-label="Cerca">⌕</button>
+        <button class="mini-action" data-home-action="settings" aria-label="Sistema">⋯</button>
       </div>
+      <div class="sync-mini">✓ ${escapeHtml(syncTime)}</div>
     </section>
 
-    <section class="mobile-home-grid home-grid-compact">
-      <button class="home-stat-card card-pratiche" data-open-view="practicesView">
-        <span class="home-stat-icon">▣</span>
-        <strong>${stats.practices}</strong>
-        <small>Pratiche attive</small>
-        <i>›</i>
-      </button>
-      <button class="home-stat-card card-udienze" data-open-view="hearingsView">
-        <span class="home-stat-icon">⚖</span>
-        <strong>${stats.hearings}</strong>
-        <small>Udienze</small>
-        <i>›</i>
-      </button>
-      <button class="home-stat-card card-scadenze" data-open-view="agendaView">
-        <span class="home-stat-icon">⌛</span>
-        <strong>${stats.deadlines}</strong>
-        <small>Scadenze</small>
-        <i>›</i>
-      </button>
-      <button class="home-stat-card card-sync" data-open-view="agendaView">
-        <span class="home-stat-icon">◷</span>
-        <strong>${stats.appointments}</strong>
-        <small>Appuntamenti</small>
-        <i>›</i>
-      </button>
+    <section class="home-kpi-strip">
+      <button class="home-kpi" data-open-view="practicesView"><b>${stats.practices}</b><span>Pratiche</span></button>
+      <button class="home-kpi judicial" data-open-view="hearingsView"><b>${stats.hearings}</b><span>Udienze</span></button>
+      <button class="home-kpi urgent" data-open-view="agendaView"><b>${stats.deadlines}</b><span>Scadenze</span></button>
+      <button class="home-kpi" data-open-view="agendaView"><b>${stats.appointments}</b><span>Appunt.</span></button>
     </section>
 
-    <section class="mobile-panel next-panel">
-      <div class="panel-head">
-        <h3>Prossimo impegno</h3>
-        <button class="panel-link" data-open-view="agendaView">Vedi agenda completa</button>
-      </div>
-      ${next?`<button class="next-engagement-card" ${linked?`data-practice="${linked.id}"`:'data-open-view="agendaView"'}>
-        <div class="next-engagement-icon">${eventKind(next)==='UDIENZA'?'⚖':eventKind(next)==='APPUNTAMENTO'?'☷':'⌛'}</div>
-        <div class="next-engagement-time">${escapeHtml(next.start_time||'—')}</div>
-        <div class="next-engagement-body">
-          <strong>${escapeHtml(next.title||eventKind(next))}</strong>
-          <span>${escapeHtml(linked?.assistito || next.practice_name || next.location || '')}</span>
-          ${(next.authority || next.location || linked?.autorita || linked?.tribunale)?`<small>${escapeHtml(next.authority || next.location || linked?.autorita || linked?.tribunale || '')}</small>`:''}
-        </div>
-        <div class="next-engagement-chevron">›</div>
-      </button>`:'<div class="empty home-empty">Nessun impegno imminente.</div>'}
+    <section class="home-focus-panel">
+      <div class="home-section-title"><div><span>OGGI</span><h3>La tua giornata</h3></div><button data-open-view="agendaView">Apri agenda</button></div>
+      <div class="today-list">${todayRows||'<div class="home-empty-inline">Nessun impegno oggi.</div>'}</div>
     </section>
 
-    <section class="mobile-panel quick-panel">
-      <div class="panel-head">
-        <h3>Strumenti rapidi</h3>
-        <button class="panel-link" data-open-view="toolsView">Tutti gli strumenti</button>
-      </div>
-      <div class="quick-tool-row">
-        <button class="quick-icon-card tone-sage" data-open-tool="creset"><span>⌗</span><em>Creset</em></button>
-        <button class="quick-icon-card tone-green" data-open-tool="codes"><span>▤</span><em>Banca giuridica</em></button>
-        <button class="quick-icon-card tone-gold" data-open-tool="terms"><span>⌛</span><em>Termini</em></button>
-        <button class="quick-icon-card tone-cream" data-open-tool="split"><span>€</span><em>Riparto</em></button>
-        <button class="quick-icon-card tone-deep" data-open-view="checklistsView"><span>✓</span><em>Checklist</em></button>
+    <section class="home-next-compact">
+      <div class="home-section-title"><div><span>PROSSIMO</span><h3>Impegno in arrivo</h3></div></div>
+      ${next?`<button class="next-compact-card" ${linked?`data-practice="${linked.id}"`:'data-open-view="agendaView"'}>
+        <span class="next-badge">${eventKind(next)==='UDIENZA'?'⚖ UDIENZA':eventKind(next)==='APPUNTAMENTO'?'● APPUNTAMENTO':'! '+eventKind(next)}</span>
+        <strong>${escapeHtml(next.start_time||'—')}</strong>
+        <div><b>${escapeHtml(next.title||eventKind(next))}</b><small>${escapeHtml(linked?.assistito||next.practice_name||next.location||'')}</small></div><i>›</i>
+      </button>`:'<div class="home-empty-inline">Nessun impegno imminente.</div>'}
+    </section>
+
+    <section class="home-tools-compact">
+      <div class="home-section-title"><div><span>AZIONI</span><h3>Accesso rapido</h3></div><button data-open-view="toolsView">Tutti</button></div>
+      <div class="home-action-grid">
+        <button data-open-tool="creset"><span>⌗</span><em>Creset</em></button>
+        <button data-open-tool="codes"><span>§</span><em>Banca giuridica</em></button>
+        <button data-open-tool="terms"><span>⌛</span><em>Termini</em></button>
+        <button data-open-view="checklistsView"><span>✓</span><em>Checklist</em></button>
       </div>
     </section>`;
 
@@ -741,25 +714,50 @@ function renderMonthGrid(items,selected){
 function compactEventList(events,emptyText="Nessun impegno nel giorno selezionato"){
   return `<div class="compact-event-list">${events.length?events.map(eventCard).join(""):`<div class="empty">${emptyText}</div>`}</div>`;
 }
+function hearingDocketList(events,emptyText="Nessuna udienza nel giorno selezionato"){
+  if(!events.length)return `<div class="empty docket-empty">${emptyText}</div>`;
+  return `<div class="docket-list">${events.map((e,index)=>{
+    const p=e.practice_id&&practiceById(e.practice_id);
+    const place=e.authority||e.location||p?.autorita||p?.tribunale||'';
+    return `<button class="docket-card" ${p?`data-practice="${p.id}"`:''}>
+      <span class="docket-number">${String(index+1).padStart(2,'0')}</span>
+      <span class="docket-time">${escapeHtml(e.start_time||'—')}</span>
+      <span class="docket-body"><strong>${escapeHtml(e.title||'Udienza')}</strong><small>${escapeHtml(p?.assistito||e.practice_name||'')}</small>${place?`<em>${escapeHtml(place)}</em>`:''}</span>
+      <span class="docket-chevron">›</span>
+    </button>`;
+  }).join('')}</div>`;
+}
+function agendaTimeline(events,emptyText="Nessun impegno nel giorno selezionato"){
+  if(!events.length)return `<div class="empty planner-empty">${emptyText}</div>`;
+  return `<div class="planner-timeline">${events.map(e=>{
+    const p=e.practice_id&&practiceById(e.practice_id);const kind=eventKind(e);
+    return `<button class="planner-item kind-${kind}" ${p?`data-practice="${p.id}"`:''}>
+      <span class="planner-time">${escapeHtml(e.start_time||'—')}</span>
+      <span class="planner-line"><i></i></span>
+      <span class="planner-body"><small>${escapeHtml(kind)}</small><strong>${escapeHtml(e.title||kind)}</strong><em>${escapeHtml(p?.assistito||e.practice_name||e.location||e.authority||'')}</em></span>
+      <span class="planner-chevron">›</span>
+    </button>`;
+  }).join('')}</div>`;
+}
 function renderHearings(){
   const today=new Date().toISOString().slice(0,10);
   const anchor=$("hearingDate").value||today; const all=calendarItems().filter(e=>eventKind(e)==="UDIENZA").sort(eventSort); let events=[]; let periodLabel="";
   if(hearingMode==="day"){
     hearingSelectedDay=anchor; events=all.filter(e=>e.event_date===anchor); periodLabel=`${fmtWeekday(anchor)} ${fmtDate(anchor)}`;
-    $("hearingsContent").innerHTML=compactEventList(events,"Nessuna udienza nel giorno selezionato");
+    $("hearingsContent").innerHTML=`<div class="docket-day-caption"><b>${events.length}</b><span>${events.length===1?'udienza':'udienze'} in ruolo</span></div>${hearingDocketList(events)}`;
   }else if(hearingMode==="week"){
     const start=startOfWeek(anchor),end=addDays(start,6);
     if(!hearingSelectedDay||hearingSelectedDay<start||hearingSelectedDay>end)hearingSelectedDay=(today>=start&&today<=end)?today:start;
-    events=all.filter(e=>e.event_date>=start&&e.event_date<=end); periodLabel=`Lun–Dom ${fmtDate(start)} – ${fmtDate(end)}`;
+    events=all.filter(e=>e.event_date>=start&&e.event_date<=end); periodLabel=`${fmtDate(start)} – ${fmtDate(end)}`;
     const dayEvents=events.filter(e=>e.event_date===hearingSelectedDay);
-    $("hearingsContent").innerHTML=`${weekOverview(events,start,hearingSelectedDay,"data-hearing-week-day")}<div class="selected-agenda-day compact-selected"><strong>${escapeHtml(fmtWeekday(hearingSelectedDay))}</strong><span>${fmtDate(hearingSelectedDay)}</span></div>${compactEventList(dayEvents,"Nessuna udienza nel giorno selezionato")}`;
+    $("hearingsContent").innerHTML=`<div class="docket-week-summary"><b>${events.length}</b><span>udienze nella settimana</span></div>${weekOverview(events,start,hearingSelectedDay,"data-hearing-week-day")}<div class="docket-selected-day"><strong>${escapeHtml(fmtWeekday(hearingSelectedDay))}</strong><span>${fmtDate(hearingSelectedDay)} · ${dayEvents.length} ${dayEvents.length===1?'udienza':'udienze'}</span></div>${hearingDocketList(dayEvents)}`;
     $("hearingsContent").querySelectorAll("[data-hearing-week-day]").forEach(b=>b.onclick=()=>{hearingSelectedDay=b.dataset.hearingWeekDay;renderHearings()});
   }else{
     const [start,end]=monthBounds(anchor);
     if(!hearingSelectedDay||hearingSelectedDay<start||hearingSelectedDay>end)hearingSelectedDay=anchor;
     events=all.filter(e=>e.event_date>=start&&e.event_date<=end); periodLabel=new Intl.DateTimeFormat("it-IT",{month:"long",year:"numeric"}).format(new Date(anchor+"T12:00:00"));
     const dayEvents=events.filter(e=>e.event_date===hearingSelectedDay);
-    $("hearingsContent").innerHTML=`${renderMonthGrid(events,hearingSelectedDay)}<div class="selected-day-label compact-selected">${escapeHtml(fmtWeekday(hearingSelectedDay))} ${fmtDate(hearingSelectedDay)}</div>${compactEventList(dayEvents,"Nessuna udienza nel giorno selezionato")}`;
+    $("hearingsContent").innerHTML=`<div class="docket-month-count"><b>${events.length}</b><span>udienze nel mese</span></div>${renderMonthGrid(events,hearingSelectedDay)}<div class="docket-selected-day"><strong>${escapeHtml(fmtWeekday(hearingSelectedDay))}</strong><span>${fmtDate(hearingSelectedDay)} · ${dayEvents.length} in ruolo</span></div>${hearingDocketList(dayEvents)}`;
     $("hearingsContent").querySelectorAll("[data-agenda-day]").forEach(b=>b.onclick=()=>{hearingSelectedDay=b.dataset.agendaDay;renderHearings()});
   }
   $("hearingPeriodLabel").textContent=periodLabel; bindPracticeLinks($("hearingsContent"));
@@ -769,19 +767,19 @@ function renderAgenda(){
   const anchor=$("agendaDate").value||today; const all=calendarItems().sort(eventSort); let events=[]; let periodLabel="";
   if(agendaMode==="day"){
     agendaSelectedDay=anchor; events=all.filter(e=>e.event_date===anchor); periodLabel=`${fmtWeekday(anchor)} ${fmtDate(anchor)}`;
-    $("agendaContent").innerHTML=compactEventList(events);
+    $("agendaContent").innerHTML=`<div class="planner-day-heading"><strong>${escapeHtml(fmtWeekday(anchor))}</strong><span>${fmtDate(anchor)} · ${events.length} ${events.length===1?'impegno':'impegni'}</span></div>${agendaTimeline(events)}`;
   }else if(agendaMode==="week"){
     const start=startOfWeek(anchor),end=addDays(start,6);
     if(!agendaSelectedDay||agendaSelectedDay<start||agendaSelectedDay>end)agendaSelectedDay=(today>=start&&today<=end)?today:start;
-    events=all.filter(e=>e.event_date>=start&&e.event_date<=end); periodLabel=`Lun–Dom ${fmtDate(start)} – ${fmtDate(end)}`;
+    events=all.filter(e=>e.event_date>=start&&e.event_date<=end); periodLabel=`${fmtDate(start)} – ${fmtDate(end)}`;
     const dayEvents=events.filter(e=>e.event_date===agendaSelectedDay);
-    $("agendaContent").innerHTML=`${weekOverview(all,start,agendaSelectedDay,"data-agenda-week-day")}<div class="selected-agenda-day compact-selected"><strong>${escapeHtml(fmtWeekday(agendaSelectedDay))}</strong><span>${fmtDate(agendaSelectedDay)}</span></div>${compactEventList(dayEvents)}`;
+    $("agendaContent").innerHTML=`${weekOverview(all,start,agendaSelectedDay,"data-agenda-week-day")}<div class="planner-day-heading"><strong>${escapeHtml(fmtWeekday(agendaSelectedDay))}</strong><span>${fmtDate(agendaSelectedDay)} · ${dayEvents.length} ${dayEvents.length===1?'impegno':'impegni'}</span></div>${agendaTimeline(dayEvents)}`;
     $("agendaContent").querySelectorAll("[data-agenda-week-day]").forEach(b=>b.onclick=()=>{agendaSelectedDay=b.dataset.agendaWeekDay;renderAgenda()});
   }else{
     const [start,end]=monthBounds(anchor); if(!agendaSelectedDay||agendaSelectedDay<start||agendaSelectedDay>end)agendaSelectedDay=anchor;
     events=all.filter(e=>e.event_date>=start&&e.event_date<=end); periodLabel=new Intl.DateTimeFormat("it-IT",{month:"long",year:"numeric"}).format(new Date(anchor+"T12:00:00"));
     const dayEvents=events.filter(e=>e.event_date===agendaSelectedDay);
-    $("agendaContent").innerHTML=`${renderMonthGrid(events,agendaSelectedDay)}<div class="selected-day-label compact-selected">${escapeHtml(fmtWeekday(agendaSelectedDay))} ${fmtDate(agendaSelectedDay)}</div>${compactEventList(dayEvents)}`;
+    $("agendaContent").innerHTML=`${renderMonthGrid(events,agendaSelectedDay)}<div class="planner-day-heading"><strong>${escapeHtml(fmtWeekday(agendaSelectedDay))}</strong><span>${fmtDate(agendaSelectedDay)} · ${dayEvents.length} ${dayEvents.length===1?'impegno':'impegni'}</span></div>${agendaTimeline(dayEvents)}`;
     $("agendaContent").querySelectorAll("[data-agenda-day]").forEach(b=>b.onclick=()=>{agendaSelectedDay=b.dataset.agendaDay;renderAgenda()});
   }
   $("agendaPeriodLabel").textContent=periodLabel; bindPracticeLinks($("agendaContent"));

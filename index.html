@@ -7,10 +7,10 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Studio Costa">
-  <link rel="manifest" href="manifest.json?v=15.4">
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=15.4">
-  <link rel="stylesheet" href="styles.css?v=15.4">
-  <title>Studio Costa Companion V15.4</title>
+  <link rel="manifest" href="manifest.json?v=15.7">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=15.7">
+  <link rel="stylesheet" href="styles.css?v=15.7">
+  <title>Studio Costa Companion V15.7</title>
 </head>
 <body>
   <section id="pairScreen" class="screen hidden">
@@ -67,42 +67,51 @@
       <section id="homeView" class="view"></section>
 
       <section id="hearingsView" class="view hidden">
-        <div class="calendar-compact-head hearings-compact-head">
-          <div class="calendar-mode compact-mode" role="group" aria-label="Vista udienze">
-            <button data-hearing-mode="day">Giorno</button>
-            <button data-hearing-mode="week" class="active">Settimana</button>
-            <button data-hearing-mode="month">Mese</button>
+        <div class="hearings-command-head">
+          <div class="view-identity">
+            <span class="view-kicker">GIUDIZIARIO</span>
+            <div><h2>Udienze</h2><p>Ruolo, orari e pratiche collegate</p></div>
           </div>
-          <div class="calendar-compact-nav">
+          <div class="hearing-period-control">
             <button id="hearingPrev" class="nav-square" aria-label="Periodo precedente">‹</button>
             <input id="hearingDate" type="date" aria-label="Data udienze">
             <button id="hearingNext" class="nav-square" aria-label="Periodo successivo">›</button>
-            <button id="hearingToday" class="secondary-button compact-today">Oggi</button>
           </div>
-          <div id="hearingPeriodLabel" class="compact-period-label"></div>
+          <div class="hearing-view-row">
+            <div class="hearing-mode" role="group" aria-label="Vista udienze">
+              <button data-hearing-mode="day">Giorno</button>
+              <button data-hearing-mode="week" class="active">Settimana</button>
+              <button data-hearing-mode="month">Mese</button>
+            </div>
+            <button id="hearingToday" class="hearing-today">Oggi</button>
+          </div>
+          <div id="hearingPeriodLabel" class="hearing-period-label"></div>
         </div>
-        <div id="hearingsContent"></div>
+        <div id="hearingsContent" class="hearings-docket"></div>
       </section>
 
       <section id="agendaView" class="view hidden">
-        <div class="calendar-compact-head agenda-compact-head">
-          <div class="calendar-mode compact-mode" role="group" aria-label="Vista agenda">
+        <div class="agenda-planner-head">
+          <div class="agenda-title-line">
+            <div><span class="view-kicker">PLANNER</span><h2>Agenda</h2></div>
+            <button id="agendaToday" class="agenda-today">Oggi</button>
+          </div>
+          <div class="agenda-navigation-line">
+            <button id="agendaPrev" class="nav-square" aria-label="Periodo precedente">‹</button>
+            <input id="agendaDate" type="date" aria-label="Data agenda">
+            <button id="agendaNext" class="nav-square" aria-label="Periodo successivo">›</button>
+          </div>
+          <div class="agenda-mode planner-mode" role="group" aria-label="Vista agenda">
             <button data-agenda-mode="day">Giorno</button>
             <button data-agenda-mode="week" class="active">Settimana</button>
             <button data-agenda-mode="month">Mese</button>
           </div>
-          <div class="calendar-compact-nav">
-            <button id="agendaPrev" class="nav-square" aria-label="Periodo precedente">‹</button>
-            <input id="agendaDate" type="date" aria-label="Data agenda">
-            <button id="agendaNext" class="nav-square" aria-label="Periodo successivo">›</button>
-            <button id="agendaToday" class="secondary-button compact-today">Oggi</button>
-          </div>
-          <div class="compact-agenda-footer">
+          <div class="agenda-meta-row">
             <span id="agendaPeriodLabel" class="compact-period-label"></span>
-            <button id="exportCalendarIcs" class="secondary-button compact-export">Esporta calendario</button>
+            <button id="exportCalendarIcs" class="agenda-export">Esporta</button>
           </div>
         </div>
-        <div id="agendaContent"></div>
+        <div id="agendaContent" class="agenda-planner-content"></div>
       </section>
 
       <section id="practicesView" class="view hidden">
@@ -260,7 +269,7 @@
 
   <div id="settingsModal" class="modal hidden">
     <div class="modal-sheet compact-sheet">
-      <div class="modal-top"><button id="closeSettings" class="back-button">‹</button><div><div class="eyebrow dark">COMPANION V15.4</div><h2>Sincronizzazione e privacy</h2></div></div>
+      <div class="modal-top"><button id="closeSettings" class="back-button">‹</button><div><div class="eyebrow dark">COMPANION V15.7</div><h2>Sincronizzazione e privacy</h2></div></div>
       <div class="detail-section">
         <h3>Modifiche da riportare al PC</h3>
         <p id="pendingActionsInfo" class="muted"></p>
@@ -287,6 +296,6 @@
 
   <div id="undoToast" class="undo-toast hidden"><span>Checklist aggiornata</span><button id="undoAction" type="button">Annulla</button></div>
 
-  <script src="app.js?v=15.4"></script>
+  <script src="app.js?v=15.7"></script>
 </body>
 </html>

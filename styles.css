@@ -1117,3 +1117,302 @@ button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-vis
   .home-kpi{border-radius:20px!important}
   .companion-bottom-nav.five-nav{left:10px!important;right:10px!important}
 }
+
+
+/* V16.1 — BLACK PROFESSIONAL / Studio Legale Costa */
+:root{
+  --bp-black:#090d0c;
+  --bp-black-2:#0d1210;
+  --bp-panel:#121816;
+  --bp-panel-2:#151d1a;
+  --bp-panel-3:#1a2320;
+  --bp-line:#27312d;
+  --bp-line-soft:rgba(230,236,232,.08);
+  --bp-white:#f4f3ef;
+  --bp-ivory:#e9e5dc;
+  --bp-muted:#9aa6a0;
+  --bp-muted-2:#727f79;
+  --bp-green:#235b49;
+  --bp-green-bright:#4f9279;
+  --bp-gold:#b99a61;
+  --bp-gold-soft:#8f774c;
+  --bp-burgundy:#7e3d49;
+  --bp-danger:#b85a65;
+  --bp-shadow:0 14px 34px rgba(0,0,0,.28);
+  --bp-shadow-soft:0 8px 22px rgba(0,0,0,.20);
+}
+html{background:var(--bp-black)!important;color-scheme:dark!important}
+body{
+  color:var(--bp-white)!important;
+  background:
+    radial-gradient(circle at 88% 5%,rgba(35,91,73,.13),transparent 24%),
+    radial-gradient(circle at 4% 30%,rgba(185,154,97,.035),transparent 22%),
+    linear-gradient(180deg,#090d0c 0%,#0a0f0d 45%,#080c0b 100%)!important;
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opacity:.22;
+  background-image:linear-gradient(rgba(255,255,255,.012) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.012) 1px,transparent 1px);
+  background-size:28px 28px;
+}
+body,main,.view{background-color:transparent!important}
+
+/* Header: nero, leggibile, istituzionale */
+#app > header.companion-topbar{
+  position:sticky!important;top:0!important;z-index:30!important;
+  padding:calc(11px + env(safe-area-inset-top)) 14px 11px!important;
+  background:linear-gradient(180deg,rgba(10,15,13,.98) 0%,rgba(13,18,16,.95) 100%)!important;
+  border-bottom:1px solid rgba(185,154,97,.16)!important;
+  box-shadow:0 12px 30px rgba(0,0,0,.34)!important;
+  backdrop-filter:blur(20px)!important;-webkit-backdrop-filter:blur(20px)!important;
+  overflow:hidden!important;
+}
+#app > header.companion-topbar::before{
+  content:"";position:absolute;left:14px;right:14px;bottom:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(185,154,97,.48),rgba(35,91,73,.36),transparent);
+}
+#app > header.companion-topbar::after{display:none!important}
+#app > header.companion-topbar .header-logo.image-logo{
+  width:46px!important;height:46px!important;flex-basis:46px!important;border-radius:14px!important;
+  background-color:#132019!important;border:1px solid rgba(185,154,97,.22)!important;
+  box-shadow:0 8px 20px rgba(0,0,0,.30)!important;
+}
+#app > header.companion-topbar .brand-person{
+  color:#b9bdb9!important;font-size:9.5px!important;font-weight:750!important;letter-spacing:.13em!important;
+}
+#app > header.companion-topbar .brand-studio{
+  color:#f1efe9!important;font-size:18px!important;font-weight:720!important;letter-spacing:-.02em!important;
+}
+#app > header.companion-topbar h1#pageTitle{
+  color:#b9a37b!important;background:transparent!important;border:0!important;box-shadow:none!important;
+  padding:3px 0 0!important;margin:2px 0 0!important;border-radius:0!important;
+  font-size:10px!important;letter-spacing:.11em!important;font-weight:750!important;
+}
+#app > header.companion-topbar .icon-button{
+  width:42px!important;height:42px!important;border-radius:13px!important;
+  background:#141b18!important;color:#eceae4!important;border:1px solid #2a332f!important;
+  box-shadow:none!important;
+}
+#app > header.companion-topbar .icon-button:active{background:#1a2420!important;transform:scale(.96)}
+#app > header.companion-topbar .sync-pill{
+  background:#121916!important;color:#9eaaa4!important;border:1px solid #26302c!important;
+}
+
+main{padding-top:12px!important;padding-left:14px!important;padding-right:14px!important;padding-bottom:148px!important}
+
+/* Home executive */
+.home-top-compact.executive-home-head{
+  position:relative;display:grid!important;grid-template-columns:1fr auto!important;gap:10px!important;
+  background:linear-gradient(145deg,#111714 0%,#151e1a 100%)!important;
+  border:1px solid #27322d!important;border-radius:22px!important;padding:15px 15px 13px!important;
+  box-shadow:var(--bp-shadow-soft)!important;overflow:hidden!important;
+}
+.home-top-compact.executive-home-head::after{
+  content:"";position:absolute;right:-55px;top:-70px;width:170px;height:170px;border-radius:50%;
+  background:radial-gradient(circle,rgba(35,91,73,.18),transparent 70%);pointer-events:none;
+}
+.executive-heading{position:relative;z-index:1;display:flex;flex-direction:column;gap:2px;min-width:0}
+.executive-heading span{font-size:9px!important;letter-spacing:.16em!important;color:#8c9a93!important;font-weight:800!important}
+.executive-heading strong{font-size:20px!important;line-height:1.15!important;color:#f4f3ef!important;letter-spacing:-.025em!important}
+.executive-heading small{font-size:12px!important;color:#9aa6a0!important;text-transform:capitalize!important}
+.home-top-actions{position:relative;z-index:2;display:flex!important;gap:7px!important}
+.mini-action{
+  width:38px!important;height:38px!important;border-radius:12px!important;padding:0!important;
+  background:#1a221f!important;color:#d9ddd9!important;border:1px solid #303b36!important;box-shadow:none!important;
+}
+.mini-action:active{background:#223029!important}
+.sync-mini{
+  position:relative;z-index:1;grid-column:1/-1!important;justify-self:start!important;
+  display:inline-flex!important;align-items:center!important;gap:7px!important;
+  background:transparent!important;border:0!important;padding:4px 0 0!important;color:#7f8d86!important;font-size:10px!important;
+}
+.sync-mini i{width:6px;height:6px;border-radius:50%;background:#4f9279;box-shadow:0 0 0 3px rgba(79,146,121,.10)}
+
+.home-kpi-strip{gap:8px!important;margin:11px 0 15px!important}
+.home-kpi{
+  min-height:78px!important;background:linear-gradient(180deg,#121816 0%,#101513 100%)!important;
+  border:1px solid #252f2b!important;border-radius:18px!important;padding:12px 8px!important;
+  box-shadow:none!important;position:relative!important;overflow:hidden!important;
+}
+.home-kpi::after{content:""!important;position:absolute!important;left:12px!important;right:12px!important;bottom:0!important;height:2px!important;background:#294238!important;border-radius:2px!important}
+.home-kpi b{display:block!important;font-family:Georgia,serif!important;font-size:25px!important;color:#f2f0ea!important;line-height:1!important}
+.home-kpi span{display:block!important;color:#8d9a94!important;font-size:10px!important;font-weight:700!important;margin-top:5px!important}
+.home-kpi.judicial{background:linear-gradient(180deg,#181315 0%,#131012 100%)!important;border-color:#342429!important}
+.home-kpi.judicial::after{background:#7e3d49!important}.home-kpi.judicial b{color:#e3cbd0!important}
+.home-kpi.urgent{background:linear-gradient(180deg,#18160f 0%,#13120e 100%)!important;border-color:#332f24!important}
+.home-kpi.urgent::after{background:#8f774c!important}.home-kpi.urgent b{color:#dfcfac!important}
+.home-kpi:active{transform:scale(.985)!important;background:#19201d!important}
+
+.home-focus-panel,.home-next-compact,.home-tools-compact{
+  background:linear-gradient(180deg,#121816 0%,#0f1412 100%)!important;
+  border:1px solid #252f2b!important;border-radius:22px!important;padding:15px!important;margin-bottom:13px!important;
+  box-shadow:var(--bp-shadow-soft)!important;
+}
+.home-section-title span{font-size:8.5px!important;letter-spacing:.15em!important;color:#6f7d76!important}
+.home-section-title h3{font-size:19px!important;color:#eeece6!important;letter-spacing:-.02em!important}
+.home-section-title button{
+  background:#171f1c!important;color:#9faaA4!important;border:1px solid #2a3530!important;border-radius:11px!important;
+}
+.today-list{display:flex!important;flex-direction:column!important;gap:8px!important}
+.today-row,.next-compact-card,.home-action-grid button{
+  background:#171d1a!important;border:1px solid #29332f!important;border-radius:17px!important;
+  box-shadow:none!important;color:#f0eee8!important;
+}
+.today-row{padding:11px 12px!important}
+.today-time{color:#dcd8cf!important}.today-main strong,.next-compact-card b{color:#f2f0eb!important}.today-main small,.next-compact-card small{color:#89968f!important}
+.today-kind{background:#1e2d27!important;color:#6fa58e!important;box-shadow:none!important}
+.today-row.kind-UDIENZA .today-kind{background:#2a191d!important;color:#bd7885!important}
+.today-row.kind-SCADENZA .today-kind{background:#2a2418!important;color:#c1a56e!important}
+.today-go,.next-compact-card i{color:#68746e!important}
+.next-badge{background:#1e2824!important;color:#98aaa2!important;border:1px solid #2b3832!important}
+.home-action-grid{gap:8px!important}
+.home-action-grid button{padding:13px 9px!important}
+.home-action-grid button span{
+  width:36px!important;height:36px!important;background:#1c2823!important;color:#83a897!important;border:1px solid #293730!important;
+  box-shadow:none!important;border-radius:11px!important;
+}
+.home-action-grid button em{color:#d9ddd9!important;font-size:11px!important}
+.home-empty-inline{color:#7e8b84!important;background:#131916!important;border:1px dashed #2b3531!important;border-radius:15px!important;padding:15px!important}
+
+/* Udienze: black first, burgundy accent only */
+.hearings-command-head{
+  position:relative!important;overflow:hidden!important;
+  background:linear-gradient(145deg,#131716 0%,#101413 100%)!important;
+  border:1px solid #2d302f!important;border-radius:24px!important;padding:17px!important;
+  box-shadow:var(--bp-shadow)!important;
+}
+.hearings-command-head::before{
+  content:""!important;position:absolute!important;left:0!important;top:0!important;bottom:0!important;width:4px!important;
+  background:linear-gradient(180deg,#9c5663,#6d303b)!important;
+}
+.hearings-command-head::after{
+  content:""!important;position:absolute!important;right:-45px!important;top:-55px!important;width:155px!important;height:155px!important;border-radius:50%!important;
+  background:radial-gradient(circle,rgba(126,61,73,.13),transparent 70%)!important;
+}
+.hearings-command-head>*{position:relative!important;z-index:1!important}
+.hearings-command-head .view-kicker{color:#9f747d!important;font-size:9px!important;letter-spacing:.14em!important}
+.hearings-command-head h2{color:#f4f2ed!important;font-size:28px!important;letter-spacing:-.03em!important}
+.hearings-command-head p{color:#9da7a2!important}
+.hearing-period-control input{
+  background:#f2f0eb!important;color:#272a28!important;border:0!important;font-weight:800!important;
+}
+.hearing-period-control .nav-square{background:#202725!important;color:#e4e2dd!important;border:1px solid #303937!important}
+.hearing-view-row .hearing-mode{background:#181f1c!important;border:1px solid #2b3431!important}
+.hearing-view-row .hearing-mode button{color:#8d9993!important;background:transparent!important}
+.hearing-view-row .hearing-mode button.active{background:#f0eee9!important;color:#5b2932!important;box-shadow:none!important}
+.hearing-today{background:#1d2421!important;color:#d4d2cc!important;border:1px solid #303936!important}
+.hearing-period-label{color:#8a9690!important}
+.week-strip{gap:8px!important}
+.week-day-card{
+  background:#121715!important;color:#cfd3cf!important;border:1px solid #27312d!important;border-radius:18px!important;box-shadow:none!important;
+}
+.week-day-card .week-name{color:#7f8c86!important}.week-day-card strong{color:#e8e6e0!important}
+.week-day-card.selected{background:linear-gradient(180deg,#1f4338 0%,#18352d 100%)!important;border-color:#315e4e!important;box-shadow:0 8px 20px rgba(0,0,0,.22)!important}
+.week-day-card.selected .week-name,.week-day-card.selected strong,.week-day-card.selected small{color:#f2f1ed!important}
+.docket-card{
+  position:relative!important;background:#121715!important;border:1px solid #29322f!important;border-radius:20px!important;
+  box-shadow:none!important;padding:13px 14px!important;color:#f1efea!important;
+}
+.docket-card::before{background:linear-gradient(180deg,#8d4855,#642e38)!important;top:10px!important;bottom:10px!important}
+.docket-number{background:#21191b!important;color:#d2a0aa!important;border:1px solid #3a292d!important;box-shadow:none!important}
+.docket-time{color:#d8d7d1!important}.docket-body strong{color:#f2f0ea!important}.docket-body small{color:#9aa59f!important}.docket-body em{color:#88797c!important}
+.docket-chevron{color:#5f6b65!important}
+.docket-empty{background:#111614!important;color:#7e8a84!important;border:1px dashed #303a36!important}
+
+/* Agenda: black + forest green */
+.agenda-planner-head{
+  background:linear-gradient(145deg,#121816 0%,#0f1412 100%)!important;border:1px solid #29332f!important;border-radius:24px!important;padding:16px!important;
+  box-shadow:var(--bp-shadow-soft)!important;
+}
+.agenda-planner-head::before{content:"";position:absolute;left:0;top:18px;bottom:18px;width:3px;background:#356b58;border-radius:0 3px 3px 0}
+.agenda-planner-head::after{background:radial-gradient(circle,rgba(35,91,73,.15),transparent 72%)!important}
+.agenda-title-line .view-kicker{color:#6f9384!important}.agenda-title-line h2{color:#f2f0eb!important}
+.agenda-today,.agenda-export{background:#18211d!important;color:#b8c1bc!important;border:1px solid #2d3833!important}
+.agenda-navigation-line input,.agenda-navigation input{background:#151c19!important;color:#eceae4!important;border:1px solid #303a36!important}
+.agenda-navigation-line .nav-square,.agenda-navigation .nav-square{background:#1c2d27!important;color:#d9dfdc!important;border:1px solid #305044!important}
+.agenda-mode.planner-mode{background:#111715!important;border:1px solid #29322f!important}
+.agenda-mode.planner-mode button{color:#7f8c86!important;background:transparent!important}
+.agenda-mode.planner-mode button.active{background:#1e493c!important;color:#f2f1ed!important;box-shadow:none!important}
+.compact-period-label{color:#85918b!important}
+.planner-item{
+  background:#121715!important;border:1px solid #29322f!important;border-radius:19px!important;box-shadow:none!important;color:#f2f0ea!important;
+}
+.planner-time{color:#c9d3ce!important}.planner-body small{color:#71877d!important}.planner-body strong{color:#efede8!important}.planner-body em{color:#88948e!important}.planner-chevron{color:#5c6862!important}
+.planner-line::after{background:linear-gradient(180deg,rgba(79,146,121,.30),rgba(79,146,121,.04))!important}.planner-line i{background:#4f9279!important;box-shadow:0 0 0 4px rgba(79,146,121,.08)!important}
+.planner-item.kind-UDIENZA .planner-line i{background:#8b4653!important;box-shadow:0 0 0 4px rgba(139,70,83,.09)!important}
+.planner-item.kind-SCADENZA .planner-line i{background:#a88b57!important;box-shadow:0 0 0 4px rgba(168,139,87,.08)!important}
+.planner-empty,.empty{background:#101513!important;color:#78857f!important;border:1px dashed #2e3834!important}
+
+/* Generic dark cards */
+.practice-card,.tool-card,.checklist-card,.detail-section,.search-card,.search-document,.detail-disclosure,.hearing-mobile-card,.creset-mobile-card,.legal-hit,.modal-sheet,.login-card{
+  background:linear-gradient(180deg,#131916 0%,#101513 100%)!important;
+  color:#efede8!important;border:1px solid #29332f!important;box-shadow:var(--bp-shadow-soft)!important;
+}
+.section-head h2,.section-head h3,.tool-card h3,.practice-card h3,.checklist-card h3,.detail-section h3,.modal-sheet h2,.login-card h1{color:#f2f0eb!important}
+.muted,.detail-fields .label,.legal-hit p,.legal-hit summary small,.checklist-head p{color:#8b9891!important}
+.practice-card strong,.detail-section strong,.legal-hit summary span{color:#dfe2de!important}
+#practiceSearch,.tool-input,.compact-sheet input[type=text],.compact-sheet input[type=date],.compact-sheet input[type=time],.compact-sheet input[type=password],.compact-sheet select,.compact-sheet textarea,.login-card input{
+  background:#0e1311!important;color:#f0eee9!important;border:1px solid #303a36!important;box-shadow:none!important;
+}
+input::placeholder,textarea::placeholder{color:#5f6b65!important}
+select option{background:#111614!important;color:#eceae5!important}
+.practice-simple-filters button,.filters button,.tool-tabs button,.secondary-button,.text-button{
+  background:#151c19!important;color:#9aa7a0!important;border:1px solid #2d3733!important;box-shadow:none!important;
+}
+.practice-simple-filters button.active,.filters button.active,.tool-tabs button.active{
+  background:#1e493c!important;color:#f0efea!important;border-color:#32604f!important;
+}
+.tool-tabs button{background:#131916!important}.tool-tabs button.active{background:linear-gradient(180deg,#245544 0%,#193d33 100%)!important}
+.tool-result{background:#0f1512!important;border-color:#2b3531!important;color:#aeb7b2!important}.tool-result strong{color:#72a890!important}
+.legal-hit summary{color:#e9e7e2!important}.legal-hit[open] summary{background:#161e1a!important;border-bottom-color:#29332f!important}.legal-hit>div{border-top-color:#252e2b!important}.legal-notes{background:#171611!important}.legal-summary{background:#111916!important}
+.checklist-quick-tip{background:#171711!important;color:#b8aa8d!important;border:1px solid #342f24!important}
+.checklist-card::before{background:linear-gradient(180deg,#4f9279,#8f774c)!important}
+.check-item{border-top-color:#252e2a!important;color:#d7dcd8!important}.check-item span{color:#cfd5d1!important}.check-item:has(input:checked){background:#15211c!important}.check-item input{accent-color:#4f9279!important}
+.progress{background:#262e2b!important}.progress span{background:linear-gradient(90deg,#2d6c57,#4f9279)!important}
+.checklist-composer-sheet{background:linear-gradient(180deg,#141a17 0%,#0f1412 100%)!important}
+
+/* Month grid dark */
+.month-weekdays span{color:#717e78!important}.month-cell{background:#121715!important;color:#cfd4d0!important;border-color:#27312d!important}.muted-cell{background:#0d1210!important}.month-cell.selected{outline:2px solid #3d7b65!important;background:#17241f!important}.month-dot.UDIENZA{color:#bd7885!important}.month-dot.SCADENZA{color:#c2a46a!important}.month-dot.APPUNTAMENTO{color:#75a38f!important}.month-dot.CHECKLIST{color:#86ab99!important}
+
+/* Modal overlays */
+.modal{background:rgba(0,0,0,.72)!important;backdrop-filter:blur(8px)!important}.modal-top{border-bottom-color:#27312d!important}.back-button{background:#171f1c!important;color:#d6dbd7!important;border:1px solid #303a36!important}.eyebrow.dark{color:#8f9b95!important}.danger-button{background:#3a1d22!important;color:#e3a7b0!important;border-color:#5a2932!important}
+.setting-row{border-color:#29332f!important}.setting-row small{color:#7f8b85!important}
+
+/* Bottom navigation: matte black, professional */
+.companion-bottom-nav.five-nav{
+  background:rgba(13,18,16,.96)!important;border:1px solid #2a332f!important;
+  box-shadow:0 -14px 34px rgba(0,0,0,.38)!important;backdrop-filter:blur(22px)!important;-webkit-backdrop-filter:blur(22px)!important;
+}
+.companion-bottom-nav.five-nav::before{
+  background:linear-gradient(90deg,transparent,rgba(185,154,97,.35),rgba(79,146,121,.28),transparent)!important;
+}
+.companion-bottom-nav.five-nav button{color:#7f8c86!important;background:transparent!important}
+.companion-bottom-nav.five-nav button .nav-svg{background:transparent!important;color:inherit!important}
+.companion-bottom-nav.five-nav button .nav-svg svg{stroke:currentColor!important}
+.companion-bottom-nav.five-nav button.active{
+  background:#17231e!important;color:#e7e5df!important;box-shadow:inset 0 0 0 1px #2d463c!important;
+}
+.companion-bottom-nav.five-nav button.active .nav-svg{background:#1d3028!important;color:#6ca58d!important;box-shadow:none!important}
+.companion-bottom-nav.five-nav button.active .nav-svg svg{stroke:#78ad96!important}
+
+/* FAB */
+.floating-add.compact-fab{
+  background:linear-gradient(180deg,#2d6b56 0%,#1b493b 100%)!important;color:#fff!important;
+  border:3px solid #18211d!important;box-shadow:0 14px 28px rgba(0,0,0,.42)!important;
+}
+
+/* native status/readability */
+a{color:#76a994!important}
+button{color:inherit}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid rgba(79,146,121,.65)!important;outline-offset:2px!important}
+
+@media(max-width:430px){
+  #app > header.companion-topbar .header-logo.image-logo{width:42px!important;height:42px!important;flex-basis:42px!important}
+  #app > header.companion-topbar .brand-studio{font-size:17px!important}
+  #app > header.companion-topbar .brand-person{font-size:9px!important}
+  #app > header.companion-topbar .sync-pill{display:none!important}
+  main{padding-left:12px!important;padding-right:12px!important}
+  .executive-heading strong{font-size:18px!important}
+  .home-kpi b{font-size:23px!important}
+  .home-kpi span{font-size:9.5px!important}
+  .hearings-command-head,.agenda-planner-head,.home-top-compact.executive-home-head,.home-focus-panel,.home-next-compact,.home-tools-compact{border-radius:21px!important}
+}

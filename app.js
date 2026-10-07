@@ -640,16 +640,17 @@ function renderHome(){
   }).join('');
 
   root.innerHTML=`
-    <section class="home-top-compact">
-      <div class="home-brand-mini">
-        <div class="home-logo-mini"></div>
-        <div><span>STUDIO LEGALE COSTA</span><strong>${homeGreeting()}, Avvocato Costa</strong><small>${escapeHtml(dateShort)}</small></div>
+    <section class="home-top-compact executive-home-head">
+      <div class="executive-heading">
+        <span>DASHBOARD</span>
+        <strong>${homeGreeting()}, Avvocato Costa</strong>
+        <small>${escapeHtml(dateShort)}</small>
       </div>
       <div class="home-top-actions">
         <button class="mini-action" data-home-action="search" aria-label="Cerca">⌕</button>
         <button class="mini-action" data-home-action="settings" aria-label="Sistema">⋯</button>
       </div>
-      <div class="sync-mini">✓ ${escapeHtml(syncTime)}</div>
+      <div class="sync-mini"><i></i> Aggiornato ${escapeHtml(syncTime)}</div>
     </section>
 
     <section class="home-kpi-strip">

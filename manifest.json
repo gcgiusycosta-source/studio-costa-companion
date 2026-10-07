@@ -1,12 +1,12 @@
 {
-  "name": "Studio Costa Companion V16.0",
+  "name": "Studio Costa Companion V16.1",
   "short_name": "Studio Costa",
-  "description": "Studio Costa Companion V16.0 — interfaccia premium digitale per agenda, udienze, pratiche e checklist",
+  "description": "Studio Costa Companion V16.1 — interfaccia professionale nera per agenda, udienze, pratiche e checklist",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#0d1112",
-  "theme_color": "#0d1112",
+  "background_color": "#090d0c",
+  "theme_color": "#090d0c",
   "icons": [
     {
       "src": "icon-192.png",

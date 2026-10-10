@@ -1,7 +1,7 @@
 {
-  "name": "Studio Costa Companion V16.3",
+  "name": "Studio Costa Companion V17",
   "short_name": "Studio Costa",
-  "description": "Companion professionale Studio Legale Costa V16.3 Executive Black — funzioni allineate al desktop V14.18",
+  "description": "Companion professionale Studio Legale Costa V17 Executive Black — funzioni allineate al desktop V15",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

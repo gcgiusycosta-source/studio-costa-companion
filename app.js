@@ -75,7 +75,7 @@ function deviceId(){
   return value;
 }
 
-const COMPANION_BUILD="16.3";
+const COMPANION_BUILD="17.0";
 async function invalidateOldAppShell(){
   const key="studioCostaCompanionBuild";
   if(localStorage.getItem(key)===COMPANION_BUILD)return;
@@ -205,6 +205,8 @@ async function decryptCompanion(packageData,password){
     exportedAt:parsed?.exportedAt||parsed?.generated_at||packageData.exportedAt||"",
     source:parsed?.source||"Studio Legale Costa",
     archiveId:parsed?.archiveId||parsed?.archive_id||packageData.archiveId||"",
+    plannerWindows:Array.isArray(archiveData.plannerWindows)?archiveData.plannerWindows:[],
+    plannerBlocks:Array.isArray(archiveData.plannerBlocks)?archiveData.plannerBlocks:[],
     practices:archiveData.practices,
     events:archiveData.events,
     tasks:Array.isArray(archiveData.tasks)?archiveData.tasks:[],
@@ -252,6 +254,8 @@ async function importCompanionFile(file,password){
   const candidate={
     generated_at:decoded.exportedAt,
     archive_id:decoded.archiveId,
+    plannerWindows:decoded.plannerWindows,
+    plannerBlocks:decoded.plannerBlocks,
     practices:decoded.practices,
     events:decoded.events,
     tasks:decoded.tasks,
@@ -771,9 +775,41 @@ function renderHearings(){
   }
   $("hearingPeriodLabel").textContent=periodLabel; bindPracticeLinks($("hearingsContent"));
 }
+
+// V17: planning view based on encrypted desktop availability; not a judicial deadline engine.
+function mobilePlannerMinutes(s){const m=/^(\d{1,2}):(\d{2})$/.exec(String(s||""));return m?Number(m[1])*60+Number(m[2]):null;}
+function mobilePlannerTime(m){return String(Math.floor(m/60)).padStart(2,"0")+":"+String(m%60).padStart(2,"0");}
+function mobilePlannerDayNumber(date){return (new Date(date+"T12:00:00").getDay()+6)%7;}
+function mobilePlannerMerge(rows){
+  const result=[];for(const r of rows.sort((a,b)=>a[0]-b[0])){if(result.length&&r[0]<=result[result.length-1][1])result[result.length-1][1]=Math.max(result[result.length-1][1],r[1]);else result.push(r.slice())}return result;
+}
+function mobilePlannerSegments(day,events){
+  const dayNo=mobilePlannerDayNumber(day);
+  const ranges=(snapshot?.plannerWindows||[]).filter(w=>Number(w.weekday)===dayNo).map(w=>[mobilePlannerMinutes(w.start_time),mobilePlannerMinutes(w.end_time),Boolean(Number(w.preferred))]).filter(r=>r[0]!==null&&r[1]>r[0]);
+  const blocks=(snapshot?.plannerBlocks||[]).filter(b=>b.block_date===day||(b.block_date==null&&Number(b.weekday)===dayNo));
+  const busy=[...events.filter(e=>e.event_date===day),...blocks].map(e=>[mobilePlannerMinutes(e.start_time),mobilePlannerMinutes(e.end_time)]).filter(r=>r[0]!==null).map(r=>[r[0],r[1]===null?Math.min(r[0]+60,1440):r[1]]).filter(r=>r[1]>r[0]);
+  const merged=mobilePlannerMerge(busy),available=[];
+  for(const [a,b,preferred] of ranges){let cursor=a;for(const [x,y] of merged){if(y<=cursor||x>=b)continue;if(x>cursor)available.push([cursor,Math.min(x,b),preferred]);cursor=Math.max(cursor,Math.min(y,b));if(cursor>=b)break;}if(cursor<b)available.push([cursor,b,preferred]);}
+  return {ranges,busy,available,total:available.reduce((n,r)=>n+r[1]-r[0],0)};
+}
+function renderMobilePlanner(anchor,all){
+  const week=startOfWeek(anchor),days=Array.from({length:7},(_,i)=>addDays(week,i));
+  const configured=(snapshot?.plannerWindows||[]).length>0;
+  const names=['Lun','Mar','Mer','Gio','Ven','Sab','Dom'];
+  const html=days.map((day,i)=>{
+    const info=mobilePlannerSegments(day,all),events=all.filter(e=>e.event_date===day);
+    const rows=info.available.map(([a,b,p])=>`<div class="mobile-planner-slot ${p?'preferred':''}"><span>${mobilePlannerTime(a)}–${mobilePlannerTime(b)}</span><b>${p?'Preferita':'Disponibile'}</b></div>`).join('');
+    const withoutTime=events.filter(e=>!e.start_time).length;
+    return `<article class="mobile-planner-day"><div class="mobile-planner-heading"><strong>${names[i]} ${escapeHtml(day.slice(-2))}</strong><span>${Math.floor(info.total/60)} h ${String(info.total%60).padStart(2,'0')} libere</span></div>${rows||'<div class="mobile-planner-empty">Nessuna fascia libera configurata</div>'}${events.length?`<small>${events.length} impegni in agenda${withoutTime?' · '+withoutTime+' senza orario':''}</small>`:''}</article>`;
+  }).join('');
+  $("agendaPeriodLabel").textContent=`${fmtDate(week)} – ${fmtDate(addDays(week,6))}`;
+  $("agendaContent").innerHTML=`<section class="mobile-planner-note"><strong>Il tempo per te e per lo studio</strong><p>${configured?'Le disponibilità arrivano dal Planner desktop, attraverso il file cifrato di aggiornamento.':'Configura prima le fasce abituali nel Planner desktop V15 ed esporta un nuovo aggiornamento cifrato.'}</p><small>Le ore non comprendono trasferimenti non inseriti e gli impegni senza orario.</small></section>${html}`;
+}
+
 function renderAgenda(){
   const today=new Date().toISOString().slice(0,10);
   const anchor=$("agendaDate").value||today; const all=calendarItems().sort(eventSort); let events=[]; let periodLabel="";
+  if(agendaMode==="planner"){renderMobilePlanner(anchor,all);return;}
   if(agendaMode==="day"){
     agendaSelectedDay=anchor; events=all.filter(e=>e.event_date===anchor); periodLabel=`${fmtWeekday(anchor)} ${fmtDate(anchor)}`;
     $("agendaContent").innerHTML=`<div class="planner-day-heading"><strong>${escapeHtml(fmtWeekday(anchor))}</strong><span>${fmtDate(anchor)} · ${events.length} ${events.length===1?'impegno':'impegni'}</span></div>${agendaTimeline(events)}`;
@@ -1734,8 +1770,8 @@ document.querySelectorAll("[data-agenda-mode]").forEach(button=>{
     renderAgenda();
   };
 });
-$("agendaPrev").onclick=()=>{const current=$("agendaDate").value||new Date().toISOString().slice(0,10);$("agendaDate").value=addDays(current,agendaMode==="day"?-1:agendaMode==="week"?-7:-30);agendaSelectedDay=$("agendaDate").value;renderAgenda()};
-$("agendaNext").onclick=()=>{const current=$("agendaDate").value||new Date().toISOString().slice(0,10);$("agendaDate").value=addDays(current,agendaMode==="day"?1:agendaMode==="week"?7:30);agendaSelectedDay=$("agendaDate").value;renderAgenda()};
+$("agendaPrev").onclick=()=>{const current=$("agendaDate").value||new Date().toISOString().slice(0,10);$("agendaDate").value=addDays(current,agendaMode==="day"?-1:(agendaMode==="week"||agendaMode==="planner")?-7:-30);agendaSelectedDay=$("agendaDate").value;renderAgenda()};
+$("agendaNext").onclick=()=>{const current=$("agendaDate").value||new Date().toISOString().slice(0,10);$("agendaDate").value=addDays(current,agendaMode==="day"?1:(agendaMode==="week"||agendaMode==="planner")?7:30);agendaSelectedDay=$("agendaDate").value;renderAgenda()};
 $("agendaToday").onclick=()=>{$("agendaDate").value=new Date().toISOString().slice(0,10);agendaSelectedDay=$("agendaDate").value;renderAgenda()};
 $("agendaDate").onchange=()=>{agendaSelectedDay=$("agendaDate").value;renderAgenda()};
 $("hearingPrev").onclick=()=>{const current=$("hearingDate").value||new Date().toISOString().slice(0,10);$("hearingDate").value=addDays(current,hearingMode==="day"?-1:hearingMode==="week"?-7:-30);hearingSelectedDay=$("hearingDate").value;renderHearings()};

@@ -1,0 +1,2 @@
+COMPANION V17
+Base V16.3, navigazione Agenda > Planner: visualizza fasce preferite, libere e blocchi orari esportati dal desktop V15. La configurazione resta sul desktop e si aggiorna con un nuovo .scmobile cifrato. Nessuna scrittura remota automatica.

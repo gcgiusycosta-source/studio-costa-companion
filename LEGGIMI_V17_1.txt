@@ -1,0 +1,14 @@
+STUDIO COSTA COMPANION V17.1 — PLANNER E FONTI GIURIDICHE
+Base: Companion V17; formato .scmobile e database invariati.
+
+Migliorie:
+- Planner: le schede settimanali mostrano anche fino a 5 impegni del giorno, oltre alle fasce disponibili.
+- Banca giuridica: collegamenti istituzionali cliccabili a Normattiva, Open Data, Gazzetta Ufficiale, EUR-Lex, Corte costituzionale e Giustizia amministrativa.
+- Banca giuridica: pulsante «Apri fonte registrata» per schede sincronizzate che contengono un URL HTTPS.
+- Cache PWA aggiornata a V17.1 per richiedere nuovi file dopo la pubblicazione.
+
+ATTENZIONE: i collegamenti aprono portali esterni, non incorporano un motore API per la ricerca normativa. I documenti della banca locale arrivano dal desktop tramite aggiornamento cifrato.
+Il Planner mobile legge le disponibilità impostate nel desktop; la sincronizzazione non è automatica e non è bidirezionale.
+Non alterare il pacchetto .scmobile. Fare backup dell'installazione pubblicata prima di sostituire i file; aggiornare tutti i file della cartella web, quindi riaprire la PWA e importare un .scmobile recente.
+
+TEST: node --check su app.js e service-worker.js, verifica ZIP. Test desktop: 132 eseguiti, 6 saltati. Non è stato eseguito un collaudo reale su iPhone o Windows.

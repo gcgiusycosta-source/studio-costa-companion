@@ -93,7 +93,7 @@ async function ensureOfflineShell(){
   if(!location.protocol.startsWith("http")) return false;
   if(!("serviceWorker" in navigator)) return false;
   const registration=await navigator.serviceWorker.register(
-    "service-worker.js?v=16.3",{scope:"./",updateViaCache:"none"}
+    "service-worker.js?v=17.1",{scope:"./",updateViaCache:"none"}
   );
   await registration.update().catch(()=>{});
   await navigator.serviceWorker.ready;
@@ -800,7 +800,8 @@ function renderMobilePlanner(anchor,all){
     const info=mobilePlannerSegments(day,all),events=all.filter(e=>e.event_date===day);
     const rows=info.available.map(([a,b,p])=>`<div class="mobile-planner-slot ${p?'preferred':''}"><span>${mobilePlannerTime(a)}–${mobilePlannerTime(b)}</span><b>${p?'Preferita':'Disponibile'}</b></div>`).join('');
     const withoutTime=events.filter(e=>!e.start_time).length;
-    return `<article class="mobile-planner-day"><div class="mobile-planner-heading"><strong>${names[i]} ${escapeHtml(day.slice(-2))}</strong><span>${Math.floor(info.total/60)} h ${String(info.total%60).padStart(2,'0')} libere</span></div>${rows||'<div class="mobile-planner-empty">Nessuna fascia libera configurata</div>'}${events.length?`<small>${events.length} impegni in agenda${withoutTime?' · '+withoutTime+' senza orario':''}</small>`:''}</article>`;
+    const appointments=events.slice(0,5).map(e=>`<div class="mobile-planner-commitment"><span>${escapeHtml(e.start_time||'Senza ora')}</span><strong>${escapeHtml(e.title||e.type||'Impegno')}</strong></div>`).join('');
+    return `<article class="mobile-planner-day"><div class="mobile-planner-heading"><strong>${names[i]} ${escapeHtml(day.slice(-2))}</strong><span>${Math.floor(info.total/60)} h ${String(info.total%60).padStart(2,'0')} libere</span></div>${rows||'<div class="mobile-planner-empty">Nessuna fascia libera configurata</div>'}${events.length?`<small>${events.length} impegni in agenda${withoutTime?' · '+withoutTime+' senza orario':''}</small><div class="mobile-planner-commitments">${appointments}</div>`:''}</article>`;
   }).join('');
   $("agendaPeriodLabel").textContent=`${fmtDate(week)} – ${fmtDate(addDays(week,6))}`;
   $("agendaContent").innerHTML=`<section class="mobile-planner-note"><strong>Il tempo per te e per lo studio</strong><p>${configured?'Le disponibilità arrivano dal Planner desktop, attraverso il file cifrato di aggiornamento.':'Configura prima le fasce abituali nel Planner desktop V15 ed esporta un nuovo aggiornamento cifrato.'}</p><small>Le ore non comprendono trasferimenti non inseriti e gli impegni senza orario.</small></section>${html}`;
@@ -1186,7 +1187,7 @@ function renderLegalResults(){
     const title=r.title||[r.code_name,r.article_number&&`art. ${r.article_number}`,r.heading].filter(Boolean).join(" · ")||"Voce banca giuridica";
     const meta=[r.item_type,r.matter,r.authority||r.source_name,r.decision_number&&`n. ${r.decision_number}`,r.decision_date&&fmtDate(r.decision_date),r.effective_from&&`dal ${fmtDate(r.effective_from)}`,r.verification_status].filter(Boolean).join(" · ");
     const preview=r.summary||r.text_body||r.notes||"";
-    return `<details class="legal-hit"><summary><span>${r.favorite?"★ ":""}${escapeHtml(title)}</span><small>${escapeHtml(meta)}</small></summary>${r.summary?`<div class="legal-summary"><strong>Sintesi</strong><p>${escapeHtml(r.summary)}</p></div>`:""}${r.text_body?`<div class="legal-full"><strong>Testo</strong><p>${escapeHtml(r.text_body)}</p></div>`:""}${r.notes?`<div class="legal-notes"><strong>Note Studio</strong><p>${escapeHtml(r.notes)}</p></div>`:""}${!r.summary&&!r.text_body&&preview?`<p>${escapeHtml(preview)}</p>`:""}</details>`;
+    return `<details class="legal-hit"><summary><span>${r.favorite?"★ ":""}${escapeHtml(title)}</span><small>${escapeHtml(meta)}</small></summary>${r.summary?`<div class="legal-summary"><strong>Sintesi</strong><p>${escapeHtml(r.summary)}</p></div>`:""}${r.text_body?`<div class="legal-full"><strong>Testo</strong><p>${escapeHtml(r.text_body)}</p></div>`:""}${r.notes?`<div class="legal-notes"><strong>Note Studio</strong><p>${escapeHtml(r.notes)}</p></div>`:""}${!r.summary&&!r.text_body&&preview?`<p>${escapeHtml(preview)}</p>`:""}${/^https:\/\//i.test(String(r.source_url||r.url||""))?`<a class="legal-source-action" href="${escapeHtml(String(r.source_url||r.url))}" target="_blank" rel="noopener noreferrer">Apri fonte registrata ↗</a>`:""}</details>`;
   }).join(""):'<div class="empty small">Nessun risultato nella banca giuridica sincronizzata.</div>';
 }
 function calculateQuickTerm(){

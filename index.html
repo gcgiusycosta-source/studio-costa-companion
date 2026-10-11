@@ -7,10 +7,10 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Studio Costa">
-  <link rel="manifest" href="manifest.json?v=17.0">
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=17.0">
-  <link rel="stylesheet" href="styles.css?v=17.0">
-  <title>Studio Costa Companion V17</title>
+  <link rel="manifest" href="manifest.json?v=17.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=17.1">
+  <link rel="stylesheet" href="styles.css?v=17.1">
+  <title>Studio Costa Companion V17.1</title>
 </head>
 <body>
   <section id="pairScreen" class="screen hidden">
@@ -168,6 +168,15 @@
             <select id="legalTypeFilter" class="tool-input">
               <option value="">Tutto</option><option value="NORMA">Normativa</option><option value="SENTENZA">Giurisprudenza</option><option value="PRASSI">Prassi</option><option value="FORMULA">Formule</option><option value="NOTA">Note</option>
             </select>
+            <div class="legal-institutional-links" aria-label="Fonti istituzionali">
+              <a href="https://www.normattiva.it/" target="_blank" rel="noopener noreferrer">Normattiva ↗</a>
+              <a href="https://dati.normattiva.it/" target="_blank" rel="noopener noreferrer">Normattiva Open Data ↗</a>
+              <a href="https://www.gazzettaufficiale.it/" target="_blank" rel="noopener noreferrer">Gazzetta Ufficiale ↗</a>
+              <a href="https://eur-lex.europa.eu/" target="_blank" rel="noopener noreferrer">EUR-Lex ↗</a>
+              <a href="https://www.cortecostituzionale.it/" target="_blank" rel="noopener noreferrer">Corte costituzionale ↗</a>
+              <a href="https://www.giustizia-amministrativa.it/" target="_blank" rel="noopener noreferrer">Giustizia amministrativa ↗</a>
+            </div>
+            <p class="legal-source-disclaimer">Collegamenti esterni alle fonti. Le schede locali provengono dal desktop; verifica sempre vigenza e testo applicabile.</p>
             <div id="legalResults"></div>
           </div>
         </section>
@@ -335,7 +344,7 @@
 
   <div id="settingsModal" class="modal hidden">
     <div class="modal-sheet compact-sheet">
-      <div class="modal-top"><button id="closeSettings" class="back-button">‹</button><div><div class="eyebrow dark">COMPANION V17</div><h2>Sincronizzazione e privacy</h2></div></div>
+      <div class="modal-top"><button id="closeSettings" class="back-button">‹</button><div><div class="eyebrow dark">COMPANION V17.1</div><h2>Sincronizzazione e privacy</h2></div></div>
       <div class="detail-section">
         <h3>Modifiche da riportare al PC</h3>
         <p id="pendingActionsInfo" class="muted"></p>
@@ -375,6 +384,6 @@
 
 <div id="undoToast" class="undo-toast hidden"><span>Checklist aggiornata</span><button id="undoAction" type="button">Annulla</button></div>
 
-  <script src="app.js?v=17.0"></script>
+  <script src="app.js?v=17.1"></script>
 </body>
 </html>

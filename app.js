@@ -75,7 +75,7 @@ function deviceId(){
   return value;
 }
 
-const COMPANION_BUILD="17.0";
+const COMPANION_BUILD="18.0";
 async function invalidateOldAppShell(){
   const key="studioCostaCompanionBuild";
   if(localStorage.getItem(key)===COMPANION_BUILD)return;
@@ -867,43 +867,87 @@ function searchBlob(p){
     p.controparte,p.oggetto,p.note,p.materia,p.tipologia,p.stato,p.fase
   ].join(" "));
 }
+function daysUntil(date){
+  if(!date)return null;
+  const start=new Date(new Date().toISOString().slice(0,10)+"T00:00:00");
+  const target=new Date(String(date)+"T00:00:00");
+  return Math.round((target-start)/(1000*60*60*24));
+}
+function nextPracticeMilestone(p){
+  const hearing=p.prossima_udienza;
+  const deadline=p.prossima_scadenza;
+  if(hearing && deadline){
+    return String(hearing.event_date||'')<=String(deadline.event_date||'')
+      ? {kind:'UDIENZA',item:hearing}
+      : {kind:'SCADENZA',item:deadline};
+  }
+  if(hearing)return {kind:'UDIENZA',item:hearing};
+  if(deadline)return {kind:'SCADENZA',item:deadline};
+  return null;
+}
+function urgencyMeta(p){
+  const milestone=nextPracticeMilestone(p);
+  if(!milestone||!milestone.item?.event_date)return {label:'Monitoraggio ordinario', tone:'calm'};
+  const d=daysUntil(milestone.item.event_date);
+  if(d===null)return {label:'Monitoraggio ordinario', tone:'calm'};
+  if(d<0)return {label:'Da verificare', tone:'overdue'};
+  if(d===0)return {label: milestone.kind==='UDIENZA' ? 'Udienza oggi' : 'Attività oggi', tone:'urgent'};
+  if(d===1)return {label: milestone.kind==='UDIENZA' ? 'Udienza domani' : 'Attività domani', tone:'urgent'};
+  if(d<=3)return {label: `${milestone.kind==='UDIENZA'?'Udienza':'Attività'} tra ${d} giorni`, tone:'focus'};
+  if(d<=7)return {label: `Prossimo adempimento tra ${d} giorni`, tone:'watch'};
+  return {label:'Programmazione ordinaria', tone:'calm'};
+}
+function practiceMetric(label,value,accent=''){
+  return `<div class="practice-metric ${accent}"><span>${escapeHtml(label)}</span><strong>${escapeHtml(value||'—')}</strong></div>`;
+}
 function practiceCard(p){
   const hearing=p.prossima_udienza;
   const deadline=p.prossima_scadenza;
-  const progress = Math.min(100, Math.max(12, ((hearing?30:10)+(deadline?20:5)+(nonEmpty(p.numero_principale)?15:0)+(nonEmpty(p.autorita||p.tribunale)?15:0)+(nonEmpty(p.oggetto)?20:0))));
   const matter=(p.area||"PRATICA").toUpperCase();
-  return `<article class="practice-card ${escapeHtml(p.area||"")}" data-practice="${p.id}" role="button" tabindex="0" aria-label="Apri scheda pratica ${escapeHtml(p.assistito||'')}">
-    <div class="practice-top">
-      <div class="practice-heading">
-        <span class="area-badge area-${escapeHtml(matter)}">${escapeHtml(matter)}</span>
-        <h3>${escapeHtml(p.assistito||"Assistito non indicato")}</h3>
-        <div class="practice-subline">${escapeHtml(p.tipologia||p.tipologia_difesa||p.oggetto||"")}</div>
+  const urgency=urgencyMeta(p);
+  const number=p.numero_principale||p.rg||p.rgnr||p.sius||p.siep||'';
+  const authority=p.autorita||p.tribunale||'';
+  const type=p.tipologia||p.tipologia_difesa||p.oggetto||'';
+  const status=p.stato||"In corso";
+  return `<article class="practice-card practice-card-v18 ${escapeHtml(p.area||"")}" data-practice="${p.id}" role="button" tabindex="0" aria-label="Apri scheda pratica ${escapeHtml(p.assistito||'')}">
+    <div class="practice-shell">
+      <div class="practice-top modern-practice-top">
+        <div class="practice-avatar">${escapeHtml((p.assistito||'P').trim().slice(0,1).toUpperCase())}</div>
+        <div class="practice-maincopy">
+          <div class="practice-meta-row">
+            <span class="area-badge area-${escapeHtml(matter)}">${escapeHtml(matter)}</span>
+            <span class="urgency-badge ${escapeHtml(urgency.tone)}">${escapeHtml(urgency.label)}</span>
+          </div>
+          <h3>${escapeHtml(p.assistito||"Assistito non indicato")}</h3>
+          <div class="practice-subline">${escapeHtml(type||'Fascicolo operativo')}</div>
+        </div>
+        <span class="status-badge status-modern">${escapeHtml(status)}</span>
       </div>
-      <span class="status-badge">${escapeHtml(p.stato||"In corso")}</span>
-    </div>
-    <div class="practice-grid two-lines">
-      ${fieldHtml("Numero",p.numero_principale)}
-      ${fieldHtml("Autorità",p.autorita||p.tribunale)}
-      ${fieldHtml("Controparte",p.controparte)}
-      ${fieldHtml("Fase",p.fase)}
-    </div>
-    <div class="practice-progress">
-      <div class="progress-row"><span>Organizzazione fascicolo</span><b>${progress}%</b></div>
-      <div class="progress-bar"><i style="width:${progress}%"></i></div>
-    </div>
-    <div class="next-row modern-next-row">
-      <div class="next-box">
-        <span class="label">Prossima udienza</span>
-        <div class="value">${hearing?`${fmtDate(hearing.event_date)}${hearing.start_time?` · ${escapeHtml(hearing.start_time)}`:''}`:"—"}</div>
+      <div class="practice-chip-row">
+        ${number?`<span class="info-chip">${escapeHtml(number)}</span>`:''}
+        ${authority?`<span class="info-chip">${escapeHtml(authority)}</span>`:''}
+        ${p.fase?`<span class="info-chip soft">${escapeHtml(p.fase)}</span>`:''}
       </div>
-      <div class="next-box">
-        <span class="label">Prossima attività</span>
-        <div class="value">${deadline?`${fmtDate(deadline.event_date)} · ${escapeHtml(deadline.title||"")}`:"—"}</div>
+      <div class="practice-grid practice-grid-modern">
+        ${practiceMetric("Numero", number || '—')}
+        ${practiceMetric("Autorità", authority || '—')}
+        ${practiceMetric("Controparte", p.controparte || '—')}
+        ${practiceMetric("Fase", p.fase || '—')}
       </div>
-    </div>
-    <div class="practice-action-row">
-      <span class="practice-pill">Apri scheda</span>
-      <span class="practice-pill muted">Documenti e banca</span>
+      <div class="practice-schedule-panel">
+        <div class="schedule-box hearing-box">
+          <small>Prossima udienza</small>
+          <strong>${hearing?`${fmtDate(hearing.event_date)}${hearing.start_time?` · ${escapeHtml(hearing.start_time)}`:''}`:"—"}</strong>
+        </div>
+        <div class="schedule-box deadline-box">
+          <small>Prossima attività</small>
+          <strong>${deadline?`${fmtDate(deadline.event_date)} · ${escapeHtml(deadline.title||"")}`:"—"}</strong>
+        </div>
+      </div>
+      <div class="practice-action-row action-row-modern">
+        <span class="practice-pill">Apri scheda</span>
+        <span class="practice-pill muted">Documenti · Banca giuridica</span>
+      </div>
     </div>
   </article>`;
 }
@@ -913,14 +957,45 @@ function fieldHtml(label,value){
 function renderPractices(){
   const query=normalize($("practiceSearch").value);
   const filter=activePracticeFilter;
-  const practices=(snapshot.practices||[]).filter(p=>{
+  const all=(snapshot.practices||[]);
+  const filtered=all.filter(p=>{
     if(query&&!searchBlob(p).includes(query))return false;
     if(filter==="PENALE" && p.area!=="PENALE")return false;
     if(filter==="CIVILE" && p.area!=="CIVILE")return false;
     if(filter==="office" && !normalize(`${p.tipologia_difesa} ${p.stato_difesa}`).includes("ufficio"))return false;
     return true;
+  }).sort((a,b)=>{
+    const ma=nextPracticeMilestone(a)?.item?.event_date || '9999-12-31';
+    const mb=nextPracticeMilestone(b)?.item?.event_date || '9999-12-31';
+    return String(ma).localeCompare(String(mb)) || String(a.assistito||'').localeCompare(String(b.assistito||''));
   });
-  $("practiceCards").innerHTML=practices.length?practices.map(practiceCard).join(""):'<div class="empty">Nessuna pratica corrisponde ai filtri</div>';
+  const active=all.filter(p=>!/(ARCHIVIAT|CHIUS|DEFINIT|ESTINT)/i.test(String(p.stato||'')));
+  const office=all.filter(p=>normalize(`${p.tipologia_difesa} ${p.stato_difesa}`).includes('ufficio'));
+  const dueSoon=all.filter(p=>{
+    const d=daysUntil(nextPracticeMilestone(p)?.item?.event_date);
+    return d!==null && d>=0 && d<=7;
+  });
+  const hearingsSoon=all.filter(p=>{
+    const d=daysUntil(p.prossima_udienza?.event_date);
+    return d!==null && d>=0 && d<=7;
+  });
+  const focus=all.slice().sort((a,b)=>{
+    const da=daysUntil(nextPracticeMilestone(a)?.item?.event_date); const db=daysUntil(nextPracticeMilestone(b)?.item?.event_date);
+    return (da===null?9999:da)-(db===null?9999:db);
+  }).filter(p=>nextPracticeMilestone(p)).slice(0,4);
+  const overview=`<section class="practices-dashboard">
+    <div class="practices-overview-grid">
+      <article><span>Attive</span><strong>${active.length||all.length}</strong><small>fascicoli</small></article>
+      <article><span>Udienze</span><strong>${hearingsSoon.length}</strong><small>entro 7 giorni</small></article>
+      <article><span>Da seguire</span><strong>${dueSoon.length}</strong><small>entro 7 giorni</small></article>
+      <article><span>Difese d'ufficio</span><strong>${office.length}</strong><small>monitoraggio</small></article>
+    </div>
+    ${focus.length?`<div class="practices-focus-shell"><div class="focus-head"><span>FOCUS DELLA SETTIMANA</span><b>Pratiche da aprire subito</b></div><div class="focus-rail">${focus.map(p=>{
+      const milestone=nextPracticeMilestone(p); const urgency=urgencyMeta(p);
+      return `<button class="focus-card" data-practice="${p.id}"><small>${escapeHtml((p.area||'PRATICA').toUpperCase())}</small><strong>${escapeHtml(p.assistito||'Pratica')}</strong><em>${escapeHtml(urgency.label)}</em><span>${milestone?.item?.event_date?fmtDate(milestone.item.event_date):'—'}</span></button>`;
+    }).join('')}</div></div>`:''}
+  </section>`;
+  $("practiceCards").innerHTML=`${overview}<div class="practice-results-head"><strong>${filtered.length}</strong><span>${filtered.length===1?'pratica visibile':'pratiche visibili'}</span></div>${filtered.length?filtered.map(practiceCard).join(""):'<div class="empty">Nessuna pratica corrisponde ai filtri</div>'}`;
   bindPracticeLinks($("practiceCards"));
   document.querySelectorAll("[data-practice-filter]").forEach(button=>button.classList.toggle("active",button.dataset.practiceFilter===filter));
 }

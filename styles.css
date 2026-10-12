@@ -1068,3 +1068,11 @@ body{background:var(--v19-bg)!important;color:var(--v19-ink)!important;font-fami
 .mobile-planner-commitment.travel strong{color:#463a25!important}
 .mobile-planner-commitment.private{border-left:4px solid #946d42!important}
 .planner-capacity-warning{font-weight:700!important;line-height:1.5!important}
+/* V20.1: azioni giornaliere locali, senza comprimere i titoli */
+#plannerView .planner-local-section{margin:16px 0;padding:13px;background:#fff;border:1px solid #d7e5db;border-radius:18px;color:#173b29}
+#plannerView .planner-local-section h3{font-size:15px;margin:2px 0 12px;color:#174a34}
+#plannerView .planner-local-action{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-top:1px solid #e9eee9}
+#plannerView .planner-local-action>div{flex:1;min-width:0}
+#plannerView .planner-local-action strong{display:block;font-size:14px;line-height:1.4;overflow-wrap:anywhere;color:#1d3528}
+#plannerView .planner-local-action small{display:block;font-size:12px;color:#58705e;margin-bottom:5px}
+#plannerView .planner-local-action button{flex-shrink:0;background:#e4eee7;color:#1b4a35;border:1px solid #bdd6c5;border-radius:12px;padding:10px;font-size:12px;font-weight:750}

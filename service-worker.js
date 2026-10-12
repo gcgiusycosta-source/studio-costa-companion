@@ -1,5 +1,5 @@
 const CACHE="studio-costa-companion-v19-5-eventi";
-const APP_SHELL=["./","./index.html","./styles.css?v=19.6","./app.js?v=19.6","./manifest.json?v=19.6","./icon-192.png","./icon-512.png","./apple-touch-icon.png","./logo-gc.png","./courtroom.jpg","./digital-home.jpg","./sea-desk.jpg","./office-studio.jpg","./office.jpg","./desk-view.jpg","./ai-touch.jpg","./brand-wave.jpg"];
+const APP_SHELL=["./","./index.html","./styles.css?v=20.1","./app.js?v=20.1","./manifest.json?v=20.1","./icon-192.png","./icon-512.png","./apple-touch-icon.png","./logo-gc.png","./courtroom.jpg","./digital-home.jpg","./sea-desk.jpg","./office-studio.jpg","./office.jpg","./desk-view.jpg","./ai-touch.jpg","./brand-wave.jpg"];
 async function cacheShell(){const cache=await caches.open(CACHE);await cache.addAll(APP_SHELL)}
 self.addEventListener("install",event=>{event.waitUntil(cacheShell());self.skipWaiting()});
 self.addEventListener("activate",event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith("studio-costa-companion-")&&key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim()))});

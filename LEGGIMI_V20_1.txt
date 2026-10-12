@@ -1,0 +1,1 @@
+Companion V20.1: Planner giornaliero, inserimento diretto con data selezionata, sposta a domani solo per attivita locali non completate, controllo conflitti. Le scadenze e le udienze del desktop restano immutate; inviare azioni via .scmr.

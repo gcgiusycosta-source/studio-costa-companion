@@ -1,0 +1,4 @@
+COMPANION V20.0
+
+Planner mobile reso giornaliero per migliorare la leggibilità.
+Navigazione giorno per giorno; contenuti della giornata in una sola schermata.

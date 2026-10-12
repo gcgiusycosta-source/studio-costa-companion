@@ -1,0 +1,9 @@
+STUDIO COSTA COMPANION V18.5 — PLANNER COORDINATO
+
+Aggiornamento della V18, nessuna modifica alle altre schermate e ai dati salvati.
+Agenda > Planner: visualizzazione udienze, appuntamenti, impegni privati ricorrenti con etichetta, scadenze e attività con e senza orario; spiegazione della stella "Preferita".
+Toccare una scadenza o attività per assegnare orario organizzativo, oppure giorno e orario se manca completamente la data. Le scadenze legali restano inalterate.
+Le modifiche alla Companion vengono accodate e vanno esportate come risposte .scmr e importate nel DESKTOP V15.5 per diventare permanenti; non esiste sincronizzazione istantanea bidirezionale.
+Per ricevere modifiche effettuate sul desktop, esportare nuovamente il file .scmobile cifrato e importarlo nella Companion.
+Pubblicare tutti i file dello ZIP nella cartella del sito web (non lo ZIP), sovrascrivendo la vecchia versione. Alla prima apertura, aggiornare la pagina/PWA.
+Non include API di rete o accesso diretto al database.

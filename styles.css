@@ -844,3 +844,227 @@ body{background:linear-gradient(180deg,#f8f6f2 0%,#efeae2 100%)!important;color:
   .focus-card{min-width:164px;width:164px}
   .practice-simple-filters{grid-template-columns:repeat(2,1fr)!important}
 }
+
+/* Planner V18.5: scadenze e attività sempre visibili e modificabili */
+.mobile-planner-task-title{display:flex;gap:8px;align-items:center;color:#d7e5dc;font-size:12px;font-weight:800;margin:12px 0 7px}
+.mobile-planner-task-title b{font-weight:800;color:#e7c590}
+.mobile-planner-task{display:grid;grid-template-columns:90px minmax(0,1fr);text-align:left;align-items:start;gap:3px 10px;width:100%;padding:12px!important;margin-bottom:6px!important;background:#edf5ef!important;color:#243e32!important;border:1px solid #cbded1!important;border-radius:14px!important}
+.mobile-planner-task.is-deadline{background:#fff6e8!important;border-color:#e6d4b4!important}
+.mobile-planner-task span{font-size:11px;font-weight:850;color:#94652e;grid-row:span 2}
+.mobile-planner-task strong{font-size:12px;font-weight:800;color:#243e32;min-width:0;overflow-wrap:anywhere}
+.mobile-planner-task small{font-size:10px;color:#627568;grid-column:2}
+.mobile-planner-commitment.private{border-left:3px solid #9e7abc!important}
+.planner-target-overlay{position:fixed;inset:0;z-index:1001;background:rgba(7,17,12,.75);display:flex;align-items:flex-end;justify-content:center;padding:12px}
+.planner-target-sheet{width:min(100%,520px);background:#fff!important;color:#1b2d24!important;border-radius:24px;padding:23px 20px calc(22px + env(safe-area-inset-bottom));box-shadow:0 -22px 70px rgba(0,0,0,.3)}
+.planner-target-kicker{font-size:10px;color:#2c8064;font-weight:900;letter-spacing:.15em}
+.planner-target-sheet h3{font-size:20px;line-height:1.25;margin:8px 0;color:#1b2d24!important}
+.planner-target-sheet p,.planner-target-sheet small{color:#637369!important;font-size:12px;display:block;margin:8px 0}
+.planner-target-sheet label{display:block;font-weight:800;font-size:12px;margin:14px 0 5px}
+.planner-target-sheet select{display:block;width:100%;border:1px solid #cbd8cd;background:#f7faf7!important;color:#20352a!important;border-radius:12px;padding:12px}
+.planner-target-buttons{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:20px}
+.planner-target-buttons button{border-radius:12px;background:#eaf1ec!important;color:#245341!important}
+#plannerTargetSave{background:#205b46!important;color:white!important}
+
+.mobile-planner-backlog{border:1px solid rgba(168,139,83,.3);background:#faf2e4;color:#263c30;border-radius:18px;padding:13px;margin-top:14px}
+.mobile-planner-backlog h3{color:#2c523f!important;font-size:16px;margin:0 0 4px}.mobile-planner-backlog h3 span{display:inline-block;border-radius:50%;background:#d4a45c;color:#fff;padding:2px 7px}
+.mobile-planner-backlog p{color:#5e6b60;font-size:12px;margin:2px 0 10px}
+.planner-target-sheet input[type=date]{display:block;width:100%;border:1px solid #cbd8cd;border-radius:12px;background:#f7faf7!important;color:#20352a!important;padding:12px}
+
+/* V19 – visual system: one palette, legible text, robust mobile sizing */
+:root{--v19-bg:#f3f5f3;--v19-paper:#ffffff;--v19-line:#dbe3df;--v19-ink:#172920;--v19-sub:#52665c;--v19-green:#174e3c;--v19-hearing:#ac2e52;--v19-appointment:#245fb3;--v19-family:#71399d;--v19-work:#187451;--v19-deadline:#a96817}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{background:var(--v19-bg)!important;color:var(--v19-ink)!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;-webkit-font-smoothing:antialiased}
+#app>header{background:rgba(255,255,255,.97)!important;border-bottom:1px solid var(--v19-line)!important;box-shadow:0 2px 14px rgba(26,49,38,.04)!important}
+#app .brand-studio,#app .brand-person,#app #pageTitle{color:var(--v19-ink)!important}
+#app .view{padding-bottom:122px!important}
+#app .bottom-nav.v19-nav{position:fixed!important;left:8px!important;right:8px!important;bottom:7px!important;display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:2px!important;background:rgba(255,255,255,.97)!important;border:1px solid var(--v19-line)!important;border-radius:20px!important;padding:7px 5px calc(7px + env(safe-area-inset-bottom))!important;box-shadow:0 12px 35px rgba(22,50,36,.13)!important}
+#app .v19-nav button{min-width:0!important;width:auto!important;flex:none!important;overflow:hidden!important;font-size:9px!important;color:#53685d!important;border-radius:13px!important;padding:7px 0!important}
+#app .v19-nav button em{line-height:1.25!important;font-weight:750!important}
+#app .v19-nav button.active{background:#e6f0ea!important;color:#104831!important}
+#app .v19-nav .nav-svg{background:transparent!important}
+#app .v19-nav button.active .nav-svg{color:#104831!important;background:transparent!important}
+#app .v19-nav .nav-svg svg{height:20px!important;width:20px!important}
+#app button:focus-visible{outline:3px solid #5c98de!important;outline-offset:2px!important}
+
+/* Every critical panel remains readable, including legacy dark-mode elements */
+#app .view h2,#app .view h3,#app .tool-card h3,#app .detail-section h3{color:#172920!important}
+#app .view p,#app .view .muted,#app .view .practice-subline{color:var(--v19-sub)!important}
+#app .practice-search-blank,#app .practice-search-result,#app .tool-card,#app .search-card,#app .checklist-card,#app .detail-section,#app .detail-disclosure,#app .event{background:#fff!important;color:#172920!important;border:1px solid #d9e3dd!important;box-shadow:0 6px 22px rgba(22,50,36,.05)!important}
+#app .event h3,#app .event strong,#app .detail-item strong,#app .tool-result strong{color:#172920!important}
+#app .event .event-meta,#app .event .event-date,#app .event .event-time{color:#354d41!important}
+#app .event.UDIENZA{border-left:5px solid var(--v19-hearing)!important}
+#app .event.APPUNTAMENTO{border-left:5px solid var(--v19-appointment)!important}
+#app .event.SCADENZA{border-left:5px solid var(--v19-deadline)!important}
+#app .event.PREPARAZIONE,#app .event.ATTIVITÀ{border-left:5px solid var(--v19-work)!important}
+#app .event.PERSONALE{border-left:5px solid var(--v19-family)!important}
+#app .agenda-planner-head,#app .hearings-command-head{background:#fff!important;border:1px solid #d9e3dd!important;color:#172920!important;border-left:4px solid var(--v19-green)!important;box-shadow:0 8px 28px rgba(22,50,36,.05)!important}
+#app .agenda-planner-head h2,#app .hearings-command-head h2,#app .view-identity h2{color:#152c20!important}
+#app .agenda-planner-head input,#app .hearings-command-head input{background:#f3f7f4!important;color:#152a20!important;border:1px solid #cbd8cf!important}
+#app .agenda-navigation-line button,#app .hearing-period-control button{background:#eaf3ed!important;color:#174a35!important;border:1px solid #cee0d5!important}
+#app .agenda-mode,#app .hearing-mode{background:#eff3f0!important;border:1px solid #dbe5dc!important}
+#app .agenda-mode button,#app .hearing-mode button{color:#3b5445!important}
+#app .agenda-mode button.active,#app .hearing-mode button.active{background:#17533d!important;color:#fff!important}
+#app .agenda-export,#app .agenda-today,#app .hearing-today{background:#e8f2ed!important;color:#164731!important;border:1px solid #c9dfd3!important}
+#app .agenda-category-card,#app .agenda-day-group,#app .planner-timeline,#app .docket-card{background:#fff!important;color:#172920!important;border-color:#d9e3dd!important}
+#app .docket-card .docket-body strong,#app .planner-item .planner-body strong{color:#15271d!important}
+#app .docket-card .docket-body small,#app .planner-item .planner-body em{color:#566c60!important}
+#app .docket-card,#app .planner-item{background:#fff!important;color:#172920!important;border:1px solid #d9e3dd!important}
+#app .week-day-card{background:#fff!important;color:#172920!important;border:1px solid #d4e1d8!important}
+#app .week-day-card .week-name,#app .week-day-card strong{color:#28533d!important}
+#app .week-day-card.selected{background:#17533d!important;border-color:#17533d!important}
+#app .week-day-card.selected .week-name,#app .week-day-card.selected strong{color:#fff!important}
+#app .month-cell{background:#fff!important;color:#172920!important;border:1px solid #d9e3dd!important}
+#app .month-cell.selected{outline:2px solid #226b4e!important}
+#app .tool-card select,#app .tool-card input,#app .tool-input,#app #practiceSearch,#app #globalSearch{background:#fff!important;color:#172920!important;border:1px solid #cbdad0!important}
+#app .view .section-head.stacked,#app .practices-compact-head{background:transparent!important}
+#app .practice-simple-filters{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:5px!important}
+#app .practice-simple-filters button{background:#fff!important;color:#344e40!important;border-color:#d9e3dd!important;font-size:10px!important;min-height:43px!important;padding:7px 3px!important}
+#app .practice-simple-filters button.active{background:#145138!important;color:#fff!important;border-color:#145138!important}
+#app .practices-search-blank{padding:32px 20px!important;border-radius:22px!important;text-align:center!important}
+#app .practices-search-blank h3{font-size:21px!important;margin:10px 0!important}
+#app .practices-search-blank p{font-size:14px!important;line-height:1.55!important}
+#app .practices-search-blank small{color:#52655c!important}
+#app .search-mark{display:grid;place-items:center;margin:0 auto 8px;width:62px;height:62px;border-radius:20px;background:#e1efe8;color:#1d6044;font-size:34px}
+#app .practice-search-result{display:flex;align-items:center;text-align:left;width:100%;gap:12px;padding:13px!important;border-radius:16px!important;margin:9px 0!important}
+#app .practice-search-letter{width:42px;height:42px;flex:0 0 42px;display:grid;place-items:center;color:#fff;background:#206249;border-radius:13px;font-size:20px;font-weight:800}
+#app .practice-search-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+#app .practice-search-info small{font-size:10px;color:#507260!important;font-weight:800!important}
+#app .practice-search-info strong{font-size:15px;color:#182b21!important}
+#app .practice-search-info em{font-style:normal;font-size:12px;color:#667870!important;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+#app .practice-search-go{font-size:24px;color:#317452}
+
+/* Dedicated real planner, visually separate from the judicial docket */
+#plannerView .v19-planner-head{background:linear-gradient(130deg,#103e2f,#23634b)!important;color:#fff!important;padding:20px!important;border-radius:22px!important;margin-bottom:14px!important;box-shadow:0 16px 35px rgba(17,62,47,.18)!important}
+#plannerView .v19-planner-head h2{color:#fff!important;font-size:27px!important;margin:5px 0!important}
+#plannerView .v19-planner-head p{color:#d8e9df!important;font-size:13px!important;line-height:1.4!important}
+#plannerView .v19-planner-head .view-kicker{color:#e6ce9e!important;font-size:10px!important}
+#plannerView .v19-planner-head #plannerPeriodLabel{display:block;margin-top:10px;font-size:12px;color:#fff}
+#plannerView .v19-planner-date{display:grid;grid-template-columns:38px minmax(0,1fr) 38px 52px;gap:6px;margin-top:14px;align-items:center}
+#plannerView .v19-planner-date button,#plannerView .v19-planner-date input{height:42px!important;background:#fff!important;color:#16452f!important;border:1px solid #b8d6c4!important;border-radius:12px!important;font-weight:800!important;padding:5px!important;min-width:0}
+#plannerView .planner-mobile-actions{display:grid;grid-template-columns:1.2fr 1fr;gap:9px;margin:12px 0}
+#plannerView .planner-mobile-actions button{background:#17543d!important;color:#fff!important;border-radius:13px!important;padding:13px 9px!important;font-size:12px!important;font-weight:800!important}
+#plannerView .planner-mobile-actions button.secondary{background:#e2efe7!important;color:#16543c!important}
+#plannerView .planner-legend{display:flex;flex-wrap:wrap;gap:7px;margin:8px 0 13px}
+#plannerView .planner-legend span{background:#fff;border:1px solid #dbe6df;border-radius:10px;padding:7px 9px;font-size:11px;font-weight:800}
+#plannerView .legend-hearing{color:var(--v19-hearing)}
+#plannerView .legend-appointment{color:var(--v19-appointment)}
+#plannerView .legend-family{color:var(--v19-family)}
+#plannerView .legend-work{color:var(--v19-work)}
+#plannerView .mobile-planner-day{background:#fff!important;border:1px solid #dce5df!important;border-radius:20px!important;padding:13px!important;box-shadow:0 7px 24px rgba(22,50,36,.05)!important;margin:12px 0!important}
+#plannerView .mobile-planner-heading{background:#eaf2ed!important;border:0!important;border-radius:12px!important;padding:12px!important;margin-bottom:11px!important}
+#plannerView .mobile-planner-heading strong{color:#174a34!important;font-size:17px!important}
+#plannerView .mobile-planner-heading span{color:#42644f!important;font-size:12px!important}
+#plannerView .mobile-planner-slot{background:#eaf5ee!important;border:1px solid #cbe2d3!important;color:#164632!important;border-radius:12px!important;padding:11px!important;margin:5px 0!important}
+#plannerView .mobile-planner-slot.preferred{background:#fff4d9!important;border-color:#ebd6a2!important;color:#71531a!important}
+#plannerView .mobile-planner-slot span,#plannerView .mobile-planner-slot b{color:inherit!important}
+#plannerView .mobile-planner-commitment{display:flex!important;flex-direction:column!important;gap:4px!important;background:#f4f7fb!important;color:#183d67!important;border-left:4px solid #2769ad!important;border-radius:12px!important;padding:11px 12px!important;text-align:left!important;margin:5px 0!important;width:100%!important}
+#plannerView .mobile-planner-commitment.private{background:#f4ecfb!important;color:#54287a!important;border-left-color:#8745ba!important}
+#plannerView .mobile-planner-commitment strong,#plannerView .mobile-planner-commitment span{color:inherit!important;font-size:12px!important}
+#plannerView .mobile-planner-task{background:#fff9ed!important;color:#5f4218!important;border:1px solid #efddba!important;border-left:4px solid #ab7826!important;border-radius:12px!important;margin:6px 0!important;text-align:left!important;width:100%!important;padding:13px!important}
+#plannerView .mobile-planner-task strong{color:#3c3220!important;font-size:13px!important}
+#plannerView .mobile-planner-task span,#plannerView .mobile-planner-task small{color:#715925!important}
+#plannerView .mobile-planner-task.is-deadline{border-left-color:#b24b43!important;background:#fff0eb!important}
+#plannerView .mobile-planner-note,#plannerView .mobile-planner-backlog{background:#fff!important;color:#1e3829!important;border:1px solid #dce5df!important;border-radius:17px!important}
+#plannerView .mobile-planner-note strong,#plannerView .mobile-planner-backlog h3{color:#194c36!important}
+#plannerView .mobile-planner-note p,#plannerView .mobile-planner-note small,#plannerView .mobile-planner-backlog p{color:#52695b!important}
+#plannerView .mobile-planner-task-title{color:#214632!important}
+#plannerView .mobile-planner-empty{background:#f7f9f7!important;color:#506b59!important;border:1px dashed #d4e1d9!important}
+#plannerBlockOverlay .planner-target-sheet,#plannerTargetOverlay .planner-target-sheet{background:#fff!important;color:#172920!important;border-radius:22px!important;max-height:88vh!important;overflow-y:auto!important}
+#plannerBlockOverlay .planner-target-sheet h3,#plannerTargetOverlay .planner-target-sheet h3{color:#153d2a!important}
+#plannerBlockOverlay .planner-target-sheet input,#plannerBlockOverlay .planner-target-sheet select,#plannerTargetOverlay .planner-target-sheet select{background:#fff!important;color:#162b1f!important;border:1px solid #bed0c4!important;min-height:43px!important;width:100%!important}
+#plannerBlockOverlay .planner-inline-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+#plannerBlockOverlay .planner-delete{margin-top:9px;background:#fff1f1!important;border:1px solid #efc4c4!important;color:#a02d36!important;width:100%!important;padding:12px!important}
+#plannerBlockOverlay #pbSave{background:#19553d!important;color:#fff!important}
+#plannerView .mobile-planner-commitments{display:flex;flex-direction:column;gap:4px}
+
+/* Home: planner snapshot from family commitments and work queues */
+#homeView .v19-dayplan{background:#fff;border-radius:20px;padding:15px;margin:14px 0;box-shadow:0 9px 25px rgba(26,54,38,.06);border:1px solid #dbe5dd}
+#homeView .v19-dayplan-hero{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+#homeView .v19-dayplan-hero>div{background:#eaf3ed;border-radius:14px;padding:13px;color:#153d29}
+#homeView .v19-dayplan-hero>div:nth-child(2){background:#f2eafd;color:#582f80}
+#homeView .v19-dayplan-hero small{display:block;color:inherit;opacity:.78;font-size:10px;letter-spacing:.06em;font-weight:800}
+#homeView .v19-dayplan-hero strong{display:block;color:inherit;font-size:20px;margin-top:5px}
+#homeView .v19-dayplan-rows button{display:flex;width:100%;gap:12px;align-items:center;text-align:left;margin:5px 0;background:#f6f8f6!important;color:#153b27!important;border-radius:11px;padding:11px!important}
+#homeView .v19-dayplan-rows button span{min-width:92px;font-size:11px;color:#53715d!important}
+#homeView .v19-dayplan-rows button strong{font-size:12px;color:#1a3323!important}
+#homeView .v19-dayplan-rows .v19-dayplan-family{border-left:4px solid var(--v19-family)!important;background:#f4edf8!important}
+#homeView .v19-dayplan-rows .v19-dayplan-task{border-left:4px solid var(--v19-deadline)!important}
+#homeView .v19-dayplan-empty{font-size:12px;color:#5d7364!important}
+@media(max-width:390px){#app .v19-nav button{font-size:8.5px!important}#app .v19-nav .nav-svg svg{width:18px!important;height:18px!important}#app .practice-simple-filters button{font-size:9px!important}}
+#plannerView .mobile-planner-commitment.work{background:#e7f5ee!important;color:#205e42!important;border-left-color:#2f9363!important}
+#plannerView .planner-propose{background:#185a40!important;color:#fff!important;width:100%!important;margin-top:13px!important;padding:14px!important;border-radius:13px!important}
+#plannerView .planner-session-preview,#plannerTargetOverlay .planner-session-preview{margin-top:12px;color:#214633;font-size:12px}
+#plannerView .planner-session-preview>div,#plannerTargetOverlay .planner-session-preview>div{padding:7px;margin-top:4px;background:#edf5ef;color:#225139;border-radius:8px}
+#plannerTargetOverlay #plannerConfirmSessions{margin-top:10px;background:#2a6c4e!important;color:#fff!important;border-radius:11px;padding:12px;width:100%}
+#plannerTargetOverlay #plannerConfirmSessions:disabled{opacity:.45}
+
+
+/* V19.1 — tipografia e contrasti verificabili, senza modifiche ai dati. */
+:root{--v191-ink:#142b20;--v191-muted:#405c4d;--v191-border:#c5d9cb}
+#app{color:var(--v191-ink)!important}
+#app .view{font-size:14px;line-height:1.47}
+#app button,#app input,#app select{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+#app button{touch-action:manipulation}
+#app .v19-nav button{font-size:10px!important;min-height:49px!important}
+#app .v19-nav button em{font-size:10px!important;font-weight:800!important}
+#app .v19-nav .nav-svg{width:29px!important;height:29px!important}
+#app .v19-nav .nav-svg svg{width:20px!important;height:20px!important}
+#app #pageTitle{font-size:18px!important;letter-spacing:-.02em!important}
+#app .brand-studio{font-size:13px!important}
+#app .view-kicker{font-size:11px!important}
+#app #practiceSearch,#app #globalSearch,#app .tool-input{font-size:16px!important;color:#18372a!important;background:#fff!important}
+#app input::placeholder{color:#536b5b!important;opacity:1!important}
+#app .practice-simple-filters button{font-size:11px!important;padding:8px 4px!important}
+#app .practice-search-info strong{font-size:16px!important}
+#app .practice-search-info small,#app .practice-search-info em{font-size:12px!important;color:#385d45!important}
+#app .practices-search-blank h3{font-size:21px!important;color:#133d29!important}
+#app .practices-search-blank p,#app .practices-search-blank small{font-size:13px!important;color:#456454!important}
+#plannerView .v19-planner-head{background:linear-gradient(140deg,#103e2f,#255a45)!important}
+#plannerView .v19-planner-head h2{font-size:27px!important;letter-spacing:-.02em}
+#plannerView .v19-planner-head p{font-size:14px!important;color:#e2f0e6!important}
+#plannerView .v19-planner-date button,#plannerView .v19-planner-date input{font-size:14px!important;min-height:46px!important}
+#plannerView .planner-mobile-actions button{font-size:14px!important;min-height:47px!important}
+#plannerView .planner-legend span{font-size:12px!important;padding:8px 10px!important}
+#plannerView .mobile-planner-heading strong{font-size:19px!important}
+#plannerView .mobile-planner-heading span{font-size:13px!important;color:#28573b!important}
+#plannerView .mobile-planner-day{border-color:#cddfd2!important;box-shadow:0 6px 20px rgba(18,55,36,.07)!important}
+#plannerView .mobile-planner-slot{font-size:13px!important;line-height:1.4!important}
+#plannerView .mobile-planner-slot span,#plannerView .mobile-planner-slot b{font-size:13px!important;color:#183d2c!important}
+#plannerView .mobile-planner-slot.preferred span,#plannerView .mobile-planner-slot.preferred b{color:#614718!important}
+#plannerView .mobile-planner-commitment span,#plannerView .mobile-planner-commitment strong{font-size:13px!important;line-height:1.4!important}
+#plannerView .mobile-planner-task span{font-size:12px!important;font-weight:750!important;color:#67451c!important}
+#plannerView .mobile-planner-task strong{font-size:14px!important;line-height:1.45!important;color:#3c2d1b!important}
+#plannerView .mobile-planner-task small{font-size:12px!important;line-height:1.35!important;color:#6b4f27!important}
+#plannerView .mobile-planner-task-title{font-size:13px!important;font-weight:800!important;color:#1d5133!important}
+#plannerView .mobile-planner-empty{font-size:13px!important;color:#425f4e!important}
+#plannerView .mobile-planner-note{font-size:13px!important;line-height:1.5!important}
+#plannerView .mobile-planner-note p,#plannerView .mobile-planner-note small{font-size:13px!important;color:#355840!important}
+#plannerView .mobile-planner-backlog p,#plannerView .mobile-planner-backlog small{font-size:12px!important;color:#415c4a!important}
+#homeView .v19-dayplan-hero small{font-size:12px!important;opacity:1!important}
+#homeView .v19-dayplan-rows button span,#homeView .v19-dayplan-rows button strong{font-size:13px!important}
+#homeView .v19-dayplan-empty{font-size:13px!important}
+#plannerBlockOverlay .planner-target-sheet,#plannerTargetOverlay .planner-target-sheet{padding:22px!important;box-shadow:0 24px 65px rgba(6,36,20,.24)!important}
+#plannerBlockOverlay .planner-target-sheet h3,#plannerTargetOverlay .planner-target-sheet h3{font-size:22px!important}
+#plannerBlockOverlay .planner-target-sheet label,#plannerTargetOverlay .planner-target-sheet label{display:block!important;font-size:13px!important;font-weight:750!important;color:#1e3b2a!important;margin:10px 0 5px!important}
+#plannerBlockOverlay .planner-target-sheet input,#plannerBlockOverlay .planner-target-sheet select,#plannerTargetOverlay .planner-target-sheet input,#plannerTargetOverlay .planner-target-sheet select{font-size:16px!important;min-height:46px!important;color:#163c29!important;background:#fff!important;border:1px solid #aac6b4!important;border-radius:12px!important}
+#plannerBlockOverlay .planner-target-sheet small,#plannerTargetOverlay .planner-target-sheet small{font-size:12px!important;color:#3f624e!important;line-height:1.4!important}
+#plannerBlockOverlay .planner-target-buttons button,#plannerTargetOverlay .planner-target-buttons button{font-size:14px!important;min-height:46px!important}
+#plannerView .planner-propose,#plannerTargetOverlay #plannerConfirmSessions{font-size:14px!important;min-height:46px!important}
+#app button:focus-visible,#app input:focus-visible,#app select:focus-visible{outline:3px solid #428b69!important;outline-offset:2px!important}
+@media(max-width:390px){#app .v19-nav button{font-size:10px!important}#app .practice-simple-filters button{font-size:10px!important}}
+
+/* V19.2: checklist and planner integrated, read-only from desktop */
+.mobile-planner-checklists{margin:13px 0 5px;padding:12px;border:1px solid #d6e2d9;border-radius:17px;background:#f0f5f1;color:#213d30}
+.mobile-planner-checklists .mobile-planner-task-title{color:#244c3c!important;margin:0 0 9px!important}
+.mobile-checklist-work{border-left:4px solid #478367;background:white;border-radius:11px;padding:10px 12px;margin:7px 0;display:flex;flex-direction:column;gap:3px;color:#1f3228}
+.mobile-checklist-work span{font-size:11px;color:#617269}
+.mobile-checklist-work strong{font-size:14px;color:#182b22}
+.mobile-checklist-work small{font-size:11px;color:#416955}
+.planner-capacity-warning{margin:9px 0 0;padding:10px;border-radius:11px;background:#fdf4de;border:1px solid #e6cf94;color:#664d16;font-size:12px;font-weight:700}
+
+/* V19.3: fixed-family and court transfer highlights */
+.v19-dayplan-alert{padding:12px 14px;margin-top:9px;border-radius:13px;background:#fff2e8!important;border:1px solid #edc6b8!important;color:#8d352e!important;font-size:12px!important;font-weight:750!important;line-height:1.5!important}
+.mobile-planner-commitment.travel{background:#f4ebd9!important;border-left:4px solid #a68045!important;color:#463a25!important}
+.mobile-planner-commitment.travel strong{color:#463a25!important}
+.mobile-planner-commitment.private{border-left:4px solid #946d42!important}
+.planner-capacity-warning{font-weight:700!important;line-height:1.5!important}

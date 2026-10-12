@@ -1,0 +1,6 @@
+Companion V19.2 — Checklist nel Planner
+Dopo esportazione .scmobile da Studio Costa V15.8: il Planner visualizza attività checklist, durata stimata, minuti prenotati e lavoro residuo.
+Le sessioni confermate dal desktop occupano gli intervalli e riducono le fasce libere della Companion.
+L'assegnazione automatica delle checklist si conferma esclusivamente dal desktop.
+Le funzioni della V19.1 sono mantenute; nessuna modifica al formato cifrato SCM1, alle pratiche o alla banca giuridica.
+Sostituisci tutti i file del portale, aggiorna la PWA e importa un nuovo file .scmobile.

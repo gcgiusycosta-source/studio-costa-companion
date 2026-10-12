@@ -1,0 +1,20 @@
+COMPANION V19.3 – SETTIMANA TIPO E IMPEGNI FAMILIARI
+
+Caricare TUTTI i file del ZIP nella radice del sito della Companion, conservando le
+impostazioni del portale. Aggiornare la pagina o, se necessario, reinstallare la PWA
+per ricevere i nuovi file. Importare un NUOVO archivio .scmobile generato dal desktop V15.9.
+
+Home > Il mio Planner oggi: mostra fasce, impegni familiari, anticipi per udienza e
+avvisi di incompatibilità ricevuti dal desktop.
+Planner > Settimana: calendario operativo, ore libere e impegni fissati, differenziati
+per categoria. Toccando un impegno familiare ricorrente nella giornata puoi modificare
+soltanto quella occorrenza; la variazione va inviata al desktop tramite .scmr.
+
+La Companion resta OFFLINE-PRIMA: non invia automaticamente i fascicoli in rete.
+I nuovi giorni calcolati sono esportati per un orizzonte di 49 giorni; per aggiornare
+i dati serve una nuova importazione .scmobile.
+La programmazione automatica multi-attività con conferma è operativa nel desktop.
+
+Verifiche: JavaScript parsato da Node, controlli di calcolo e override giornaliero.
+Il browser headless in questo ambiente è bloccato da criteri amministrativi:
+non si dichiara un collaudo reale iPhone/Safari.

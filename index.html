@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#0d1112">
+  <meta name="theme-color" content="#f3f5f3">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Studio Costa">
-  <link rel="manifest" href="manifest.json?v=18.0">
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=18.0">
-  <link rel="stylesheet" href="styles.css?v=18.0">
-  <title>Studio Costa Companion V18.0</title>
+  <link rel="manifest" href="manifest.json?v=19.6">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=19.6">
+  <link rel="stylesheet" href="styles.css?v=19.6">
+  <title>Studio Costa Companion V19.6</title>
 </head>
 <body>
   <section id="pairScreen" class="screen hidden">
@@ -106,7 +106,7 @@
             <button data-agenda-mode="day">Giorno</button>
             <button data-agenda-mode="week" class="active">Settimana</button>
             <button data-agenda-mode="month">Mese</button>
-            <button data-agenda-mode="planner">Planner</button>
+            
           </div>
           <div class="agenda-meta-row">
             <span id="agendaPeriodLabel" class="compact-period-label"></span>
@@ -116,9 +116,19 @@
         <div id="agendaContent" class="agenda-planner-content"></div>
       </section>
 
+      <section id="plannerView" class="view hidden">
+        <div class="v19-planner-head">
+          <div class="view-kicker">STUDIO COSTA · ORGANIZZAZIONE</div><h2>Il mio Planner</h2>
+          <p>Lavoro, udienze, famiglia e tempo per gli atti in un'unica settimana.</p>
+          <div class="v19-planner-date"><button id="plannerPrev" aria-label="Settimana precedente">‹</button><input type="date" id="plannerDate" aria-label="Data Planner"><button id="plannerNext" aria-label="Settimana successiva">›</button><button id="plannerToday">Oggi</button></div>
+          <strong id="plannerPeriodLabel"></strong>
+        </div>
+        <div id="plannerContent"></div>
+      </section>
+
       <section id="practicesView" class="view hidden">
         <div class="section-head stacked practices-compact-head">
-          <div><h2>Pratiche</h2><p class="muted">Fascicoli operativi, focus urgenti e accesso rapido ai dati essenziali</p></div>
+          <div><h2>Pratiche</h2><p class="muted">Ricerca riservata nell’archivio dello studio</p></div>
           <input id="practiceSearch" type="search" placeholder="Cerca per assistito, RG, RGNR, SIUS, SIEP, autorità, controparte">
         </div>
         <div id="practiceFilterBar" class="practice-simple-filters" role="group" aria-label="Filtri pratiche">
@@ -284,12 +294,13 @@
       </section>
     </main>
 
-    <nav class="bottom-nav companion-bottom-nav five-nav">
+    <nav class="bottom-nav companion-bottom-nav five-nav v19-nav">
       <button data-target="homeView"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 10.5L12 4l8 6.5"/><path d="M6.5 9.5V20h11V9.5"/><path d="M10 20v-5.5h4V20"/></svg></span><em>Home</em></button>
       <button data-target="hearingsView"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 4v15"/><path d="M7 7h10"/><path d="M5 7c0 3-2 5-2 5h6c0 0-2-2-2-5"/><path d="M19 7c0 3-2 5-2 5h6c0 0-2-2-2-5"/><path d="M8 20h8"/></svg></span><em>Udienze</em></button>
       <button data-target="agendaView"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16"/><path d="M8 14h3M13 14h3M8 17h3"/></svg></span><em>Agenda</em></button>
+      <button data-target="plannerView"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 4v3M16 4v3M4 10h16M8 14h8M8 17h5"/></svg></span><em>Planner</em></button>
       <button data-target="practicesView"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 7.5A2.5 2.5 0 0 1 6.5 5H10l1.7 2H17.5A2.5 2.5 0 0 1 20 9.5v8A2.5 2.5 0 0 1 17.5 20h-11A2.5 2.5 0 0 1 4 17.5v-10Z"/><path d="M4 9h16"/></svg></span><em>Pratiche</em></button>
-      <button data-target="toolsView"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l1.6 3.9L17.5 8.5l-3.1 2.5.9 4-3.3-2-3.3 2 .9-4L6.5 8.5l3.9-1.6L12 3Z"/><path d="M18.5 15.5l.8 1.9 1.9.8-1.9.8-.8 1.9-.8-1.9-1.9-.8 1.9-.8.8-1.9Z"/></svg></span><em>Strumenti</em></button>
+      <button data-target="toolsView"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l1.6 3.9L17.5 8.5l-3.1 2.5.9 4-3.3-2-3.3 2 .9-4L6.5 8.5l3.9-1.6L12 3Z"/><path d="M19.6 15.5l.8 1.9 1.9.8-1.9.8-.8 1.9-.8-1.9-1.9-.8 1.9-.8.8-1.9Z"/></svg></span><em>Strumenti</em></button>
     </nav>
   </div>
 
@@ -344,7 +355,7 @@
 
   <div id="settingsModal" class="modal hidden">
     <div class="modal-sheet compact-sheet">
-      <div class="modal-top"><button id="closeSettings" class="back-button">‹</button><div><div class="eyebrow dark">COMPANION V18.0</div><h2>Sincronizzazione e privacy</h2></div></div>
+      <div class="modal-top"><button id="closeSettings" class="back-button">‹</button><div><div class="eyebrow dark">COMPANION V19.6</div><h2>Sincronizzazione e privacy</h2></div></div>
       <div class="detail-section">
         <h3>Modifiche da riportare al PC</h3>
         <p id="pendingActionsInfo" class="muted"></p>
@@ -384,6 +395,6 @@
 
 <div id="undoToast" class="undo-toast hidden"><span>Checklist aggiornata</span><button id="undoAction" type="button">Annulla</button></div>
 
-  <script src="app.js?v=18.0"></script>
+  <script src="app.js?v=19.6"></script>
 </body>
 </html>

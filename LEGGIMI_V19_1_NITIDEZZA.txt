@@ -1,0 +1,8 @@
+COMPANION V19.1 — CONTRASTO, TESTI, PLANNER
+Aggiornamento limitato alla presentazione e a un difetto di visualizzazione:
+- Tipografia leggibile nelle schede e nei controlli Planner, contrasto esplicito su sfondi chiari.
+- Campi di inserimento a 16 px per evitare lo zoom involontario su iPhone.
+- Sessioni di lavoro ancora da sincronizzare visibili anche quando non ci sono altri impegni nella giornata.
+- Nessuna modifica al formato degli archivi .scmobile/.scmr e al database.
+Pubblicare tutti i file in radice; aggiornare la pagina dopo il deploy. Conservare copia V19.
+ATTENZIONE: test HTML/JS e prova del Planner in ambiente browser simulato; da verificare su iPhone reale.

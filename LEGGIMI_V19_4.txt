@@ -1,0 +1,1 @@
+Companion V19.4: nel Planner gli eventi del calendario aprono la pratica collegata, quando disponibile, oppure l’Agenda. Le attività organizzative continuano a consentire la modifica dell’orario. Nessuna modifica al formato cifrato .scmobile/.scmr. Notifiche introdotte solo nel desktop.

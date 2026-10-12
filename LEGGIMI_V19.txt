@@ -1,0 +1,11 @@
+COMPANION V19 — PLANNER E RICERCA PRATICHE
+Pubblicare TUTTI i file di questo archivio nella radice del portale PWA,
+sostituendo i file precedenti. L'archivio non contiene sottocartelle.
+La ricerca pratiche parte vuota, apre le schede soltanto su richiesta.
+Agenda, Udienze e Planner sono tre viste distinte.
+Il Planner consente di creare/modificare impegni familiari e personali,
+assegnare orari alle attività e indicare tempo di lavoro necessario.
+Le sessioni suggerite sul telefono richiedono esportazione .scmr e importazione
+nel desktop V15.6 per essere registrate definitivamente. Le scadenze non cambiano.
+Il portale deve essere servito in HTTPS. iOS: aggiornare la pagina/PWA dopo il caricamento.
+Conservare backup della PWA precedente e del database desktop.

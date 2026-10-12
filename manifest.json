@@ -1,12 +1,12 @@
 {
-  "name": "Studio Costa Companion V18",
+  "name": "Studio Costa Companion V19.3",
   "short_name": "Studio Costa",
-  "description": "Companion professionale Studio Legale Costa V18 Executive Black — funzioni allineate al desktop V15",
+  "description": "Companion professionale Studio Legale Costa V19.3 Planner coordinato — funzioni allineate al desktop V15.9",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#080b0a",
-  "theme_color": "#080b0a",
+  "background_color": "#f3f5f3",
+  "theme_color": "#f3f5f3",
   "icons": [
     {
       "src": "icon-192.png",

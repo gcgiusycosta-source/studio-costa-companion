@@ -1,0 +1,1 @@
+Companion V19.5: allineamento della versione e aggiornamento cache; visualizzazione Planner da esportazione desktop cifrata. La creazione rapida di attività è disponibile sul desktop. Non sono state introdotte modifiche bidirezionali non supportate.

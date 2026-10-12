@@ -1,0 +1,1 @@
+Companion V19.6: cache allineata. Le modifiche desktop alla checklist sono principalmente grafiche e NON rappresentano una nuova sincronizzazione automatica.

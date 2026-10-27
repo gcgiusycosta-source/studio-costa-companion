@@ -1,0 +1,886 @@
+.view{animation:fadeSlide .24s ease}@keyframes fadeSlide{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.lux-hero{position:relative;overflow:hidden;border-radius:30px;margin:4px 0 16px;padding:22px 20px 24px;background:linear-gradient(160deg,rgba(14,44,36,.95),rgba(30,92,72,.82)),url('sea-desk.jpg') center/cover no-repeat;box-shadow:var(--card-shadow);color:#fff}.lux-hero::before{content:"";position:absolute;inset:auto -20% -40% auto;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(222,190,120,.34),rgba(222,190,120,0));pointer-events:none}.lux-hero h2{margin:10px 0 6px!important;font-size:30px!important;line-height:1.02;color:#fff!important}.lux-hero p{color:#f0f3f1!important;font-size:14px!important}.hero-badge{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.15);font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}.hero-glow{position:absolute;inset:auto 12px 12px auto;width:84px;height:84px;border-radius:24px;background:linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,0));backdrop-filter:blur(4px)}
+.kpi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:16px}.kpi-card{border:0;text-align:left;border-radius:24px;padding:16px 14px;background:#fff;box-shadow:var(--card-shadow);display:flex;flex-direction:column;gap:4px;position:relative;overflow:hidden;transition:transform .16s ease,box-shadow .16s ease}.kpi-card:active{transform:scale(.985)}.kpi-card strong{font-size:30px;line-height:1;color:#17352e}.kpi-card small{font-size:12px;color:#5a7168;font-weight:700}.kpi-icon{display:grid;place-items:center;width:40px;height:40px;border-radius:14px;margin-bottom:6px;font-size:18px;font-weight:700}.kpi-card.emerald .kpi-icon{background:#e8f4ef;color:#165344}.kpi-card.ruby .kpi-icon{background:#fff0f2;color:#be4b5d}.kpi-card.amber .kpi-icon{background:#fff5e8;color:#b87021}.kpi-card.jade .kpi-icon{background:#edf6ef;color:#2c7c57}.kpi-card::after{content:"";position:absolute;inset:auto -18px -24px auto;width:90px;height:90px;border-radius:50%;background:radial-gradient(circle,rgba(33,78,66,.08),rgba(33,78,66,0))}
+.next-focus-card{border-radius:28px;background:#fff;box-shadow:var(--card-shadow);padding:18px 16px;margin-bottom:18px;border:1px solid rgba(19,57,47,.06)}.next-focus-head{display:flex;justify-content:space-between;gap:10px;align-items:center;font-size:12px;color:#6a7b74;font-weight:800;text-transform:uppercase;letter-spacing:.06em}.next-focus-head b{font-size:11px;color:#1b5a48;background:#edf5f1;padding:8px 10px;border-radius:999px}.next-focus-card h3{margin:10px 0 6px!important;color:#17352e}.next-focus-meta,.next-focus-practice{color:#5c6e67;font-size:13px}.next-focus-practice{font-weight:800;color:#25493e;margin-top:6px}.next-focus-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.primary-soft,.secondary-soft{border:0;border-radius:999px;padding:11px 14px;font-weight:800}.primary-soft{background:linear-gradient(180deg,#245645,#17392f);color:#fff}.secondary-soft{background:#edf4ef;color:#214e42}
+.quick-tools-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.quick-tool-card{background:#fff;border:1px solid rgba(19,57,47,.07);box-shadow:var(--card-shadow);border-radius:22px;padding:14px;text-align:left;display:flex;flex-direction:column;gap:6px}.quick-tool-icon{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:#e6f0ec;color:#1d5646;font-size:18px}.quick-tool-card strong{font-size:15px;color:#163931}.quick-tool-card small{font-size:12px;color:#678078}.ai-promo-card{margin-top:12px;border-radius:24px;padding:16px 16px 70px;background:linear-gradient(180deg,rgba(12,39,32,.94),rgba(20,70,56,.88)),url('ai-touch.jpg') right center/cover no-repeat;color:#fff;box-shadow:var(--card-shadow)}.ai-chip{display:inline-flex;padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.14);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}.ai-promo-card strong{display:block;font-size:18px;line-height:1.2;margin-bottom:6px}.ai-promo-card small{font-size:13px;color:#dde7e3}
+.section-head.stacked,.tool-card,.practice-card,.detail-section,.event,.home-check-item,.search-card{border-radius:22px!important;box-shadow:var(--card-shadow)!important;border:1px solid rgba(19,57,47,.06)!important}.section-head.stacked{background:#fff!important;padding:16px!important}.agenda-mode,.filters{background:#eef3ef!important;border-radius:18px!important;padding:6px!important}.agenda-mode button,.filters button{border-radius:999px!important}.nav-square{border-radius:16px!important;box-shadow:0 6px 14px rgba(21,70,57,.18)!important}.home-navigation input,.agenda-navigation input,#practiceSearch,#globalSearch,.tool-input,select{border-radius:16px!important;border-color:#d8e4dc!important;background:#fcfdfc!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.9)}
+#practicesView .section-head.stacked{background:linear-gradient(180deg,#ffffff 0%,#f4f7f4 100%)!important}.practices-overview{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;background:linear-gradient(180deg,#edf4ef 0%,#f8faf8 100%);border-radius:18px;padding:12px 14px;color:#315549;font-size:12px;font-weight:700}.practices-overview b{font-size:18px;color:#17352e}.practice-card{padding:16px!important;background:linear-gradient(180deg,#fff 0%,#fbfcfb 100%)!important}.practice-heading h3{margin:4px 0!important;font-size:20px!important;color:#17352e!important}.practice-subline{font-size:13px;color:#62756d}.status-badge{padding:8px 10px;border-radius:999px;background:#eef4ef;color:#1f5b48;font-size:11px;font-weight:800;align-self:flex-start;max-width:42%}.area-badge{padding:6px 10px;border-radius:999px;font-size:11px;letter-spacing:.05em}.practice-grid.two-lines .field{min-height:48px}.practice-progress{margin:14px 0}.progress-row{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:#5f746b;font-weight:700;margin-bottom:7px}.progress-row b{color:#17352e}.progress-bar{height:9px;background:#edf1ee;border-radius:999px;overflow:hidden}.progress-bar i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#265a49,#7aa58f)}.modern-next-row{gap:10px!important}.modern-next-row .next-box{background:#f5f8f6!important;border-color:#e1ebe4!important}.practice-action-row{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}.practice-pill{display:inline-flex;align-items:center;padding:8px 12px;border-radius:999px;background:#183f33;color:#fff;font-size:12px;font-weight:800}.practice-pill.muted{background:#edf3ef;color:#315247}.area-PENALE{background:#fff0f2!important;color:#bd4b5c!important}.area-CIVILE{background:#eef2ff!important;color:#4767c7!important}.area-TRIBUTARIO{background:#e9f5ee!important;color:#21835e!important}
+.bottom-nav.four-nav{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:10px!important;padding:10px 12px calc(10px + env(safe-area-inset-bottom))!important;background:rgba(252,252,251,.96)!important;backdrop-filter:blur(18px);border-top:1px solid rgba(24,63,51,.08)!important;box-shadow:0 -10px 32px rgba(15,38,31,.08)!important}.bottom-nav.four-nav button{padding:8px 2px 10px!important;border-radius:18px!important;color:#5f736a!important}.bottom-nav.four-nav button.active{background:#edf4ef!important;color:#1d4b3d!important;box-shadow:inset 0 0 0 1px rgba(29,75,61,.08)!important}.floating-add{width:62px!important;height:62px!important;border:3px solid rgba(255,255,255,.65)!important;bottom:calc(86px + env(safe-area-inset-bottom))!important;background:linear-gradient(180deg,#245645 0%,#12392f 100%)!important;box-shadow:0 12px 28px rgba(19,57,47,.28)!important}#pageTitle{font-size:26px!important}.syncbar{display:flex;justify-content:space-between;gap:10px;align-items:center}main section h2{letter-spacing:-.02em}.detail-hero{border-radius:24px!important;background:linear-gradient(180deg,#17392f,#245645),url('office.jpg') center/cover no-repeat!important;background-blend-mode:soft-light!important;color:#fff!important;padding:18px!important}.detail-hero h3,.detail-hero .sub,.detail-hero .eyebrow{color:#fff!important}.modal-sheet{border-radius:28px 28px 0 0!important}.tool-tabs{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:10px!important}.tool-tabs button{min-height:86px;border-radius:20px!important;background:#fff!important;box-shadow:var(--card-shadow)!important;border:1px solid rgba(19,57,47,.06)!important}.tool-tabs button.active{background:linear-gradient(180deg,#245645 0%,#17392f 100%)!important;color:#fff!important}#toolsView .tool-card h3{font-size:20px!important}
+@media(max-width:390px){.lux-hero h2{font-size:26px!important}.kpi-card strong{font-size:24px}.quick-tools-grid{grid-template-columns:1fr 1fr}.hero-switchbar{padding-left:12px;padding-right:12px}.next-focus-actions{flex-direction:column}.floating-add{width:58px!important;height:58px!important}}
+
+
+/* V14.6 Companion redesign */
+body[data-active-view="homeView"] header,
+body[data-active-view="homeView"] .syncbar,
+body[data-active-view="homeView"] .hero-switchbar{display:none!important}
+body[data-active-view="homeView"] main{padding-top:0!important}
+.companion-bottom-nav{background:rgba(255,255,255,.78)!important;border:1px solid rgba(255,255,255,.82)!important;box-shadow:0 -8px 30px rgba(20,46,36,.10)!important;backdrop-filter:blur(18px);left:12px!important;right:12px!important;bottom:10px!important;border-radius:30px!important;padding:10px 10px calc(10px + env(safe-area-inset-bottom))!important}.companion-bottom-nav button{border-radius:22px!important;padding:10px 2px 12px!important;font-size:10.5px!important;font-weight:700!important;color:#69776f!important}.companion-bottom-nav button span{font-size:20px!important;margin-bottom:5px!important}.companion-bottom-nav button.active{background:linear-gradient(180deg,#eef1ee 0%,#e2e7e2 100%)!important;color:#17392f!important;box-shadow:inset 0 0 0 1px rgba(29,75,61,.06)!important}
+.floating-add{bottom:calc(92px + env(safe-area-inset-bottom))!important;right:18px!important;left:auto!important;transform:none!important;width:68px!important;height:68px!important;border-radius:50%!important;background:linear-gradient(180deg,#2d775f 0%,#184739 100%)!important;box-shadow:0 18px 34px rgba(24,71,57,.32)!important;border:4px solid rgba(255,255,255,.72)!important}
+.mobile-home-hero{position:relative;margin:-8px -16px 18px;padding:18px 18px 22px;min-height:300px;border-radius:0 0 28px 28px;overflow:hidden;background:linear-gradient(90deg,rgba(12,42,34,.72) 0%,rgba(12,42,34,.38) 36%,rgba(12,42,34,.12) 68%),url('sea-desk.jpg') center/cover no-repeat;box-shadow:0 10px 28px rgba(17,55,44,.18)}.mobile-home-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,29,24,.16),rgba(8,29,24,.06) 35%,rgba(8,29,24,.20) 100%)}.mobile-home-hero>*{position:relative;z-index:1}.mobile-home-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}.mobile-brand-card{display:flex;align-items:center;gap:12px;color:#fff}.mobile-brand-logo{width:76px;height:76px;border-radius:22px;background:url('logo-gc.png') center/cover no-repeat,rgba(255,255,255,.12);backdrop-filter:blur(8px);box-shadow:0 10px 26px rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.24)}.mobile-brand-overline{font-size:14px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;line-height:1.15;max-width:168px}.mobile-brand-subline{font-size:16px;opacity:.9;margin-top:4px}.mobile-home-actions{display:flex;gap:10px}.circle-action{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.78);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.55);color:#143b31;font-size:22px;box-shadow:0 8px 18px rgba(20,45,38,.12)}.circle-action.has-dot{position:relative}.circle-action.has-dot::after{content:"";position:absolute;top:10px;right:11px;width:8px;height:8px;border-radius:50%;background:#2f6b58;border:2px solid rgba(255,255,255,.94)}.mobile-home-copy{margin-top:26px;color:#fff;max-width:82%}.mobile-greeting{margin:0 0 6px;font-size:16px;font-weight:500;opacity:.96}.mobile-home-copy h2{margin:0;font-size:42px;line-height:.95;color:#fff!important;letter-spacing:-.03em}.mobile-date{margin:12px 0 16px;font-size:14px;color:rgba(255,255,255,.94)}.sync-chip-home{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:999px;background:rgba(255,255,255,.74);color:#21463d;font-size:13px;font-weight:700;box-shadow:0 8px 20px rgba(0,0,0,.08)}
+.mobile-home-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:18px}.home-stat-card{position:relative;overflow:hidden;min-height:156px;border:1px solid rgba(255,255,255,.55);border-radius:26px;background:#f5f6f3;box-shadow:0 14px 28px rgba(19,57,47,.09);padding:16px 16px 14px;text-align:left;color:#17342d}.home-stat-card::before{content:"";position:absolute;inset:0;background-size:cover;background-position:center;opacity:.27}.home-stat-card::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.92) 0%,rgba(255,255,255,.82) 44%,rgba(255,255,255,.18) 100%)}.home-stat-card>*{position:relative;z-index:1}.home-stat-icon{display:grid;place-items:center;width:52px;height:52px;border-radius:50%;font-size:24px;font-weight:700;background:rgba(255,255,255,.72);backdrop-filter:blur(6px);margin-bottom:16px}.home-stat-card strong{display:block;font-size:22px;line-height:1;margin-bottom:6px}.home-stat-card small{display:block;font-size:14px;color:#495e56;max-width:118px}.home-stat-card i{position:absolute;right:16px;bottom:14px;font-style:normal;font-size:22px;color:#6f7e76}.card-pratiche::before{background-image:url('office.jpg')}.card-udienze::before{background-image:url('courtroom.jpg')}.card-scadenze::before{background-image:url('sea-desk.jpg')}.card-sync::before{background-image:url('digital-home.jpg')}.card-pratiche .home-stat-icon{color:#275948}.card-udienze .home-stat-icon{color:#8f3941}.card-scadenze .home-stat-icon{color:#916f2f}.card-sync .home-stat-icon{color:#275948}
+.mobile-panel{background:rgba(255,255,255,.9);border:1px solid rgba(232,235,231,.9);box-shadow:0 12px 24px rgba(21,53,44,.07);border-radius:28px;padding:18px;margin-bottom:16px}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}.panel-head h3{margin:0!important;font-size:18px!important;color:#1c352d}.panel-link{width:auto!important;padding:0!important;background:transparent!important;color:#6d746f!important;font-size:14px!important;font-weight:600!important}.next-engagement-card{display:grid;grid-template-columns:52px 74px 1fr 16px;gap:14px;align-items:center;padding:14px;border-radius:24px;background:linear-gradient(180deg,#fcfcfb 0%,#f3f1ee 100%);box-shadow:inset 0 0 0 1px rgba(229,230,226,.95)}.next-engagement-icon{width:52px;height:52px;border-radius:18px;display:grid;place-items:center;background:#fff;color:#8e4045;font-size:24px;box-shadow:0 6px 12px rgba(0,0,0,.05)}.next-engagement-time{display:inline-flex;align-items:center;justify-content:center;padding:10px 0;border-radius:16px;background:#f7e9e8;color:#a13d42;font-size:22px;font-weight:800}.next-engagement-body strong{display:block;font-size:17px;color:#1c302b}.next-engagement-body span{display:block;color:#4a5f58;font-size:14px;margin-top:4px}.next-engagement-body small{display:block;color:#78867f;font-size:12px;margin-top:4px}.next-engagement-chevron{font-size:28px;color:#7f8a84}.home-empty{padding:16px 4px!important}
+.quick-tool-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.quick-icon-card{display:flex;flex-direction:column;align-items:center;gap:8px;padding:10px 6px 8px;border-radius:22px;background:transparent;box-shadow:none;border:0;text-align:center}.quick-icon-card span{display:grid;place-items:center;width:58px;height:58px;border-radius:20px;font-size:28px;font-weight:700}.quick-icon-card em{font-style:normal;font-size:13px;line-height:1.15;color:#243932}.tone-red span{background:#f7e7e4;color:#8e3d43}.tone-sage span{background:#e4eee8;color:#335a4d}.tone-green span{background:#e4f0ea;color:#1f5d4c}.tone-gold span{background:#f5ebd7;color:#9a7433}.tone-cream span{background:#f7f0e2;color:#6d5b2a}.tone-deep span{background:#204d41;color:#fff}
+header{padding:14px 16px 10px!important;background:rgba(255,251,248,.96)!important;backdrop-filter:blur(10px)!important;border-bottom:1px solid rgba(223,229,226,.9)!important}.header-logo.image-logo{width:42px!important;height:42px!important;border-radius:14px!important}.brand-lockup h1{font-size:22px!important}.hero-switchbar{display:none!important}.syncbar{display:none!important}.section-head.stacked,.tool-card,.practice-card,.detail-section,.event,.home-check-item,.search-card{border-radius:24px!important}body{background:linear-gradient(180deg,#f1f1ed 0%,#f7f5f1 100%)!important}.view{animation:fadeSlide .22s ease}
+@media(max-width:390px){.mobile-home-hero{min-height:284px;padding:16px 14px 20px}.mobile-brand-logo{width:68px;height:68px}.mobile-home-copy h2{font-size:36px}.mobile-home-grid{gap:12px}.home-stat-card{min-height:146px;padding:14px}.quick-tool-row{gap:10px}.quick-icon-card span{width:54px;height:54px;border-radius:18px}}
+
+
+/* ===== V15.4 COMPACT ===== */
+:root{--compact-bg:#0d1112;--compact-panel:#101718;--compact-panel-2:#0f1415;--compact-line:rgba(207,184,133,.12);--compact-green:#245949;--compact-gold:#c8a460;--compact-text:#f3ecde;--compact-soft:#cdc2ab;}
+html,body{background:linear-gradient(180deg,#0a0f10 0%,#111919 100%)!important;color:var(--compact-text)!important}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at top left,rgba(31,89,73,.18),transparent 32%),radial-gradient(circle at bottom right,rgba(200,164,96,.08),transparent 22%);z-index:-1}
+.hero-switchbar,.syncbar{display:none!important}
+header{background:rgba(13,17,18,.88)!important;border-bottom:1px solid rgba(255,255,255,.06)!important;backdrop-filter:blur(18px)!important}
+.header-logo,.brand-mark,.mobile-brand-logo{background-image:url('logo-gc.png')!important;background-size:cover!important;background-position:center!important}
+.mobile-home-hero.compact-hero{min-height:220px!important;padding:16px 16px 18px!important;border-radius:24px!important}
+.home-copy-tight h2,.mobile-home-copy h2{font-size:34px!important;line-height:1.05!important;margin:0 0 4px!important}
+.mobile-greeting{font-size:14px!important;margin-bottom:4px!important}.mobile-date{font-size:13px!important}.sync-chip-home{margin-top:10px!important;font-size:12px!important;padding:8px 12px!important}
+.home-grid-compact .home-stat-card{min-height:122px!important;padding:14px!important;border-radius:22px!important}.home-grid-compact .home-stat-icon{width:44px!important;height:44px!important;margin-bottom:12px!important}.home-grid-compact .home-stat-card strong{font-size:20px!important}.home-grid-compact .home-stat-card small{font-size:13px!important}
+.quick-tool-row{gap:10px!important}.quick-icon-card em{font-size:12px!important}
+
+.calendar-compact-head{background:rgba(16,23,24,.92)!important;border:1px solid var(--compact-line)!important;border-radius:22px!important;padding:12px 12px 10px!important;margin-bottom:14px!important;box-shadow:0 10px 24px rgba(0,0,0,.18)!important}
+.compact-mode{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:8px!important;margin-bottom:10px!important}
+.compact-mode button{min-height:44px!important;border-radius:16px!important;font-size:13px!important;font-weight:700!important}
+.calendar-compact-nav{display:grid!important;grid-template-columns:48px 1fr 48px auto!important;gap:8px!important;align-items:center!important}
+.calendar-compact-nav input[type="date"]{min-height:44px!important;border-radius:16px!important;text-align:center!important;font-size:14px!important}
+.compact-today,.compact-export{min-height:42px!important;border-radius:14px!important;padding:0 12px!important;font-size:13px!important;white-space:nowrap}
+.compact-agenda-footer{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:10px!important;margin-top:10px!important;flex-wrap:wrap}
+.compact-period-label{font-size:14px!important;color:var(--compact-soft)!important;font-weight:600!important}
+.week-strip{gap:8px!important;margin-bottom:10px!important}.week-day-card{min-height:84px!important;padding:10px 8px!important;border-radius:18px!important}.week-day-card strong{font-size:22px!important}.week-day-card small{font-size:11px!important}.week-day-card .week-dots{margin-top:8px!important}
+.selected-agenda-day,.selected-day-label,.compact-selected{padding:10px 12px!important;margin:8px 0 10px!important;border-radius:14px!important;background:rgba(255,255,255,.04)!important;border:1px solid var(--compact-line)!important}
+.month-grid{gap:8px!important}.month-cell{min-height:76px!important;padding:8px!important;border-radius:16px!important}.month-cell strong{font-size:16px!important}.month-dot{font-size:10px!important;padding:2px 6px!important}
+.compact-event-list{display:grid;gap:10px}
+.event{padding:12px 14px!important;border-radius:20px!important;margin-bottom:0!important;box-shadow:0 8px 18px rgba(0,0,0,.14)!important}
+.event h3{font-size:16px!important;line-height:1.22!important;margin:6px 0!important}.event-date-row{margin-bottom:2px!important}.event-date,.event-category,.event-meta,.practice-inline{font-size:12px!important}.event-top{margin-bottom:4px!important}.event-time{font-size:14px!important;font-weight:700!important}.event-meta{margin-top:4px!important;line-height:1.35!important}.local-actions{display:flex!important;gap:8px!important;flex-wrap:wrap!important;margin-top:10px!important}.local-actions button,.practice-link,.secondary-button.compact-action{min-height:38px!important;padding:8px 12px!important;border-radius:14px!important;font-size:13px!important}.practice-link{margin-top:8px!important}.local-badge{padding:8px 10px!important;border-radius:12px!important;font-size:11px!important}
+.event.UDIENZA{border-left-width:5px!important}.event.SCADENZA{border-left-width:5px!important}.event.PREPARAZIONE,.event.ATTIVITÀ,.event.APPUNTAMENTO,.event.CRESET{border-left-width:5px!important}
+
+.practices-compact-head{padding:16px!important;border-radius:22px!important}.practices-compact-head h2{font-size:22px!important}.practices-compact-head input{margin-top:8px!important;min-height:48px!important;border-radius:18px!important}
+.practice-simple-filters{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0 14px}.practice-simple-filters button{min-height:42px;border-radius:16px;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);color:var(--compact-text);font-weight:700;padding:8px 10px}.practice-simple-filters button.active{background:linear-gradient(180deg,rgba(44,122,100,.86),rgba(22,58,49,.96));border-color:rgba(200,164,96,.22);color:#fff}
+.result-count,.practices-dashboard,.practice-mini-stat,.practices-overview{display:none!important}
+.practice-card{padding:16px!important;border-radius:24px!important;margin-bottom:12px!important}.practice-top{margin-bottom:10px!important}.practice-heading h3{font-size:18px!important}.practice-subline{font-size:13px!important}.practice-grid{gap:12px!important}.practice-progress{display:none!important}.practice-action-row{margin-top:10px!important}.practice-pill{font-size:11px!important}
+
+.companion-bottom-nav.five-nav{display:grid!important;grid-template-columns:repeat(5,1fr)!important;gap:0!important;padding:14px 10px 18px!important;border-radius:26px 26px 0 0!important;background:rgba(244,243,239,.96)!important;box-shadow:0 -12px 30px rgba(0,0,0,.14)!important}
+.companion-bottom-nav button{font-size:12px!important;padding:6px 4px!important}.companion-bottom-nav button span{display:block;font-size:20px!important;margin-bottom:6px!important}.companion-bottom-nav button.active{background:rgba(31,89,73,.10)!important;border-radius:16px!important}
+.compact-fab,.floating-add{width:72px!important;height:72px!important;right:18px!important;bottom:110px!important;font-size:38px!important;box-shadow:0 14px 22px rgba(0,0,0,.22)!important}
+.undo-toast{position:fixed;left:16px;right:16px;bottom:118px;z-index:120;background:#121818;color:#fff;padding:12px 14px;border-radius:16px;border:1px solid var(--compact-line);display:flex;justify-content:space-between;align-items:center;gap:12px;box-shadow:0 12px 24px rgba(0,0,0,.24)}.undo-toast button{min-height:36px;padding:8px 12px;border-radius:12px;background:#255b49;color:#fff;border:0}.undo-toast.hidden{display:none}
+@media(max-width:430px){.practice-simple-filters{grid-template-columns:repeat(2,1fr)}.calendar-compact-nav{grid-template-columns:44px 1fr 44px auto!important}.compact-export{width:100%}.companion-bottom-nav.five-nav button{font-size:11px!important}.companion-bottom-nav.five-nav button span{font-size:18px!important}}
+
+/* =========================================================
+   V15.5 — HOME OPERATIVA + UDIENZE/AGENDA DIFFERENZIATE
+   Solo presentazione: nessuna modifica a dati o persistenza.
+   ========================================================= */
+body[data-active-view="homeView"] main{padding:0 14px 92px!important}
+.home-top-compact{position:relative;margin:0 -14px 10px;padding:13px 14px 11px;min-height:118px;background:linear-gradient(120deg,#173d33 0%,#285b4c 58%,#d9d8cd 160%);color:#fff;border-radius:0 0 22px 22px;box-shadow:0 7px 20px rgba(18,56,46,.14)}
+.home-brand-mini{display:flex;align-items:center;gap:10px;padding-right:74px}.home-logo-mini{width:44px;height:44px;flex:0 0 44px;border-radius:14px;background:url('logo-gc.png') center/cover no-repeat;border:1px solid rgba(255,255,255,.24);box-shadow:0 6px 15px rgba(0,0,0,.12)}
+.home-brand-mini div:last-child{display:flex;flex-direction:column;min-width:0}.home-brand-mini span{font-size:9px;letter-spacing:.14em;font-weight:800;opacity:.76}.home-brand-mini strong{font-size:16px;line-height:1.1;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.home-brand-mini small{font-size:11px;opacity:.86;margin-top:3px;text-transform:capitalize}
+.home-top-actions{position:absolute;top:13px;right:14px;display:flex;gap:7px}.mini-action{width:34px;height:34px!important;min-height:34px!important;border-radius:12px!important;padding:0!important;background:rgba(255,255,255,.16)!important;color:#fff!important;border:1px solid rgba(255,255,255,.18)!important;font-size:19px!important;backdrop-filter:blur(8px)}.mini-action:active{transform:scale(.94)}
+.sync-mini{position:absolute;right:14px;bottom:12px;font-size:10px;font-weight:700;padding:5px 8px;border-radius:999px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.14)}
+.home-kpi-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:0 0 10px}.home-kpi{min-width:0;min-height:62px!important;padding:8px 4px!important;border-radius:16px!important;background:#fff!important;border:1px solid #e7e7e1!important;color:#263a34!important;box-shadow:0 4px 13px rgba(21,53,44,.05)!important;display:flex!important;flex-direction:column;align-items:center;justify-content:center;gap:2px}.home-kpi b{font-size:21px;line-height:1;color:#1d4b3e}.home-kpi span{font-size:9.5px;font-weight:700;color:#718078;white-space:nowrap}.home-kpi.judicial b{color:#913f49}.home-kpi.urgent b{color:#a66f19}.home-kpi:active{transform:translateY(1px) scale(.98)}
+.home-focus-panel,.home-next-compact,.home-tools-compact{background:#fff;border:1px solid #e8e8e2;border-radius:20px;padding:12px;margin-bottom:10px;box-shadow:0 5px 16px rgba(20,52,43,.045)}
+.home-section-title{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin-bottom:8px}.home-section-title div{display:flex;align-items:baseline;gap:7px;min-width:0}.home-section-title span{font-size:9px;letter-spacing:.12em;font-weight:900;color:#88948e}.home-section-title h3{font-size:16px!important;margin:0!important;color:#203832!important}.home-section-title button{width:auto!important;padding:4px 0!important;background:transparent!important;color:#527064!important;font-size:11px!important}
+.today-list{display:flex;flex-direction:column;gap:4px}.today-row{display:grid!important;grid-template-columns:42px 20px 1fr 12px;align-items:center;gap:7px;width:100%;min-height:48px!important;padding:6px 4px!important;background:transparent!important;color:#243a33!important;border:0!important;border-top:1px solid #efeee9!important;border-radius:0!important;text-align:left}.today-row:first-child{border-top:0!important}.today-time{font-size:12px;font-weight:850;color:#274d42}.today-kind{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:10px;background:#e6efeb;color:#2d5d4e}.today-row.kind-UDIENZA .today-kind{background:#f6e6e8;color:#943f49}.today-row.kind-SCADENZA .today-kind{background:#f7eddc;color:#a36c16}.today-main{display:flex;flex-direction:column;min-width:0}.today-main strong{font-size:12.5px;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.today-main small{font-size:10.5px;color:#7a8781;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.today-go{font-size:18px;color:#9aa39f}.home-empty-inline{font-size:12px;color:#78847f;padding:10px 2px}
+.next-compact-card{display:grid!important;grid-template-columns:auto 48px 1fr 12px;align-items:center;gap:9px;width:100%;padding:10px!important;border-radius:15px!important;background:#f6f5f1!important;color:#243b34!important;border:1px solid #eceae4!important;text-align:left}.next-badge{font-size:8px!important;letter-spacing:.07em;font-weight:900;color:#7f494e;background:#f4e8e9;border-radius:8px;padding:5px 6px}.next-compact-card>strong{font-size:17px}.next-compact-card div{display:flex;flex-direction:column;min-width:0}.next-compact-card b{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.next-compact-card small{font-size:10px;color:#7a8580;margin-top:2px}.next-compact-card i{font-style:normal;font-size:18px;color:#929b97}
+.home-action-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.home-action-grid button{min-width:0;min-height:63px!important;padding:7px 3px!important;border-radius:15px!important;background:#f4f5f1!important;color:#2b453c!important;border:1px solid #eaebe6!important;display:flex!important;flex-direction:column;align-items:center;justify-content:center;gap:5px}.home-action-grid span{font-size:19px}.home-action-grid em{font-style:normal;font-size:9.5px;line-height:1.05;text-align:center}.home-action-grid button:active{transform:scale(.97)}
+
+/* UDIENZE: identità giudiziaria distinta, più severa e verticale */
+#hearingsView{--court:#6f3039;--court-soft:#f5e9ea;--court-line:#ead5d8}
+.hearings-command-head{margin:-2px -2px 11px;padding:13px 12px 11px;border-radius:18px;background:linear-gradient(145deg,#3f2025,#71323b);color:#fff;box-shadow:0 8px 22px rgba(82,35,42,.17)}
+.view-identity{display:flex;align-items:flex-end;justify-content:space-between;gap:10px}.view-identity h2{font-size:27px!important;line-height:1;margin:2px 0 0!important;color:#fff!important}.view-identity p{font-size:11px;margin:5px 0 0;color:rgba(255,255,255,.74)}.view-kicker{font-size:8px;letter-spacing:.16em;font-weight:900;opacity:.74}
+.hearing-period-control{display:grid;grid-template-columns:34px 1fr 34px;gap:6px;margin-top:12px}.hearing-period-control .nav-square{width:34px!important;height:34px!important;min-height:34px!important;border-radius:10px!important;background:rgba(255,255,255,.13)!important;color:#fff!important;border:1px solid rgba(255,255,255,.12)!important}.hearing-period-control input{height:34px;border:0;border-radius:10px;background:rgba(255,255,255,.95);color:#43262a;text-align:center;font-weight:700;font-size:12px}
+.hearing-view-row{display:flex;align-items:center;gap:7px;margin-top:7px}.hearing-mode{display:grid;grid-template-columns:repeat(3,1fr);gap:3px;flex:1;padding:3px;border-radius:11px;background:rgba(255,255,255,.10)}.hearing-mode button{padding:7px 4px!important;border-radius:8px!important;background:transparent!important;color:rgba(255,255,255,.72)!important;font-size:10.5px!important}.hearing-mode button.active{background:#fff!important;color:#63303a!important}.hearing-today{width:auto!important;padding:7px 10px!important;border-radius:10px!important;background:rgba(255,255,255,.14)!important;color:#fff!important;border:1px solid rgba(255,255,255,.13)!important;font-size:10.5px!important}.hearing-period-label{font-size:10px;font-weight:700;margin-top:7px;opacity:.82;text-transform:capitalize}
+.docket-week-summary,.docket-month-count,.docket-day-caption{display:flex;align-items:baseline;gap:6px;padding:0 3px 8px}.docket-week-summary b,.docket-month-count b,.docket-day-caption b{font-size:23px;color:var(--court)}.docket-week-summary span,.docket-month-count span,.docket-day-caption span{font-size:11px;color:#7d6b6e;font-weight:700}
+#hearingsView .week-strip{margin-bottom:9px}#hearingsView .week-day-card{border-color:var(--court-line)!important;background:#fff!important}#hearingsView .week-day-card.active{background:var(--court-soft)!important;border-color:#c98d94!important;color:var(--court)!important;box-shadow:none!important}
+.docket-selected-day{display:flex;align-items:baseline;gap:7px;padding:8px 3px 6px}.docket-selected-day strong{font-size:15px;color:#43272b;text-transform:capitalize}.docket-selected-day span{font-size:10.5px;color:#89777a}
+.docket-list{display:flex;flex-direction:column;gap:7px}.docket-card{display:grid!important;grid-template-columns:28px 42px 1fr 12px;gap:8px;align-items:center;width:100%;min-height:68px!important;padding:9px 8px!important;border-radius:14px!important;background:#fff!important;border:1px solid var(--court-line)!important;color:#35292b!important;text-align:left;box-shadow:0 3px 10px rgba(79,35,42,.04)!important}.docket-number{font-size:9px;font-weight:900;color:#a08286;letter-spacing:.08em}.docket-time{font-size:14px;font-weight:900;color:var(--court)}.docket-body{display:flex;flex-direction:column;min-width:0}.docket-body strong{font-size:12.5px;line-height:1.15}.docket-body small{font-size:10.5px;color:#6e5d60;margin-top:3px}.docket-body em{font-size:9.5px;color:#9a8589;font-style:normal;margin-top:2px}.docket-chevron{font-size:17px;color:#ac9599}.docket-card:active{transform:scale(.992);background:#fcf8f8!important}.docket-empty{border-color:var(--court-line)!important;background:#fbf7f7!important}
+
+/* AGENDA: planner quotidiano, più chiaro e dinamico */
+#agendaView{--planner:#244f43;--planner-soft:#edf4f0;--planner-line:#dde9e3}
+.agenda-planner-head{margin:-2px -2px 10px;padding:11px 11px 9px;border-radius:18px;background:#fff;border:1px solid #e3e9e5;box-shadow:0 5px 16px rgba(22,61,50,.05)}.agenda-title-line{display:flex;justify-content:space-between;align-items:flex-start}.agenda-title-line h2{font-size:26px!important;line-height:1;margin:2px 0 0!important;color:#183c32!important}.agenda-title-line .view-kicker{color:#6e8179}.agenda-today{width:auto!important;padding:7px 11px!important;border-radius:10px!important;background:#e8f1ed!important;color:#214f41!important;font-size:11px!important}
+.agenda-navigation-line{display:grid;grid-template-columns:34px 1fr 34px;gap:6px;margin-top:9px}.agenda-navigation-line .nav-square{width:34px!important;height:34px!important;min-height:34px!important;border-radius:10px!important;background:#f1f4f2!important;color:#31584c!important}.agenda-navigation-line input{height:34px;border:1px solid #e2e9e5;border-radius:10px;background:#fafbf9;text-align:center;font-weight:700;color:#294d42;font-size:12px}
+.planner-mode{margin-top:7px!important;background:#eef2ef!important;padding:3px!important;border-radius:11px!important}.planner-mode button{padding:7px 4px!important;font-size:10.5px!important}.planner-mode button.active{background:#28594a!important;color:#fff!important;box-shadow:none!important}.agenda-meta-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:7px}.agenda-meta-row .compact-period-label{font-size:10px!important;color:#718078!important;text-transform:capitalize}.agenda-export{width:auto!important;padding:4px 7px!important;background:transparent!important;color:#547568!important;font-size:9.5px!important}
+#agendaView .week-strip{margin:4px 0 9px}.planner-day-heading{display:flex;align-items:baseline;gap:7px;padding:4px 3px 7px}.planner-day-heading strong{font-size:17px;color:#21483d;text-transform:capitalize}.planner-day-heading span{font-size:10.5px;color:#7e8a85}
+.planner-timeline{display:flex;flex-direction:column}.planner-item{display:grid!important;grid-template-columns:42px 16px 1fr 12px;gap:6px;align-items:stretch;width:100%;min-height:62px!important;padding:0 4px!important;border:0!important;background:transparent!important;color:#243b34!important;text-align:left}.planner-time{padding-top:10px;font-size:11.5px;font-weight:850;color:#416459}.planner-line{position:relative;display:flex;justify-content:center}.planner-line:before{content:"";position:absolute;top:0;bottom:0;width:1px;background:#dce5e0}.planner-line i{position:relative;margin-top:12px;width:9px;height:9px;border-radius:50%;background:#5d887a;border:2px solid #edf4f0;box-shadow:0 0 0 1px #b8cec5}.planner-body{display:flex;flex-direction:column;justify-content:center;padding:8px 0;border-bottom:1px solid #ecefea;min-width:0}.planner-body small{font-size:8px;letter-spacing:.08em;font-weight:900;color:#829089}.planner-body strong{font-size:12.5px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.planner-body em{font-size:10px;color:#7d8984;font-style:normal;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.planner-chevron{display:flex;align-items:center;border-bottom:1px solid #ecefea;color:#99a39f;font-size:17px}.planner-item.kind-UDIENZA .planner-line i{background:#94424b;border-color:#f7e9ea;box-shadow:0 0 0 1px #d2a4a9}.planner-item.kind-SCADENZA .planner-line i{background:#b27a23;border-color:#f9f0e2;box-shadow:0 0 0 1px #dec296}.planner-item.kind-APPUNTAMENTO .planner-line i{background:#3673a7;border-color:#edf4fa;box-shadow:0 0 0 1px #a9c7df}.planner-item:active{background:#f8faf8!important}.planner-empty{background:#f8faf8!important;border-color:var(--planner-line)!important}
+
+@media(max-width:390px){
+  .home-top-compact{min-height:112px;padding-left:12px;padding-right:12px}.home-brand-mini strong{font-size:15px}.home-kpi-strip{gap:4px}.home-kpi{min-height:58px!important}.home-kpi b{font-size:19px}.home-kpi span{font-size:8.8px}.home-focus-panel,.home-next-compact,.home-tools-compact{padding:10px}.home-action-grid{gap:5px}.home-action-grid em{font-size:8.8px}
+  .docket-card{grid-template-columns:24px 38px 1fr 10px;gap:6px}.docket-time{font-size:13px}
+}
+
+/* =========================================================
+   V15.6 — CONTRASTO E LEGGIBILITÀ
+   Correzione del tema ibrido: le card chiare non ereditano
+   più il testo crema del tema dark V15.4.
+   ========================================================= */
+
+/* Strumenti: superficie chiara = testo sempre scuro */
+#toolsView,
+#toolsView .plugin-tool,
+#toolsView .tool-card{
+  color:#1f2f2a!important;
+}
+#toolsView .tool-card{
+  background:#ffffff!important;
+  border:1px solid #dde5e0!important;
+  box-shadow:0 8px 22px rgba(15,45,37,.08)!important;
+}
+#toolsView .tool-card h3,
+#toolsView .tool-card h2,
+#toolsView .tool-card label,
+#toolsView .tool-card strong{
+  color:#1f2f2a!important;
+}
+#toolsView .tool-card > h3{
+  color:#173e33!important;
+  font-weight:800!important;
+}
+#toolsView .tool-card .muted,
+#toolsView .tool-card small,
+#toolsView .tool-card p{
+  color:#61716a!important;
+}
+
+/* Campi: bianco netto, bordo visibile, testo pieno */
+#toolsView .tool-input,
+#toolsView input[type="text"],
+#toolsView input[type="number"],
+#toolsView input[inputmode="decimal"],
+#toolsView input[type="date"],
+#toolsView select,
+#toolsView textarea{
+  background:#ffffff!important;
+  color:#101714!important;
+  border:1.5px solid #cfdad4!important;
+  box-shadow:none!important;
+  opacity:1!important;
+  -webkit-text-fill-color:#101714!important;
+}
+#toolsView .tool-input::placeholder,
+#toolsView input::placeholder,
+#toolsView textarea::placeholder{
+  color:#8a9690!important;
+  opacity:1!important;
+}
+
+/* Riga opzioni/checkbox */
+#toolsView .setting-row{
+  color:#24362f!important;
+  border-bottom-color:#e4e9e6!important;
+}
+#toolsView .setting-row strong{color:#293b34!important}
+#toolsView .setting-row small{color:#5e6d67!important}
+
+/* Risultato del calcolo: gerarchia leggibile */
+#toolsView .tool-result{
+  background:#f5f7f5!important;
+  color:#33443e!important;
+  border:1px solid #d8e1dc!important;
+  font-size:14px!important;
+  line-height:1.55!important;
+  padding:14px 16px!important;
+  gap:7px!important;
+}
+#toolsView .tool-result strong{
+  color:#1d5948!important;
+  font-size:16px!important;
+}
+#splitResult{
+  color:#32443d!important;
+}
+#splitResult > *{
+  color:inherit!important;
+  opacity:1!important;
+}
+#splitResult strong,
+#splitResult b{
+  color:#1d5948!important;
+  opacity:1!important;
+}
+
+/* Titoli e testi di tutte le superfici bianche principali */
+.section-head.stacked,
+.practice-card,
+.detail-section,
+.event,
+.search-card,
+.home-focus-panel,
+.home-next-compact,
+.home-tools-compact,
+.agenda-planner-head,
+.docket-card,
+.week-day-card,
+.month-cell{
+  color:#20342d!important;
+}
+.section-head.stacked h2,
+.section-head.stacked h3,
+.practice-card h3,
+.detail-section h3,
+.event h3,
+.search-card h3{
+  color:#183b31!important;
+}
+
+/* Il tema scuro resta solo come sfondo esterno; sulle card il contrasto è AA/AAA */
+main{color:#e9e0cf}
+#toolsView .tool-tabs button:not(.active){
+  color:#2d5548!important;
+  background:#ffffff!important;
+}
+#toolsView .tool-tabs button.active{
+  color:#ffffff!important;
+}
+
+/* Riparto: più aria e titolo più leggibile su iPhone */
+#splitTool .tool-card{padding:18px 16px!important}
+#splitTool .tool-card h3{font-size:24px!important;margin-bottom:14px!important}
+#splitTool .tool-card label{font-size:14px!important;margin:14px 0!important}
+#splitTool #calculateSplit{margin-top:6px!important;min-height:48px!important;font-size:16px!important}
+#splitTool #splitResult{margin-top:14px!important}
+
+
+/* =========================================================
+   V15.7 — SAFE AREA iPHONE + TESTATA COMPATTA
+   Evita che la parte superiore finisca sotto la status bar/notch.
+   Mantiene più spazio utile per il contenuto operativo.
+   ========================================================= */
+html{
+  min-height:100%;
+  background:#0d1112;
+  scroll-padding-top:calc(env(safe-area-inset-top, 0px) + 58px);
+}
+body{
+  min-height:100dvh;
+  overflow-x:hidden;
+  -webkit-text-size-adjust:100%;
+}
+/* L'ultimo override della V15.3/V15.4 azzerava la safe-area con !important. */
+#app > header{
+  box-sizing:border-box!important;
+  min-height:0!important;
+  padding-top:calc(env(safe-area-inset-top, 0px) + 6px)!important;
+  padding-right:12px!important;
+  padding-bottom:6px!important;
+  padding-left:12px!important;
+  position:sticky!important;
+  top:0!important;
+  z-index:60!important;
+  overflow:visible!important;
+}
+#app > header .brand-lockup{gap:8px!important;min-width:0!important}
+#app > header .header-logo.image-logo{
+  width:34px!important;
+  height:34px!important;
+  flex:0 0 34px!important;
+  border-radius:11px!important;
+}
+#app > header .eyebrow{
+  font-size:8px!important;
+  line-height:1!important;
+  letter-spacing:.09em!important;
+  margin:0!important;
+}
+#app > header #pageTitle,
+#app > header .brand-lockup h1{
+  font-size:17px!important;
+  line-height:1.05!important;
+  margin:3px 0 0!important;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+#app > header .header-actions{gap:6px!important;flex:0 0 auto!important}
+#app > header .icon-button{
+  width:34px!important;
+  height:34px!important;
+  min-height:34px!important;
+  border-radius:11px!important;
+  font-size:19px!important;
+  padding:0!important;
+}
+#app > header .sync-pill{
+  max-width:88px!important;
+  padding:6px 7px!important;
+  font-size:8.5px!important;
+  line-height:1.1!important;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+/* Home: il pannello operativo parte sempre interamente sotto la testata. */
+body[data-active-view="homeView"] main{
+  padding-top:0!important;
+}
+.home-top-compact{
+  margin-top:0!important;
+}
+/* Evita che i titoli di sezione vengano coperti quando si salta a una vista. */
+.view, .tool-card, .practice-card, .agenda-planner-head, .hearings-command-head{
+  scroll-margin-top:calc(env(safe-area-inset-top, 0px) + 58px);
+}
+/* iPhone stretti: ancora più compatto, senza sacrificare la safe-area. */
+@media(max-width:430px){
+  #app > header{
+    padding-top:calc(env(safe-area-inset-top, 0px) + 5px)!important;
+    padding-bottom:5px!important;
+  }
+  #app > header .sync-pill{display:none!important}
+  #app > header .header-logo.image-logo{width:32px!important;height:32px!important;flex-basis:32px!important}
+  #app > header #pageTitle,
+  #app > header .brand-lockup h1{font-size:16px!important}
+  #app > header .icon-button{width:32px!important;height:32px!important;min-height:32px!important}
+}
+
+/* V16.2 — EXECUTIVE BLACK / clean single theme */
+:root{
+  --x-bg:#080b0a;--x-panel:#0f1312;--x-panel-2:#141918;--x-panel-3:#191f1d;
+  --x-line:#28312e;--x-line-soft:#202825;--x-text:#f3f2ed;--x-muted:#929d98;
+  --x-green:#38745f;--x-green-2:#245343;--x-gold:#b69a66;--x-burgundy:#81404d;
+  --x-shadow:0 18px 40px rgba(0,0,0,.30);--x-radius:22px;
+}
+*{box-sizing:border-box}
+html{background:#080b0a!important;color-scheme:dark}
+body{margin:0!important;background:radial-gradient(circle at 80% 0%,rgba(43,91,72,.10),transparent 32%),linear-gradient(180deg,#080b0a 0%,#0a0e0c 100%)!important;color:var(--x-text)!important}
+#app{background:transparent!important;min-height:100vh!important}
+.hidden{display:none!important}
+
+/* Compact identity bar */
+#app>header.companion-topbar{position:sticky!important;top:0!important;z-index:40!important;display:flex!important;align-items:center!important;justify-content:space-between!important;gap:10px!important;padding:calc(9px + env(safe-area-inset-top)) 12px 9px!important;background:rgba(8,12,10,.96)!important;border:0!important;border-bottom:1px solid rgba(182,154,102,.20)!important;box-shadow:0 10px 30px rgba(0,0,0,.32)!important;backdrop-filter:blur(18px)!important;-webkit-backdrop-filter:blur(18px)!important}
+#app>header.companion-topbar::before,#app>header.companion-topbar::after{display:none!important}
+.brand-lockup-redesigned{display:flex!important;align-items:center!important;gap:9px!important;min-width:0!important}
+#app>header .header-logo.image-logo{width:38px!important;height:38px!important;flex:0 0 38px!important;border-radius:11px!important;background:url('logo-gc.png') center/cover no-repeat!important;border:1px solid rgba(182,154,102,.24)!important;box-shadow:0 7px 18px rgba(0,0,0,.35)!important}
+#app>header .brand-copy{min-width:0!important;display:grid!important;grid-template-columns:auto auto!important;grid-template-rows:auto auto!important;column-gap:8px!important;align-items:center!important}
+#app>header .brand-person{grid-column:1/-1!important;color:#9aa49f!important;font-size:8px!important;line-height:1!important;letter-spacing:.14em!important;font-weight:800!important;white-space:nowrap!important}
+#app>header .brand-studio{grid-column:1!important;color:#f2f0e9!important;font-size:16px!important;line-height:1.05!important;font-weight:720!important;letter-spacing:-.015em!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+#app>header h1#pageTitle{grid-column:2!important;align-self:center!important;margin:0!important;padding:4px 7px!important;border-radius:8px!important;background:#17201c!important;border:1px solid #26322d!important;color:#b69a66!important;font-size:8px!important;line-height:1!important;letter-spacing:.10em!important;text-transform:uppercase!important;box-shadow:none!important}
+#app>header .header-actions{display:flex!important;align-items:center!important;gap:6px!important;flex:0 0 auto!important}
+#app>header .sync-pill{display:none!important}
+#app>header .icon-button{width:38px!important;height:38px!important;border-radius:11px!important;padding:0!important;background:#121816!important;color:#d8d9d5!important;border:1px solid #2a3430!important;box-shadow:none!important;font-size:19px!important}
+
+.syncbar,.hero-switchbar{display:none!important}
+main{padding:12px 12px calc(132px + env(safe-area-inset-bottom))!important;max-width:820px!important;margin:0 auto!important}
+.view{animation:executiveIn .18s ease both}
+@keyframes executiveIn{from{opacity:.5;transform:translateY(3px)}to{opacity:1;transform:none}}
+
+/* HOME — unmistakably different dashboard */
+.executive-welcome{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important;padding:5px 2px 12px!important;border-bottom:1px solid #1d2522!important;margin-bottom:12px!important}
+.executive-welcome>div:first-child{min-width:0!important;display:flex!important;flex-direction:column!important;gap:2px!important}
+.executive-welcome span{color:#6f7c76!important;font-size:8px!important;font-weight:800!important;letter-spacing:.17em!important}
+.executive-welcome strong{color:#f1f0eb!important;font-size:19px!important;line-height:1.14!important;letter-spacing:-.025em!important}
+.executive-welcome small{color:#8f9a95!important;font-size:11px!important;text-transform:capitalize!important}
+.executive-system{display:flex!important;align-items:center!important;gap:7px!important;color:#74827b!important;font-size:9px!important;white-space:nowrap!important}
+.executive-system>i{width:7px!important;height:7px!important;border-radius:50%!important;background:#4f9b7d!important;box-shadow:0 0 0 4px rgba(79,155,125,.10)!important}
+.executive-system>b{font-weight:700!important}
+.executive-system>button{width:32px!important;height:32px!important;padding:0!important;border-radius:10px!important;background:#111715!important;color:#aab1ad!important;border:1px solid #26302c!important}
+
+.executive-kpis{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:7px!important;margin:0 0 14px!important}
+.executive-kpis button{min-width:0!important;text-align:left!important;padding:12px 10px 10px!important;border-radius:17px!important;background:linear-gradient(180deg,#111614 0%,#0d1210 100%)!important;border:1px solid #252e2a!important;color:var(--x-text)!important;box-shadow:none!important;position:relative!important;overflow:hidden!important}
+.executive-kpis button::after{content:""!important;position:absolute!important;left:10px!important;right:10px!important;bottom:0!important;height:2px!important;border-radius:3px!important;background:#315846!important}
+.executive-kpis button.kpi-hearing::after{background:#81404d!important}.executive-kpis button.kpi-deadline::after{background:#9c7e49!important}
+.executive-kpis span{display:block!important;color:#78847e!important;font-size:8px!important;font-weight:800!important;line-height:1.15!important;text-transform:uppercase!important;letter-spacing:.06em!important;min-height:19px!important}
+.executive-kpis b{display:block!important;color:#f3f1eb!important;font-family:Georgia,serif!important;font-size:25px!important;line-height:1!important;margin:7px 0 4px!important}
+.executive-kpis .kpi-hearing b{color:#ddbdc4!important}.executive-kpis .kpi-deadline b{color:#d9c699!important}
+.executive-kpis i{display:block!important;color:#65716b!important;font-size:8px!important;font-style:normal!important}
+
+.executive-next,.executive-today,.executive-shortcuts{background:linear-gradient(180deg,#101513 0%,#0d1210 100%)!important;border:1px solid #242d29!important;border-radius:21px!important;padding:14px!important;margin-bottom:12px!important;box-shadow:0 12px 30px rgba(0,0,0,.18)!important}
+.executive-section-head{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:10px!important;margin-bottom:10px!important}
+.executive-section-head>span{color:#7d8983!important;font-size:8.5px!important;font-weight:800!important;letter-spacing:.16em!important}
+.executive-section-head>button{width:auto!important;padding:6px 9px!important;border-radius:9px!important;background:#151c19!important;color:#98a49e!important;border:1px solid #29332f!important;font-size:9px!important;font-weight:700!important}
+.executive-section-head>button i{font-style:normal!important;color:#65746d!important;margin-left:3px!important}
+.executive-next-card{width:100%!important;display:grid!important;grid-template-columns:66px 1fr 22px!important;align-items:center!important;gap:12px!important;text-align:left!important;padding:13px!important;border-radius:16px!important;background:#171d1a!important;border:1px solid #2b3631!important;color:#fff!important;box-shadow:none!important;position:relative!important;overflow:hidden!important}
+.executive-next-card::before{content:""!important;position:absolute!important;left:0!important;top:0!important;bottom:0!important;width:3px!important;background:#3d8068!important}
+.executive-next-card.is-hearing::before{background:#884652!important}
+.next-date{display:flex!important;flex-direction:column!important;gap:4px!important;border-right:1px solid #2b3430!important;padding-right:10px!important}
+.next-date b{color:#aeb7b2!important;font-size:9px!important;text-transform:uppercase!important}.next-date em{color:#f1eee7!important;font-family:Georgia,serif!important;font-size:19px!important;font-style:normal!important}
+.next-copy{min-width:0!important;display:flex!important;flex-direction:column!important;gap:3px!important}.next-copy small{color:#6e9d89!important;font-size:8px!important;font-weight:800!important;letter-spacing:.1em!important}.is-hearing .next-copy small{color:#b87380!important}.next-copy strong{color:#f0eee9!important;font-size:14px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}.next-copy em{color:#87948e!important;font-size:10px!important;font-style:normal!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}.next-open{color:#626f69!important;font-size:23px!important}
+.executive-list{display:flex!important;flex-direction:column!important;gap:7px!important}.executive-row{width:100%!important;display:grid!important;grid-template-columns:46px 28px 1fr 18px!important;align-items:center!important;gap:8px!important;padding:10px 4px!important;background:transparent!important;border:0!important;border-top:1px solid #202824!important;border-radius:0!important;text-align:left!important;color:#fff!important;box-shadow:none!important}.executive-row:first-child{border-top:0!important}.executive-row-time{color:#d2d4cf!important;font-size:11px!important;font-weight:800!important}.executive-row-mark{width:25px!important;height:25px!important;display:grid!important;place-items:center!important;border-radius:8px!important;background:#1a2a23!important;color:#6fa28b!important;font-size:9px!important;font-weight:900!important}.executive-row.kind-UDIENZA .executive-row-mark{background:#27191d!important;color:#bd7885!important}.executive-row.kind-SCADENZA .executive-row-mark{background:#292316!important;color:#c6a96f!important}.executive-row-copy{min-width:0!important;display:flex!important;flex-direction:column!important;gap:2px!important}.executive-row-copy strong{color:#e8e7e2!important;font-size:12px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}.executive-row-copy small{color:#75817b!important;font-size:9px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}.executive-row-arrow{color:#56625c!important;font-size:18px!important}.executive-empty{padding:16px!important;border:1px dashed #2a342f!important;border-radius:14px!important;color:#74807a!important;font-size:11px!important;text-align:center!important}
+.executive-shortcut-grid{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:8px!important}.executive-shortcut-grid button{min-width:0!important;padding:11px 7px!important;border-radius:15px!important;background:#141a18!important;border:1px solid #28322e!important;color:#fff!important;box-shadow:none!important;text-align:center!important}.executive-shortcut-grid button>span{width:31px!important;height:31px!important;display:grid!important;place-items:center!important;margin:0 auto 7px!important;border-radius:9px!important;background:#1a2822!important;color:#65937f!important}.executive-shortcut-grid svg{width:17px!important;height:17px!important;stroke:currentColor!important;stroke-width:1.8!important;stroke-linecap:round!important;stroke-linejoin:round!important}.executive-shortcut-grid b{display:block!important;color:#dfe1dc!important;font-size:10px!important}.executive-shortcut-grid small{display:block!important;color:#65716b!important;font-size:7.5px!important;margin-top:2px!important}
+
+/* Shared view typography */
+.section-head h2,#practicesView h2,#checklistsView h2,#toolsView h2,#searchView h2{color:#f1efe9!important}.muted{color:#85918b!important}.section-head{border-color:#252e2a!important}
+
+/* HEARINGS — black shell, restrained burgundy */
+.hearings-command-head{position:relative!important;overflow:hidden!important;background:linear-gradient(145deg,#111514 0%,#0d1110 100%)!important;border:1px solid #2a302e!important;border-radius:21px!important;padding:14px!important;box-shadow:var(--x-shadow)!important}
+.hearings-command-head::before{content:""!important;position:absolute!important;left:0!important;top:0!important;bottom:0!important;width:3px!important;background:#83414d!important}.hearings-command-head>*{position:relative!important;z-index:1!important}
+.hearings-command-head .view-identity{display:flex!important;align-items:flex-end!important;justify-content:space-between!important;gap:10px!important;margin-bottom:12px!important}.hearings-command-head .view-kicker{color:#a66b76!important;font-size:8px!important;letter-spacing:.15em!important;font-weight:800!important}.hearings-command-head h2{color:#f3f1eb!important;font-size:24px!important;margin:2px 0 0!important}.hearings-command-head p{color:#828d88!important;font-size:10px!important;margin:3px 0 0!important}.hearing-period-control{display:grid!important;grid-template-columns:38px 1fr 38px!important;gap:7px!important}.hearing-period-control input{height:40px!important;background:#181d1b!important;color:#ebe9e3!important;border:1px solid #2d3632!important;border-radius:12px!important;text-align:center!important;font-weight:800!important}.nav-square{height:40px!important;background:#171d1a!important;color:#d7d6d0!important;border:1px solid #2d3732!important;border-radius:11px!important;box-shadow:none!important}.hearing-view-row{display:grid!important;grid-template-columns:1fr auto!important;gap:7px!important;margin-top:8px!important}.hearing-mode{display:grid!important;grid-template-columns:repeat(3,1fr)!important;background:#141a17!important;border:1px solid #29322e!important;border-radius:12px!important;padding:3px!important}.hearing-mode button{background:transparent!important;color:#78857f!important;border:0!important;padding:8px 6px!important;border-radius:9px!important;font-size:10px!important}.hearing-mode button.active{background:#ece9e2!important;color:#5c2a33!important}.hearing-today{width:auto!important;padding:0 11px!important;background:#171d1a!important;color:#aeb5b1!important;border:1px solid #2d3732!important;border-radius:11px!important}.hearing-period-label{color:#707d77!important;font-size:9px!important;margin-top:8px!important}.week-strip{display:grid!important;grid-template-columns:repeat(7,minmax(42px,1fr))!important;gap:6px!important;margin:12px 0!important;overflow-x:auto!important}.week-day-card{min-width:0!important;padding:10px 3px!important;border-radius:15px!important;background:#111614!important;color:#d8dad5!important;border:1px solid #242e2a!important;box-shadow:none!important}.week-day-card .week-name{color:#68746e!important;font-size:8px!important}.week-day-card strong{display:block!important;color:#e6e4de!important;font-family:Georgia,serif!important;font-size:19px!important;margin:4px 0!important}.week-day-card.selected{background:#19251f!important;border-color:#38634f!important;outline:0!important}.week-day-card.selected .week-name,.week-day-card.selected strong{color:#e7eee9!important}.docket-list{display:flex!important;flex-direction:column!important;gap:8px!important}.docket-card{width:100%!important;display:grid!important;grid-template-columns:34px 50px 1fr 18px!important;align-items:center!important;gap:8px!important;padding:11px!important;text-align:left!important;background:#111614!important;border:1px solid #252f2b!important;border-radius:16px!important;color:#fff!important;box-shadow:none!important}.docket-number{width:32px!important;height:32px!important;display:grid!important;place-items:center!important;border-radius:9px!important;background:#24171b!important;color:#bb7d88!important;font-size:9px!important;font-weight:900!important}.docket-time{color:#dbd9d3!important;font-size:11px!important;font-weight:800!important}.docket-body{min-width:0!important}.docket-body strong{display:block!important;color:#eceae4!important;font-size:12px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}.docket-body small,.docket-body em{display:block!important;color:#78847e!important;font-size:9px!important;font-style:normal!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}.docket-chevron{color:#56635d!important;font-size:18px!important}.docket-empty{background:#101412!important;color:#727f78!important;border:1px dashed #2b3430!important;border-radius:16px!important;padding:20px!important}
+
+/* AGENDA — distinct green executive planner */
+.agenda-planner-head{background:linear-gradient(145deg,#111714 0%,#0e1210 100%)!important;border:1px solid #26322d!important;border-left:3px solid #356c58!important;border-radius:21px!important;padding:14px!important;box-shadow:var(--x-shadow)!important}.agenda-title-line{display:flex!important;justify-content:space-between!important;align-items:flex-end!important}.agenda-title-line .view-kicker{color:#5f927d!important;font-size:8px!important;letter-spacing:.15em!important}.agenda-title-line h2{color:#f1efe9!important;font-size:24px!important;margin:2px 0 0!important}.agenda-today,.agenda-export{width:auto!important;padding:8px 10px!important;background:#151c19!important;color:#9fa9a4!important;border:1px solid #2b3631!important;border-radius:10px!important;font-size:9px!important}.agenda-navigation-line{display:grid!important;grid-template-columns:38px 1fr 38px!important;gap:7px!important;margin-top:11px!important}.agenda-navigation-line input{height:40px!important;background:#181d1b!important;color:#ebe9e3!important;border:1px solid #2d3632!important;border-radius:12px!important;text-align:center!important;font-weight:800!important}.agenda-mode{display:grid!important;grid-template-columns:repeat(3,1fr)!important;background:#141a17!important;border:1px solid #29322e!important;border-radius:12px!important;padding:3px!important;margin-top:8px!important}.agenda-mode button{background:transparent!important;color:#78857f!important;border:0!important;padding:8px 6px!important;border-radius:9px!important;font-size:10px!important}.agenda-mode button.active{background:#1f493a!important;color:#e8f0ec!important}.agenda-meta-row{display:flex!important;align-items:center!important;justify-content:space-between!important;margin-top:8px!important}.compact-period-label{color:#74817b!important;font-size:9px!important}.planner-timeline{display:flex!important;flex-direction:column!important;gap:7px!important;margin-top:12px!important}.planner-item{width:100%!important;display:grid!important;grid-template-columns:47px 14px 1fr 16px!important;align-items:stretch!important;gap:8px!important;text-align:left!important;padding:10px!important;background:#111614!important;border:1px solid #252f2b!important;border-radius:16px!important;color:#fff!important;box-shadow:none!important}.planner-time{color:#d8d7d1!important;font-size:10px!important;font-weight:800!important;padding-top:3px!important}.planner-line{display:flex!important;justify-content:center!important}.planner-line i{width:3px!important;border-radius:4px!important;background:#3d745f!important}.planner-item.kind-UDIENZA .planner-line i{background:#81404d!important}.planner-item.kind-SCADENZA .planner-line i{background:#967b49!important}.planner-body{min-width:0!important;display:flex!important;flex-direction:column!important;gap:2px!important}.planner-body small{color:#668a7a!important;font-size:8px!important;font-weight:800!important}.planner-body strong{color:#e8e7e1!important;font-size:11px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}.planner-body em{color:#76827c!important;font-size:9px!important;font-style:normal!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}.planner-chevron{color:#56635d!important;font-size:17px!important}.planner-empty{background:#101412!important;color:#727f78!important;border:1px dashed #2b3430!important;border-radius:16px!important;padding:20px!important}
+
+/* Practices, tools, checklist: one dark language */
+#practiceSearch,#globalSearch,.tool-input,.compact-sheet input[type=text],.compact-sheet input[type=date],.compact-sheet input[type=time],.compact-sheet input[type=password],.compact-sheet select,.compact-sheet textarea,.login-card input,.login-card select{width:100%!important;background:#151b18!important;color:#eceae4!important;border:1px solid #2c3631!important;border-radius:12px!important;padding:11px!important;box-shadow:none!important}.compact-sheet input[type=date]::-webkit-calendar-picker-indicator,.agenda-navigation-line input::-webkit-calendar-picker-indicator,.hearing-period-control input::-webkit-calendar-picker-indicator{filter:invert(1) opacity(.7)}
+.practices-compact-head,.section-head.stacked{background:transparent!important}.practice-simple-filters,.filters.checklist-filters{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:6px!important;background:#0f1412!important;border:1px solid #242d29!important;border-radius:14px!important;padding:4px!important;margin:10px 0 12px!important}.filters.checklist-filters{grid-template-columns:1fr 1fr!important}.practice-simple-filters button,.filters.checklist-filters button{background:transparent!important;color:#77837d!important;border:0!important;border-radius:10px!important;padding:9px 6px!important;font-size:9px!important}.practice-simple-filters button.active,.filters.checklist-filters button.active{background:#1d2e27!important;color:#a9c9bb!important}.practice-card,.tool-card,.checklist-card,.detail-section,.search-card,.search-document,.detail-disclosure,.hearing-mobile-card,.creset-mobile-card{background:linear-gradient(180deg,#111614 0%,#0e1311 100%)!important;color:#e8e7e1!important;border:1px solid #252f2b!important;border-radius:17px!important;box-shadow:none!important}.practice-card h3,.tool-card h3,.checklist-card h3,.detail-section h3{color:#efede7!important}.practice-card p,.practice-card small,.tool-card p,.checklist-card p,.detail-section p{color:#7f8b85!important}.secondary-button{background:#17231e!important;color:#9fc0b1!important;border:1px solid #2b3a33!important;border-radius:11px!important}.checklist-quick-tip{margin:8px 0 12px!important;padding:11px!important;border-radius:13px!important;background:#151a17!important;color:#87938d!important;border:1px solid #29322e!important;font-size:10px!important}.check-item{border-top:1px solid #222b27!important}.check-item span{color:#d9dbd6!important}.check-item input{accent-color:#4d8b72!important}.progress{background:#202723!important}.progress span{background:#3b785f!important}.tool-tabs{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:7px!important}.tool-tabs button{min-height:70px!important;background:#111614!important;color:#89958f!important;border:1px solid #26302c!important;border-radius:15px!important;box-shadow:none!important}.tool-tabs button.active{background:#1b3027!important;color:#b8d3c7!important;border-color:#315443!important}.tool-result{background:#121815!important;color:#cfd3ce!important;border:1px solid #28322e!important}.plugin-chip{background:#15231d!important;color:#9bc1b0!important;border:1px solid #2a3a33!important}.login-card{background:#111614!important;color:#eeece6!important;border:1px solid #28322e!important;box-shadow:var(--x-shadow)!important}.login-card h1{color:#f1efe9!important}.login-card p{color:#87938d!important}
+
+/* Checklist composer */
+.checklist-composer-sheet textarea{min-height:220px!important;resize:vertical!important}.checklist-composer-actions{display:grid!important;grid-template-columns:1fr 1.35fr!important;gap:8px!important;margin-top:10px!important}
+
+/* Modal */
+.modal{background:rgba(0,0,0,.70)!important;backdrop-filter:blur(5px)!important}.modal-sheet{background:#0f1412!important;color:#eae9e3!important;border-top:1px solid #303a35!important;box-shadow:0 -20px 50px rgba(0,0,0,.45)!important}.modal-top{border-color:#252e2a!important}.modal-top h2{color:#f0eee8!important}.eyebrow.dark{color:#6f8f80!important}.setting-row{border-color:#252e2a!important}.setting-row small{color:#7c8882!important}
+
+/* Premium black nav */
+.companion-bottom-nav.five-nav{position:fixed!important;left:10px!important;right:10px!important;bottom:8px!important;z-index:35!important;display:grid!important;grid-template-columns:repeat(5,1fr)!important;gap:4px!important;padding:7px 8px calc(7px + env(safe-area-inset-bottom))!important;border-radius:22px!important;background:rgba(11,15,13,.97)!important;border:1px solid #28312e!important;box-shadow:0 -12px 34px rgba(0,0,0,.40)!important;backdrop-filter:blur(20px)!important;overflow:visible!important}.companion-bottom-nav.five-nav button{min-width:0!important;width:auto!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:4px!important;padding:7px 2px!important;border-radius:13px!important;background:transparent!important;color:#65716b!important;font-size:8.5px!important;font-weight:750!important;box-shadow:none!important}.companion-bottom-nav.five-nav button em{font-style:normal!important;line-height:1!important}.companion-bottom-nav .nav-svg{width:27px!important;height:27px!important;display:grid!important;place-items:center!important;border-radius:9px!important}.companion-bottom-nav .nav-svg svg{width:18px!important;height:18px!important;stroke:currentColor!important;stroke-width:1.7!important;stroke-linecap:round!important;stroke-linejoin:round!important}.companion-bottom-nav.five-nav button.active{background:#171e1b!important;color:#c8cec9!important;box-shadow:inset 0 0 0 1px #2b3530!important}.companion-bottom-nav.five-nav button.active .nav-svg{background:#1e3028!important;color:#79a993!important}.companion-bottom-nav.five-nav button:nth-child(2).active .nav-svg{background:#2a1a1e!important;color:#c07b88!important}
+.floating-add.compact-fab{position:fixed!important;left:auto!important;right:17px!important;bottom:calc(91px + env(safe-area-inset-bottom))!important;transform:none!important;width:54px!important;height:54px!important;border-radius:50%!important;background:linear-gradient(180deg,#356f59 0%,#245343 100%)!important;color:#fff!important;border:2px solid #17201c!important;box-shadow:0 12px 28px rgba(0,0,0,.38)!important;font-size:26px!important}
+
+/* Small screen */
+@media(max-width:390px){
+  #app>header .brand-studio{font-size:15px!important}.executive-welcome strong{font-size:17px!important}.executive-kpis{gap:5px!important}.executive-kpis button{padding:10px 7px 9px!important}.executive-kpis b{font-size:22px!important}.executive-kpis span{font-size:7px!important}.executive-shortcut-grid{gap:6px!important}.executive-shortcut-grid button{padding:10px 4px!important}.week-strip{gap:4px!important}.docket-card{grid-template-columns:31px 44px 1fr 14px!important;gap:6px!important}.companion-bottom-nav.five-nav button{font-size:8px!important}}
+
+/* V16.3 — functional alignment only; Executive Black visual language preserved */
+.tool-subcard{margin:12px 0;padding:14px;border:1px solid #26302c;border-radius:15px;background:#0f1412}
+.tool-subcard>strong{display:block;margin-bottom:9px;color:#efede7;font-size:13px}
+.tool-subcard label{display:block;margin:10px 0}
+.compact-result{margin-top:10px!important}
+.tfc-role-grid{margin-top:8px;padding-top:4px}
+.result-divider{height:1px;background:#28322e;margin:10px 0}
+.tax-result span,.tax-result strong,#splitResult span,#splitResult strong,#splitReserveResult span,#splitReserveResult strong,#splitHalfResult span,#splitHalfResult strong{display:block;margin:5px 0;line-height:1.4}
+.creset-status-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;margin-top:12px}
+.creset-status-row .tool-input{margin:0!important}
+#documentsToolResults{display:grid;gap:8px;margin-top:10px}
+#documentsToolResults .search-document{margin:0!important}
+@media(max-width:390px){.creset-status-row{grid-template-columns:1fr}.tool-subcard{padding:12px}}
+
+/* V17 – planning settimanale responsive */
+.mobile-planner-note{border:1px solid #536c60;border-radius:18px;padding:17px;margin:14px 0;background:linear-gradient(145deg,#12241e,#131816);color:#fff}
+.mobile-planner-note strong{font-size:16px}.mobile-planner-note p{color:#cbd9d1;font-size:13px;line-height:1.5}.mobile-planner-note small{color:#a8b9ad}
+.mobile-planner-day{background:#f6f5f1;color:#13231b;border-radius:16px;padding:13px;margin:10px 0;border:1px solid #e0e4da}
+.mobile-planner-heading{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:9px}
+.mobile-planner-heading strong{font-size:15px}.mobile-planner-heading span{font-size:12px;color:#276a49;font-weight:700}
+.mobile-planner-slot{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;margin:5px 0;border-radius:9px;background:#e6eee9;font-size:13px}
+.mobile-planner-slot.preferred{background:#efe8cf}.mobile-planner-slot b{font-size:11px;color:#315747}
+.mobile-planner-day small{display:block;margin-top:8px;color:#6d7670;font-size:11px}
+.mobile-planner-empty{font-size:12px;color:#79837a;padding:10px 0}
+.agenda-mode.planner-mode{display:flex;flex-wrap:wrap;gap:5px}.agenda-mode.planner-mode button{min-width:0;flex:1 1 auto}
+
+/* V17.1: completamento non invasivo del Planner e delle fonti */
+.legal-institutional-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:14px 0 8px}
+.legal-institutional-links a{display:flex;align-items:center;min-height:42px;padding:9px 11px;border:1px solid rgba(166,192,172,.3);border-radius:11px;color:#e8dbb4;background:#18211f;text-decoration:none;font-size:12px;font-weight:600}
+.legal-source-disclaimer{font-size:11px;line-height:1.5;color:#a3aea9;margin:8px 0 12px}
+.legal-source-action{display:inline-block;padding:9px 11px;margin:8px 0;color:#e8dbb4;text-decoration:underline}
+.mobile-planner-commitments{display:grid;gap:5px;margin-top:8px}
+.mobile-planner-commitment{display:flex;align-items:baseline;gap:9px;font-size:12px;padding:7px 8px;border-left:2px solid #b99c62;background:rgba(100,116,106,.1);border-radius:4px}
+.mobile-planner-commitment span{color:#b5bdb8;white-space:nowrap}
+.mobile-planner-commitment strong{font-weight:600;overflow-wrap:anywhere}
+
+
+/* ===== V18 premium mobile refresh ===== */
+:root{
+  --v18-bg:#f4f1eb;
+  --v18-surface:#ffffff;
+  --v18-surface-2:#f7f8f6;
+  --v18-text:#18211d;
+  --v18-muted:#67736d;
+  --v18-line:#dde4df;
+  --v18-green:#1f4f42;
+  --v18-green-2:#2f6a5a;
+  --v18-penale:#a93f52;
+  --v18-civile:#4f63b7;
+  --v18-gold:#a98342;
+  --v18-shadow:0 14px 34px rgba(24,33,29,.08);
+}
+body{background:linear-gradient(180deg,#f8f6f2 0%,#efeae2 100%)!important;color:var(--v18-text)!important}
+#app>header{background:rgba(248,246,242,.92)!important;border-bottom:1px solid rgba(220,226,222,.95)!important;backdrop-filter:blur(18px)!important}
+.header-logo.image-logo{box-shadow:0 10px 24px rgba(31,79,66,.16)!important}
+.brand-person{color:#6a756f!important}.brand-studio,.brand-lockup h1,#pageTitle{color:#13241d!important}
+.view{padding-bottom:110px!important}
+.companion-bottom-nav.five-nav{background:rgba(255,255,255,.88)!important;border:1px solid rgba(209,219,214,.95)!important;box-shadow:0 -12px 28px rgba(18,28,24,.10)!important}
+.companion-bottom-nav.five-nav button{color:#7a857f!important}
+.companion-bottom-nav.five-nav button.active{background:#f3f6f4!important;color:#21493d!important;box-shadow:inset 0 0 0 1px rgba(33,73,61,.08)!important}
+.companion-bottom-nav .nav-svg{background:#f4f7f5!important}
+.companion-bottom-nav.five-nav button.active .nav-svg{background:#e8f1ed!important;color:#245b4b!important}
+.companion-bottom-nav.five-nav button:nth-child(2).active .nav-svg{background:#f8e9ed!important;color:#a04658!important}
+
+.practices-compact-head,.section-head.stacked{background:transparent!important;padding:0!important;box-shadow:none!important;border:0!important}
+.practices-compact-head h2{font-size:28px!important;color:#15231d!important;margin:0 0 4px!important}
+.practices-compact-head p{color:#6d7772!important}
+#practiceSearch{background:rgba(255,255,255,.92)!important;color:#18211d!important;border:1px solid #d7dfda!important;border-radius:18px!important;padding:14px 16px!important;box-shadow:0 6px 18px rgba(0,0,0,.04)!important}
+.practice-simple-filters{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:8px!important;background:transparent!important;border:0!important;padding:0!important;margin:14px 0 16px!important}
+.practice-simple-filters button{background:rgba(255,255,255,.84)!important;color:#52615a!important;border:1px solid #d6dfd8!important;border-radius:16px!important;padding:11px 8px!important;font-size:11px!important;font-weight:800!important;box-shadow:0 6px 16px rgba(16,26,21,.04)!important}
+.practice-simple-filters button.active{background:linear-gradient(180deg,#265948 0%,#173d31 100%)!important;color:#fff!important;border-color:#1f4f42!important}
+
+.practices-dashboard{display:flex;flex-direction:column;gap:14px;margin-bottom:16px}
+.practices-overview-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.practices-overview-grid article{background:linear-gradient(180deg,#ffffff 0%,#f4f7f5 100%)!important;border:1px solid var(--v18-line)!important;border-radius:22px!important;padding:14px 14px 13px!important;box-shadow:var(--v18-shadow)!important}
+.practices-overview-grid span{display:block;color:#6c7872;font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+.practices-overview-grid strong{display:block;color:#13211b;font-size:28px;line-height:1;margin:8px 0 5px;font-family:Georgia,serif}
+.practices-overview-grid small{color:#71807a;font-size:12px}
+.practices-focus-shell{background:linear-gradient(145deg,#173f33 0%,#255444 100%)!important;border-radius:24px!important;padding:16px!important;color:#fff!important;box-shadow:0 18px 34px rgba(23,63,51,.22)!important}
+.practices-focus-shell .focus-head span{display:block;color:#9fc0b4;font-size:10px;font-weight:900;letter-spacing:.16em}
+.practices-focus-shell .focus-head b{display:block;margin-top:4px;font-size:20px;line-height:1.2}
+.focus-rail{display:flex;gap:10px;overflow-x:auto;padding-top:12px;scrollbar-width:none}
+.focus-rail::-webkit-scrollbar{display:none}
+.focus-card{min-width:176px;width:176px;text-align:left;background:rgba(255,255,255,.12)!important;border:1px solid rgba(255,255,255,.14)!important;color:#fff!important;border-radius:18px!important;padding:14px!important;backdrop-filter:blur(8px)!important}
+.focus-card small{display:block;color:#b8d3ca;font-size:10px;font-weight:800;letter-spacing:.08em}
+.focus-card strong{display:block;margin:6px 0 8px;font-size:16px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.focus-card em{display:block;color:#fff;font-style:normal;font-size:12px;line-height:1.35;min-height:33px}
+.focus-card span{display:block;margin-top:10px;color:#dce9e3;font-size:11px;font-weight:700}
+.practice-results-head{display:flex;align-items:baseline;gap:8px;margin:8px 2px 12px;color:#5f6f68}
+.practice-results-head strong{font-size:24px;color:#15231d;font-family:Georgia,serif}
+
+.practice-card.practice-card-v18{background:transparent!important;border:0!important;box-shadow:none!important;padding:0!important;margin:0 0 14px!important}
+.practice-shell{background:linear-gradient(180deg,#ffffff 0%,#f7f8f6 100%)!important;border:1px solid var(--v18-line)!important;border-radius:24px!important;padding:16px!important;box-shadow:var(--v18-shadow)!important}
+.modern-practice-top{display:grid!important;grid-template-columns:52px 1fr auto!important;gap:12px!important;align-items:flex-start!important}
+.practice-avatar{width:52px;height:52px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(180deg,#2e6657 0%,#1d4b3f 100%);color:#fff;font-size:24px;font-weight:800;box-shadow:0 10px 22px rgba(31,79,66,.22)}
+.practice-maincopy{min-width:0}
+.practice-meta-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:6px}
+.area-badge{padding:6px 10px!important;border-radius:999px!important;font-size:10px!important;font-weight:900!important;letter-spacing:.08em!important}
+.area-PENALE{background:#fbecef!important;color:#a93f52!important}.area-CIVILE{background:#eef1ff!important;color:#4f63b7!important}.area-TRIBUTARIO{background:#eaf7ef!important;color:#26855e!important}
+.urgency-badge{padding:6px 10px;border-radius:999px;font-size:10px;font-weight:900;letter-spacing:.03em}
+.urgency-badge.urgent{background:#fff0f2;color:#b03f53}.urgency-badge.focus{background:#eef5ff;color:#3f63b7}.urgency-badge.watch{background:#fff6e8;color:#9a7535}.urgency-badge.calm{background:#eef4f1;color:#46665b}.urgency-badge.overdue{background:#fce7dc;color:#b2552d}
+.practice-heading h3,.practice-maincopy h3{font-size:20px!important;color:#14231d!important;margin:0 0 4px!important;line-height:1.15!important}
+.practice-subline{color:#6c7771!important;font-size:13px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.status-modern{align-self:flex-start;background:#f2f5f3!important;color:#2b594b!important;border:1px solid #dbe5df!important;max-width:unset!important}
+.practice-chip-row{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 10px}
+.info-chip{display:inline-flex;align-items:center;gap:6px;background:#f3f5f4;border:1px solid #dde4df;border-radius:999px;padding:8px 11px;color:#3d4d46;font-size:11px;font-weight:700;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.info-chip.soft{background:#fbfbfa}
+.practice-grid-modern{display:grid!important;grid-template-columns:1fr 1fr!important;gap:10px!important}
+.practice-metric{background:#fcfdfc;border:1px solid #e2e8e3;border-radius:18px;padding:12px 12px 11px;min-width:0}
+.practice-metric span{display:block;color:#70807a;font-size:10px;font-weight:800;letter-spacing:.04em;text-transform:uppercase}
+.practice-metric strong{display:block;color:#16241d;font-size:13px;font-weight:800;line-height:1.35;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.practice-schedule-panel{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.schedule-box{border-radius:18px;padding:13px 13px 12px;border:1px solid #e2e8e3;background:#fff}
+.schedule-box small{display:block;color:#73817b;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em}
+.schedule-box strong{display:block;color:#17251e;font-size:12.5px;line-height:1.4;margin-top:7px}
+.hearing-box{background:linear-gradient(180deg,#fff5f6 0%,#fff 100%)}
+.deadline-box{background:linear-gradient(180deg,#f4f8ff 0%,#fff 100%)}
+.action-row-modern{margin-top:13px!important;display:flex;gap:8px;flex-wrap:wrap!important}
+.practice-pill{background:linear-gradient(180deg,#234f42 0%,#183c31 100%)!important;color:#fff!important;border-radius:999px!important;padding:9px 13px!important;font-size:11px!important;font-weight:800!important;box-shadow:0 10px 18px rgba(24,60,49,.15)!important}
+.practice-pill.muted{background:#eef3f0!important;color:#365548!important;box-shadow:none!important}
+
+.detail-hero{background:linear-gradient(135deg,#21493d 0%,#2f6656 100%)!important;box-shadow:0 18px 34px rgba(23,63,51,.18)!important}
+.detail-section,.tool-card,.checklist-card,.search-card,.search-document,.detail-disclosure,.hearing-mobile-card,.creset-mobile-card{background:linear-gradient(180deg,#ffffff 0%,#f9faf9 100%)!important;color:#18211d!important;border:1px solid #dee5e0!important;box-shadow:var(--v18-shadow)!important}
+.detail-section h3,.tool-card h3,.checklist-card h3{color:#16221d!important}
+.detail-item,.next-box,.tool-result{background:#f5f7f6!important;color:#203029!important;border:1px solid #e1e7e2!important}
+.detail-item span,.practice-card p,.practice-card small,.tool-card p,.checklist-card p,.detail-section p{color:#65726b!important}
+.tool-tabs button{background:linear-gradient(180deg,#fff 0%,#f7f8f7 100%)!important;color:#405149!important;border:1px solid #dde5e0!important;box-shadow:var(--v18-shadow)!important}
+.tool-tabs button.active{background:linear-gradient(180deg,#255444 0%,#183f33 100%)!important;color:#fff!important;border-color:#255444!important}
+
+@media (max-width:430px){
+  .practices-overview-grid{grid-template-columns:repeat(2,1fr)!important}
+  .practice-grid-modern,.practice-schedule-panel{grid-template-columns:1fr!important}
+  .modern-practice-top{grid-template-columns:46px 1fr!important}
+  .status-modern{grid-column:2/3;justify-self:start;margin-top:6px}
+  .practice-avatar{width:46px;height:46px;font-size:21px;border-radius:16px}
+  .focus-card{min-width:164px;width:164px}
+  .practice-simple-filters{grid-template-columns:repeat(2,1fr)!important}
+}
+
+/* Planner V18.5: scadenze e attività sempre visibili e modificabili */
+.mobile-planner-task-title{display:flex;gap:8px;align-items:center;color:#d7e5dc;font-size:12px;font-weight:800;margin:12px 0 7px}
+.mobile-planner-task-title b{font-weight:800;color:#e7c590}
+.mobile-planner-task{display:grid;grid-template-columns:90px minmax(0,1fr);text-align:left;align-items:start;gap:3px 10px;width:100%;padding:12px!important;margin-bottom:6px!important;background:#edf5ef!important;color:#243e32!important;border:1px solid #cbded1!important;border-radius:14px!important}
+.mobile-planner-task.is-deadline{background:#fff6e8!important;border-color:#e6d4b4!important}
+.mobile-planner-task span{font-size:11px;font-weight:850;color:#94652e;grid-row:span 2}
+.mobile-planner-task strong{font-size:12px;font-weight:800;color:#243e32;min-width:0;overflow-wrap:anywhere}
+.mobile-planner-task small{font-size:10px;color:#627568;grid-column:2}
+.mobile-planner-commitment.private{border-left:3px solid #9e7abc!important}
+.planner-target-overlay{position:fixed;inset:0;z-index:1001;background:rgba(7,17,12,.75);display:flex;align-items:flex-end;justify-content:center;padding:12px}
+.planner-target-sheet{width:min(100%,520px);background:#fff!important;color:#1b2d24!important;border-radius:24px;padding:23px 20px calc(22px + env(safe-area-inset-bottom));box-shadow:0 -22px 70px rgba(0,0,0,.3)}
+.planner-target-kicker{font-size:10px;color:#2c8064;font-weight:900;letter-spacing:.15em}
+.planner-target-sheet h3{font-size:20px;line-height:1.25;margin:8px 0;color:#1b2d24!important}
+.planner-target-sheet p,.planner-target-sheet small{color:#637369!important;font-size:12px;display:block;margin:8px 0}
+.planner-target-sheet label{display:block;font-weight:800;font-size:12px;margin:14px 0 5px}
+.planner-target-sheet select{display:block;width:100%;border:1px solid #cbd8cd;background:#f7faf7!important;color:#20352a!important;border-radius:12px;padding:12px}
+.planner-target-buttons{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:20px}
+.planner-target-buttons button{border-radius:12px;background:#eaf1ec!important;color:#245341!important}
+#plannerTargetSave{background:#205b46!important;color:white!important}
+
+.mobile-planner-backlog{border:1px solid rgba(168,139,83,.3);background:#faf2e4;color:#263c30;border-radius:18px;padding:13px;margin-top:14px}
+.mobile-planner-backlog h3{color:#2c523f!important;font-size:16px;margin:0 0 4px}.mobile-planner-backlog h3 span{display:inline-block;border-radius:50%;background:#d4a45c;color:#fff;padding:2px 7px}
+.mobile-planner-backlog p{color:#5e6b60;font-size:12px;margin:2px 0 10px}
+.planner-target-sheet input[type=date]{display:block;width:100%;border:1px solid #cbd8cd;border-radius:12px;background:#f7faf7!important;color:#20352a!important;padding:12px}
+
+/* V19 – visual system: one palette, legible text, robust mobile sizing */
+:root{--v19-bg:#f3f5f3;--v19-paper:#ffffff;--v19-line:#dbe3df;--v19-ink:#172920;--v19-sub:#52665c;--v19-green:#174e3c;--v19-hearing:#ac2e52;--v19-appointment:#245fb3;--v19-family:#71399d;--v19-work:#187451;--v19-deadline:#a96817}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{background:var(--v19-bg)!important;color:var(--v19-ink)!important;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;-webkit-font-smoothing:antialiased}
+#app>header{background:rgba(255,255,255,.97)!important;border-bottom:1px solid var(--v19-line)!important;box-shadow:0 2px 14px rgba(26,49,38,.04)!important}
+#app .brand-studio,#app .brand-person,#app #pageTitle{color:var(--v19-ink)!important}
+#app .view{padding-bottom:122px!important}
+#app .bottom-nav.v19-nav{position:fixed!important;left:8px!important;right:8px!important;bottom:7px!important;display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:2px!important;background:rgba(255,255,255,.97)!important;border:1px solid var(--v19-line)!important;border-radius:20px!important;padding:7px 5px calc(7px + env(safe-area-inset-bottom))!important;box-shadow:0 12px 35px rgba(22,50,36,.13)!important}
+#app .v19-nav button{min-width:0!important;width:auto!important;flex:none!important;overflow:hidden!important;font-size:9px!important;color:#53685d!important;border-radius:13px!important;padding:7px 0!important}
+#app .v19-nav button em{line-height:1.25!important;font-weight:750!important}
+#app .v19-nav button.active{background:#e6f0ea!important;color:#104831!important}
+#app .v19-nav .nav-svg{background:transparent!important}
+#app .v19-nav button.active .nav-svg{color:#104831!important;background:transparent!important}
+#app .v19-nav .nav-svg svg{height:20px!important;width:20px!important}
+#app button:focus-visible{outline:3px solid #5c98de!important;outline-offset:2px!important}
+
+/* Every critical panel remains readable, including legacy dark-mode elements */
+#app .view h2,#app .view h3,#app .tool-card h3,#app .detail-section h3{color:#172920!important}
+#app .view p,#app .view .muted,#app .view .practice-subline{color:var(--v19-sub)!important}
+#app .practice-search-blank,#app .practice-search-result,#app .tool-card,#app .search-card,#app .checklist-card,#app .detail-section,#app .detail-disclosure,#app .event{background:#fff!important;color:#172920!important;border:1px solid #d9e3dd!important;box-shadow:0 6px 22px rgba(22,50,36,.05)!important}
+#app .event h3,#app .event strong,#app .detail-item strong,#app .tool-result strong{color:#172920!important}
+#app .event .event-meta,#app .event .event-date,#app .event .event-time{color:#354d41!important}
+#app .event.UDIENZA{border-left:5px solid var(--v19-hearing)!important}
+#app .event.APPUNTAMENTO{border-left:5px solid var(--v19-appointment)!important}
+#app .event.SCADENZA{border-left:5px solid var(--v19-deadline)!important}
+#app .event.PREPARAZIONE,#app .event.ATTIVITÀ{border-left:5px solid var(--v19-work)!important}
+#app .event.PERSONALE{border-left:5px solid var(--v19-family)!important}
+#app .agenda-planner-head,#app .hearings-command-head{background:#fff!important;border:1px solid #d9e3dd!important;color:#172920!important;border-left:4px solid var(--v19-green)!important;box-shadow:0 8px 28px rgba(22,50,36,.05)!important}
+#app .agenda-planner-head h2,#app .hearings-command-head h2,#app .view-identity h2{color:#152c20!important}
+#app .agenda-planner-head input,#app .hearings-command-head input{background:#f3f7f4!important;color:#152a20!important;border:1px solid #cbd8cf!important}
+#app .agenda-navigation-line button,#app .hearing-period-control button{background:#eaf3ed!important;color:#174a35!important;border:1px solid #cee0d5!important}
+#app .agenda-mode,#app .hearing-mode{background:#eff3f0!important;border:1px solid #dbe5dc!important}
+#app .agenda-mode button,#app .hearing-mode button{color:#3b5445!important}
+#app .agenda-mode button.active,#app .hearing-mode button.active{background:#17533d!important;color:#fff!important}
+#app .agenda-export,#app .agenda-today,#app .hearing-today{background:#e8f2ed!important;color:#164731!important;border:1px solid #c9dfd3!important}
+#app .agenda-category-card,#app .agenda-day-group,#app .planner-timeline,#app .docket-card{background:#fff!important;color:#172920!important;border-color:#d9e3dd!important}
+#app .docket-card .docket-body strong,#app .planner-item .planner-body strong{color:#15271d!important}
+#app .docket-card .docket-body small,#app .planner-item .planner-body em{color:#566c60!important}
+#app .docket-card,#app .planner-item{background:#fff!important;color:#172920!important;border:1px solid #d9e3dd!important}
+#app .week-day-card{background:#fff!important;color:#172920!important;border:1px solid #d4e1d8!important}
+#app .week-day-card .week-name,#app .week-day-card strong{color:#28533d!important}
+#app .week-day-card.selected{background:#17533d!important;border-color:#17533d!important}
+#app .week-day-card.selected .week-name,#app .week-day-card.selected strong{color:#fff!important}
+#app .month-cell{background:#fff!important;color:#172920!important;border:1px solid #d9e3dd!important}
+#app .month-cell.selected{outline:2px solid #226b4e!important}
+#app .tool-card select,#app .tool-card input,#app .tool-input,#app #practiceSearch,#app #globalSearch{background:#fff!important;color:#172920!important;border:1px solid #cbdad0!important}
+#app .view .section-head.stacked,#app .practices-compact-head{background:transparent!important}
+#app .practice-simple-filters{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:5px!important}
+#app .practice-simple-filters button{background:#fff!important;color:#344e40!important;border-color:#d9e3dd!important;font-size:10px!important;min-height:43px!important;padding:7px 3px!important}
+#app .practice-simple-filters button.active{background:#145138!important;color:#fff!important;border-color:#145138!important}
+#app .practices-search-blank{padding:32px 20px!important;border-radius:22px!important;text-align:center!important}
+#app .practices-search-blank h3{font-size:21px!important;margin:10px 0!important}
+#app .practices-search-blank p{font-size:14px!important;line-height:1.55!important}
+#app .practices-search-blank small{color:#52655c!important}
+#app .search-mark{display:grid;place-items:center;margin:0 auto 8px;width:62px;height:62px;border-radius:20px;background:#e1efe8;color:#1d6044;font-size:34px}
+#app .practice-search-result{display:flex;align-items:center;text-align:left;width:100%;gap:12px;padding:13px!important;border-radius:16px!important;margin:9px 0!important}
+#app .practice-search-letter{width:42px;height:42px;flex:0 0 42px;display:grid;place-items:center;color:#fff;background:#206249;border-radius:13px;font-size:20px;font-weight:800}
+#app .practice-search-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+#app .practice-search-info small{font-size:10px;color:#507260!important;font-weight:800!important}
+#app .practice-search-info strong{font-size:15px;color:#182b21!important}
+#app .practice-search-info em{font-style:normal;font-size:12px;color:#667870!important;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+#app .practice-search-go{font-size:24px;color:#317452}
+
+/* Dedicated real planner, visually separate from the judicial docket */
+#plannerView .v19-planner-head{background:linear-gradient(130deg,#103e2f,#23634b)!important;color:#fff!important;padding:20px!important;border-radius:22px!important;margin-bottom:14px!important;box-shadow:0 16px 35px rgba(17,62,47,.18)!important}
+#plannerView .v19-planner-head h2{color:#fff!important;font-size:27px!important;margin:5px 0!important}
+#plannerView .v19-planner-head p{color:#d8e9df!important;font-size:13px!important;line-height:1.4!important}
+#plannerView .v19-planner-head .view-kicker{color:#e6ce9e!important;font-size:10px!important}
+#plannerView .v19-planner-head #plannerPeriodLabel{display:block;margin-top:10px;font-size:12px;color:#fff}
+#plannerView .v19-planner-date{display:grid;grid-template-columns:38px minmax(0,1fr) 38px 52px;gap:6px;margin-top:14px;align-items:center}
+#plannerView .v19-planner-date button,#plannerView .v19-planner-date input{height:42px!important;background:#fff!important;color:#16452f!important;border:1px solid #b8d6c4!important;border-radius:12px!important;font-weight:800!important;padding:5px!important;min-width:0}
+#plannerView .planner-mobile-actions{display:grid;grid-template-columns:1.2fr 1fr;gap:9px;margin:12px 0}
+#plannerView .planner-mobile-actions button{background:#17543d!important;color:#fff!important;border-radius:13px!important;padding:13px 9px!important;font-size:12px!important;font-weight:800!important}
+#plannerView .planner-mobile-actions button.secondary{background:#e2efe7!important;color:#16543c!important}
+#plannerView .planner-legend{display:flex;flex-wrap:wrap;gap:7px;margin:8px 0 13px}
+#plannerView .planner-legend span{background:#fff;border:1px solid #dbe6df;border-radius:10px;padding:7px 9px;font-size:11px;font-weight:800}
+#plannerView .legend-hearing{color:var(--v19-hearing)}
+#plannerView .legend-appointment{color:var(--v19-appointment)}
+#plannerView .legend-family{color:var(--v19-family)}
+#plannerView .legend-work{color:var(--v19-work)}
+#plannerView .mobile-planner-day{background:#fff!important;border:1px solid #dce5df!important;border-radius:20px!important;padding:13px!important;box-shadow:0 7px 24px rgba(22,50,36,.05)!important;margin:12px 0!important}
+#plannerView .mobile-planner-heading{background:#eaf2ed!important;border:0!important;border-radius:12px!important;padding:12px!important;margin-bottom:11px!important}
+#plannerView .mobile-planner-heading strong{color:#174a34!important;font-size:17px!important}
+#plannerView .mobile-planner-heading span{color:#42644f!important;font-size:12px!important}
+#plannerView .mobile-planner-slot{background:#eaf5ee!important;border:1px solid #cbe2d3!important;color:#164632!important;border-radius:12px!important;padding:11px!important;margin:5px 0!important}
+#plannerView .mobile-planner-slot.preferred{background:#fff4d9!important;border-color:#ebd6a2!important;color:#71531a!important}
+#plannerView .mobile-planner-slot span,#plannerView .mobile-planner-slot b{color:inherit!important}
+#plannerView .mobile-planner-commitment{display:flex!important;flex-direction:column!important;gap:4px!important;background:#f4f7fb!important;color:#183d67!important;border-left:4px solid #2769ad!important;border-radius:12px!important;padding:11px 12px!important;text-align:left!important;margin:5px 0!important;width:100%!important}
+#plannerView .mobile-planner-commitment.private{background:#f4ecfb!important;color:#54287a!important;border-left-color:#8745ba!important}
+#plannerView .mobile-planner-commitment strong,#plannerView .mobile-planner-commitment span{color:inherit!important;font-size:12px!important}
+#plannerView .mobile-planner-task{background:#fff9ed!important;color:#5f4218!important;border:1px solid #efddba!important;border-left:4px solid #ab7826!important;border-radius:12px!important;margin:6px 0!important;text-align:left!important;width:100%!important;padding:13px!important}
+#plannerView .mobile-planner-task strong{color:#3c3220!important;font-size:13px!important}
+#plannerView .mobile-planner-task span,#plannerView .mobile-planner-task small{color:#715925!important}
+#plannerView .mobile-planner-task.is-deadline{border-left-color:#b24b43!important;background:#fff0eb!important}
+#plannerView .mobile-planner-note,#plannerView .mobile-planner-backlog{background:#fff!important;color:#1e3829!important;border:1px solid #dce5df!important;border-radius:17px!important}
+#plannerView .mobile-planner-note strong,#plannerView .mobile-planner-backlog h3{color:#194c36!important}
+#plannerView .mobile-planner-note p,#plannerView .mobile-planner-note small,#plannerView .mobile-planner-backlog p{color:#52695b!important}
+#plannerView .mobile-planner-task-title{color:#214632!important}
+#plannerView .mobile-planner-empty{background:#f7f9f7!important;color:#506b59!important;border:1px dashed #d4e1d9!important}
+#plannerBlockOverlay .planner-target-sheet,#plannerTargetOverlay .planner-target-sheet{background:#fff!important;color:#172920!important;border-radius:22px!important;max-height:88vh!important;overflow-y:auto!important}
+#plannerBlockOverlay .planner-target-sheet h3,#plannerTargetOverlay .planner-target-sheet h3{color:#153d2a!important}
+#plannerBlockOverlay .planner-target-sheet input,#plannerBlockOverlay .planner-target-sheet select,#plannerTargetOverlay .planner-target-sheet select{background:#fff!important;color:#162b1f!important;border:1px solid #bed0c4!important;min-height:43px!important;width:100%!important}
+#plannerBlockOverlay .planner-inline-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+#plannerBlockOverlay .planner-delete{margin-top:9px;background:#fff1f1!important;border:1px solid #efc4c4!important;color:#a02d36!important;width:100%!important;padding:12px!important}
+#plannerBlockOverlay #pbSave{background:#19553d!important;color:#fff!important}
+#plannerView .mobile-planner-commitments{display:flex;flex-direction:column;gap:4px}
+
+/* Home: planner snapshot from family commitments and work queues */
+#homeView .v19-dayplan{background:#fff;border-radius:20px;padding:15px;margin:14px 0;box-shadow:0 9px 25px rgba(26,54,38,.06);border:1px solid #dbe5dd}
+#homeView .v19-dayplan-hero{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+#homeView .v19-dayplan-hero>div{background:#eaf3ed;border-radius:14px;padding:13px;color:#153d29}
+#homeView .v19-dayplan-hero>div:nth-child(2){background:#f2eafd;color:#582f80}
+#homeView .v19-dayplan-hero small{display:block;color:inherit;opacity:.78;font-size:10px;letter-spacing:.06em;font-weight:800}
+#homeView .v19-dayplan-hero strong{display:block;color:inherit;font-size:20px;margin-top:5px}
+#homeView .v19-dayplan-rows button{display:flex;width:100%;gap:12px;align-items:center;text-align:left;margin:5px 0;background:#f6f8f6!important;color:#153b27!important;border-radius:11px;padding:11px!important}
+#homeView .v19-dayplan-rows button span{min-width:92px;font-size:11px;color:#53715d!important}
+#homeView .v19-dayplan-rows button strong{font-size:12px;color:#1a3323!important}
+#homeView .v19-dayplan-rows .v19-dayplan-family{border-left:4px solid var(--v19-family)!important;background:#f4edf8!important}
+#homeView .v19-dayplan-rows .v19-dayplan-task{border-left:4px solid var(--v19-deadline)!important}
+#homeView .v19-dayplan-empty{font-size:12px;color:#5d7364!important}
+@media(max-width:390px){#app .v19-nav button{font-size:8.5px!important}#app .v19-nav .nav-svg svg{width:18px!important;height:18px!important}#app .practice-simple-filters button{font-size:9px!important}}
+#plannerView .mobile-planner-commitment.work{background:#e7f5ee!important;color:#205e42!important;border-left-color:#2f9363!important}
+#plannerView .planner-propose{background:#185a40!important;color:#fff!important;width:100%!important;margin-top:13px!important;padding:14px!important;border-radius:13px!important}
+#plannerView .planner-session-preview,#plannerTargetOverlay .planner-session-preview{margin-top:12px;color:#214633;font-size:12px}
+#plannerView .planner-session-preview>div,#plannerTargetOverlay .planner-session-preview>div{padding:7px;margin-top:4px;background:#edf5ef;color:#225139;border-radius:8px}
+#plannerTargetOverlay #plannerConfirmSessions{margin-top:10px;background:#2a6c4e!important;color:#fff!important;border-radius:11px;padding:12px;width:100%}
+#plannerTargetOverlay #plannerConfirmSessions:disabled{opacity:.45}
+
+
+/* V19.1 — tipografia e contrasti verificabili, senza modifiche ai dati. */
+:root{--v191-ink:#142b20;--v191-muted:#405c4d;--v191-border:#c5d9cb}
+#app{color:var(--v191-ink)!important}
+#app .view{font-size:14px;line-height:1.47}
+#app button,#app input,#app select{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+#app button{touch-action:manipulation}
+#app .v19-nav button{font-size:10px!important;min-height:49px!important}
+#app .v19-nav button em{font-size:10px!important;font-weight:800!important}
+#app .v19-nav .nav-svg{width:29px!important;height:29px!important}
+#app .v19-nav .nav-svg svg{width:20px!important;height:20px!important}
+#app #pageTitle{font-size:18px!important;letter-spacing:-.02em!important}
+#app .brand-studio{font-size:13px!important}
+#app .view-kicker{font-size:11px!important}
+#app #practiceSearch,#app #globalSearch,#app .tool-input{font-size:16px!important;color:#18372a!important;background:#fff!important}
+#app input::placeholder{color:#536b5b!important;opacity:1!important}
+#app .practice-simple-filters button{font-size:11px!important;padding:8px 4px!important}
+#app .practice-search-info strong{font-size:16px!important}
+#app .practice-search-info small,#app .practice-search-info em{font-size:12px!important;color:#385d45!important}
+#app .practices-search-blank h3{font-size:21px!important;color:#133d29!important}
+#app .practices-search-blank p,#app .practices-search-blank small{font-size:13px!important;color:#456454!important}
+#plannerView .v19-planner-head{background:linear-gradient(140deg,#103e2f,#255a45)!important}
+#plannerView .v19-planner-head h2{font-size:27px!important;letter-spacing:-.02em}
+#plannerView .v19-planner-head p{font-size:14px!important;color:#e2f0e6!important}
+#plannerView .v19-planner-date button,#plannerView .v19-planner-date input{font-size:14px!important;min-height:46px!important}
+#plannerView .planner-mobile-actions button{font-size:14px!important;min-height:47px!important}
+#plannerView .planner-legend span{font-size:12px!important;padding:8px 10px!important}
+#plannerView .mobile-planner-heading strong{font-size:19px!important}
+#plannerView .mobile-planner-heading span{font-size:13px!important;color:#28573b!important}
+#plannerView .mobile-planner-day{border-color:#cddfd2!important;box-shadow:0 6px 20px rgba(18,55,36,.07)!important}
+#plannerView .mobile-planner-slot{font-size:13px!important;line-height:1.4!important}
+#plannerView .mobile-planner-slot span,#plannerView .mobile-planner-slot b{font-size:13px!important;color:#183d2c!important}
+#plannerView .mobile-planner-slot.preferred span,#plannerView .mobile-planner-slot.preferred b{color:#614718!important}
+#plannerView .mobile-planner-commitment span,#plannerView .mobile-planner-commitment strong{font-size:13px!important;line-height:1.4!important}
+#plannerView .mobile-planner-task span{font-size:12px!important;font-weight:750!important;color:#67451c!important}
+#plannerView .mobile-planner-task strong{font-size:14px!important;line-height:1.45!important;color:#3c2d1b!important}
+#plannerView .mobile-planner-task small{font-size:12px!important;line-height:1.35!important;color:#6b4f27!important}
+#plannerView .mobile-planner-task-title{font-size:13px!important;font-weight:800!important;color:#1d5133!important}
+#plannerView .mobile-planner-empty{font-size:13px!important;color:#425f4e!important}
+#plannerView .mobile-planner-note{font-size:13px!important;line-height:1.5!important}
+#plannerView .mobile-planner-note p,#plannerView .mobile-planner-note small{font-size:13px!important;color:#355840!important}
+#plannerView .mobile-planner-backlog p,#plannerView .mobile-planner-backlog small{font-size:12px!important;color:#415c4a!important}
+#homeView .v19-dayplan-hero small{font-size:12px!important;opacity:1!important}
+#homeView .v19-dayplan-rows button span,#homeView .v19-dayplan-rows button strong{font-size:13px!important}
+#homeView .v19-dayplan-empty{font-size:13px!important}
+#plannerBlockOverlay .planner-target-sheet,#plannerTargetOverlay .planner-target-sheet{padding:22px!important;box-shadow:0 24px 65px rgba(6,36,20,.24)!important}
+#plannerBlockOverlay .planner-target-sheet h3,#plannerTargetOverlay .planner-target-sheet h3{font-size:22px!important}
+#plannerBlockOverlay .planner-target-sheet label,#plannerTargetOverlay .planner-target-sheet label{display:block!important;font-size:13px!important;font-weight:750!important;color:#1e3b2a!important;margin:10px 0 5px!important}
+#plannerBlockOverlay .planner-target-sheet input,#plannerBlockOverlay .planner-target-sheet select,#plannerTargetOverlay .planner-target-sheet input,#plannerTargetOverlay .planner-target-sheet select{font-size:16px!important;min-height:46px!important;color:#163c29!important;background:#fff!important;border:1px solid #aac6b4!important;border-radius:12px!important}
+#plannerBlockOverlay .planner-target-sheet small,#plannerTargetOverlay .planner-target-sheet small{font-size:12px!important;color:#3f624e!important;line-height:1.4!important}
+#plannerBlockOverlay .planner-target-buttons button,#plannerTargetOverlay .planner-target-buttons button{font-size:14px!important;min-height:46px!important}
+#plannerView .planner-propose,#plannerTargetOverlay #plannerConfirmSessions{font-size:14px!important;min-height:46px!important}
+#app button:focus-visible,#app input:focus-visible,#app select:focus-visible{outline:3px solid #428b69!important;outline-offset:2px!important}
+@media(max-width:390px){#app .v19-nav button{font-size:10px!important}#app .practice-simple-filters button{font-size:10px!important}}
+
+/* V19.2: checklist and planner integrated, read-only from desktop */
+.mobile-planner-checklists{margin:13px 0 5px;padding:12px;border:1px solid #d6e2d9;border-radius:17px;background:#f0f5f1;color:#213d30}
+.mobile-planner-checklists .mobile-planner-task-title{color:#244c3c!important;margin:0 0 9px!important}
+.mobile-checklist-work{border-left:4px solid #478367;background:white;border-radius:11px;padding:10px 12px;margin:7px 0;display:flex;flex-direction:column;gap:3px;color:#1f3228}
+.mobile-checklist-work span{font-size:11px;color:#617269}
+.mobile-checklist-work strong{font-size:14px;color:#182b22}
+.mobile-checklist-work small{font-size:11px;color:#416955}
+.planner-capacity-warning{margin:9px 0 0;padding:10px;border-radius:11px;background:#fdf4de;border:1px solid #e6cf94;color:#664d16;font-size:12px;font-weight:700}
+
+/* V19.3: fixed-family and court transfer highlights */
+.v19-dayplan-alert{padding:12px 14px;margin-top:9px;border-radius:13px;background:#fff2e8!important;border:1px solid #edc6b8!important;color:#8d352e!important;font-size:12px!important;font-weight:750!important;line-height:1.5!important}
+.mobile-planner-commitment.travel{background:#f4ebd9!important;border-left:4px solid #a68045!important;color:#463a25!important}
+.mobile-planner-commitment.travel strong{color:#463a25!important}
+.mobile-planner-commitment.private{border-left:4px solid #946d42!important}
+.planner-capacity-warning{font-weight:700!important;line-height:1.5!important}
+/* V20.1: azioni giornaliere locali, senza comprimere i titoli */
+#plannerView .planner-local-section{margin:16px 0;padding:13px;background:#fff;border:1px solid #d7e5db;border-radius:18px;color:#173b29}
+#plannerView .planner-local-section h3{font-size:15px;margin:2px 0 12px;color:#174a34}
+#plannerView .planner-local-action{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-top:1px solid #e9eee9}
+#plannerView .planner-local-action>div{flex:1;min-width:0}
+#plannerView .planner-local-action strong{display:block;font-size:14px;line-height:1.4;overflow-wrap:anywhere;color:#1d3528}
+#plannerView .planner-local-action small{display:block;font-size:12px;color:#58705e;margin-bottom:5px}
+#plannerView .planner-local-action button{flex-shrink:0;background:#e4eee7;color:#1b4a35;border:1px solid #bdd6c5;border-radius:12px;padding:10px;font-size:12px;font-weight:750}
+
+/* Companion V20.2 — Planner giornaliero, dettatura/incolla, iPad e landscape */
+#plannerView .v19-planner-head{padding:14px 16px!important;margin-bottom:9px!important}
+#plannerView .v19-planner-head h2{font-size:24px!important;margin:2px 0!important}
+#plannerView .v19-planner-head p{font-size:12.5px!important;line-height:1.3!important;margin:4px 0 9px!important}
+#plannerView .planner-mobile-actions{display:grid!important;grid-template-columns:1fr 1fr!important;gap:8px!important}
+#plannerView .planner-mobile-actions #plannerPasteOpen{grid-column:1 / -1;background:#18543e!important;color:white!important;order:3}
+#plannerView .planner-mobile-actions .planner-family-btn{background:#efe4f5!important;color:#60357c!important}
+#plannerView .mobile-planner-day{padding:13px!important}
+#plannerView .mobile-planner-availability{border:1px solid #d0e0d7;border-radius:13px;padding:10px 12px;margin-top:15px;color:#16432f;background:#f6faf7}
+#plannerView .mobile-planner-availability summary{font-size:14px;font-weight:800;cursor:pointer;list-style:revert}
+#plannerView .mobile-planner-availability .mobile-planner-slot{margin-top:8px!important}
+#plannerView .mobile-planner-heading strong{font-size:17px!important}
+#plannerView .mobile-planner-task{font-size:14px!important;line-height:1.45!important}
+#plannerView .mobile-planner-commitment{font-size:14px!important;line-height:1.35!important}
+.planner-batch-overlay{position:fixed;inset:0;z-index:1200;background:rgba(9,23,17,.78);display:flex;justify-content:center;align-items:center;padding:12px;box-sizing:border-box}
+.planner-batch-sheet{width:min(100%,960px);max-height:94dvh;min-height:min(510px,90dvh);overflow:auto;display:flex;flex-direction:column;background:#f9faf8;color:#18382a;border-radius:21px;border:1px solid #cbdcd0;box-shadow:0 22px 70px rgba(0,0,0,.28);padding:16px;box-sizing:border-box}
+.planner-batch-sheet header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:5px}
+.planner-batch-sheet header small{color:#567564;font-size:11px;font-weight:800;letter-spacing:.12em}
+.planner-batch-sheet header h2{font-size:22px;color:#15452f;margin:3px 0}
+.planner-batch-sheet #pbClose{border:1px solid #cbded0;border-radius:12px;background:#eef4ef;color:#285039;flex:0 0 43px;width:43px;height:43px;padding:0;font-size:22px}
+.planner-batch-sheet p{color:#3e5e4d;font-size:13px;line-height:1.45;margin:5px 0 11px}
+.planner-batch-sheet label{font-size:13px;font-weight:800;color:#214935;display:block;margin:4px 0 7px}
+.planner-batch-sheet textarea{width:100%;flex:0 0 auto;min-height:125px;max-height:35vh;resize:vertical;box-sizing:border-box;border:1px solid #9dbba8;border-radius:13px;padding:12px;font-family:ui-monospace,Menlo,monospace;font-size:13px;line-height:1.55;background:#fff;color:#183427;outline-color:#257953;user-select:text;-webkit-user-select:text}
+.planner-batch-format{font-size:12px;color:#496554;line-height:1.45;padding:9px 0}
+.planner-batch-report{flex:1 1 auto;min-height:110px;overflow:auto;background:#fff;border:1px solid #d8e4dc;border-radius:13px;padding:12px;font-size:13px;color:#214130}
+.planner-batch-report>strong{font-size:14px;color:#165038}
+.planner-batch-report .pb-row{border-top:1px solid #e6eee8;padding:12px 0;display:flex;flex-direction:column;gap:4px}
+.planner-batch-report .pb-row>strong{font-size:14px;color:#193e2b;overflow-wrap:anywhere}
+.planner-batch-report .pb-row small{font-size:12px;color:#536d5e}
+.planner-batch-report .pb-sessions{display:flex;flex-wrap:wrap;gap:6px;margin-top:3px}
+.planner-batch-report .pb-sessions span{background:#e1f1e8;color:#195a3f;border-radius:10px;padding:7px 8px;font-size:12px;font-weight:800}
+.planner-batch-report .pb-error{color:#932d36;background:#fff0f0;border:1px solid #f2c5c8;border-radius:9px;padding:9px;margin:8px 0}
+.planner-batch-report .pb-warning{color:#6c4b11;background:#fff5dd;border:1px solid #ead4a2;border-radius:9px;padding:9px;margin:8px 0}
+.planner-batch-sheet footer{position:sticky;bottom:-16px;display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:12px 0 max(9px,env(safe-area-inset-bottom));background:#f9faf8;z-index:2}
+.planner-batch-sheet footer button{min-height:49px;padding:9px 8px;font-size:13px!important;font-weight:800;border-radius:13px;background:#e4eee7;color:#165038;border:1px solid #c6dbcb}
+.planner-batch-sheet footer #pbConfirm{background:#19553c;color:#fff;border-color:#19553c}
+.planner-batch-sheet footer #pbConfirm:disabled{opacity:.45;cursor:not-allowed}
+@media (orientation:landscape) and (min-width:680px){
+  #plannerView .v19-planner-head{padding:12px 17px!important}
+  #plannerView .v19-planner-head p{max-width:650px}
+  #plannerView .planner-mobile-actions{grid-template-columns:repeat(3,1fr)!important}
+  #plannerView .planner-mobile-actions #plannerPasteOpen{grid-column:auto;order:initial}
+  .planner-batch-sheet{max-width:980px;max-height:96dvh;min-height:0;padding:13px 18px}
+  .planner-batch-sheet textarea{min-height:100px;max-height:28vh}
+  .planner-batch-report{min-height:100px}
+}
+@media (min-width:900px){
+  #plannerView{max-width:1200px;margin:auto}
+  #plannerView #plannerContent{max-width:1150px;margin:auto}
+  #plannerView .mobile-planner-day{padding:21px!important}
+  #plannerView .mobile-planner-day>.mobile-planner-commitments,
+  #plannerView .mobile-planner-day>.mobile-planner-task-title,
+  #plannerView .mobile-planner-day>.mobile-planner-task,
+  #plannerView .mobile-planner-day>.mobile-planner-checklists{max-width:none}
+  #plannerView .mobile-planner-heading{padding:15px!important}
+  #plannerView .planner-mobile-actions{grid-template-columns:repeat(3,1fr)!important}
+  #plannerView .planner-mobile-actions #plannerPasteOpen{grid-column:auto;order:initial}
+}
+@media (max-width:360px){
+  .planner-batch-sheet{padding:11px}
+  .planner-batch-sheet header h2{font-size:19px}
+  .planner-batch-sheet footer button{font-size:12px!important}
+}
+/* V20.2 — schermo ruotato: timeline e disponibilità affiancate su iPad */
+#plannerView .planner-day-columns{display:block}
+#plannerView .planner-day-main,#plannerView .planner-day-sidebar{min-width:0}
+@media (orientation:landscape) and (min-width:900px), (min-width:1100px){
+  #plannerView .planner-day-columns{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(250px,1fr);gap:18px;align-items:start}
+  #plannerView .planner-day-sidebar{position:sticky;top:12px;background:#f7faf8;border:1px solid #e2e9e3;border-radius:16px;padding:12px}
+  #plannerView .mobile-planner-availability{margin-top:0}
+}
+/* Contrasto prioritario della testata del compositore, anche con tema scuro */
+.planner-batch-sheet > header{position:relative!important;top:auto!important;display:flex!important;background:#f9faf8!important;color:#173d2b!important;border:0!important;box-shadow:none!important;min-height:52px!important;padding:0 0 8px!important;margin:0 0 7px!important;opacity:1!important}
+.planner-batch-sheet > header h2{color:#173d2b!important;font-size:22px!important;margin:2px 0!important}
+.planner-batch-sheet > header small{color:#50715d!important}
+
+/* V20.3: Planner leggibile anche in orizzontale su tablet compatti.
+   La vista giornaliera mantiene le scadenze, senza cambiare i dati cifrati. */
+@media (orientation:landscape) and (min-width:720px){
+  #plannerView .planner-day-columns{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(230px,1fr);gap:14px;align-items:start}
+  #plannerView .planner-day-main,#plannerView .planner-day-sidebar{min-width:0}
+  #plannerView .planner-day-sidebar{position:static;background:#f7faf8;border:1px solid #e2e9e3;border-radius:16px;padding:12px}
+  #plannerView .mobile-planner-availability{margin-top:0}
+  #plannerView .mobile-planner-task{grid-template-columns:90px minmax(0,1fr)}
+}
+@media (min-width:1024px){
+  #plannerView .planner-day-columns{grid-template-columns:minmax(0,1.7fr) minmax(280px,1fr)}
+  #plannerView .mobile-planner-task strong{font-size:15px!important}
+  #plannerView .mobile-planner-commitment strong{font-size:14px!important}
+}

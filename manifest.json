@@ -1,7 +1,7 @@
 {
-  "name": "Studio Costa Companion V19.3",
+  "name": "Studio Costa Companion V20.8",
   "short_name": "Studio Costa",
-  "description": "Companion professionale Studio Legale Costa V19.3 Planner coordinato — funzioni allineate al desktop V15.9",
+  "description": "Companion professionale Studio Legale Costa V20.8 — pianificazione, agende e strumenti offline",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

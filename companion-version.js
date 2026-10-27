@@ -1,0 +1,1 @@
+const COMPANION_VERSION='20.8';

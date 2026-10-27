@@ -7,12 +7,34 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Studio Costa">
-  <link rel="manifest" href="manifest.json?v=20.1">
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=20.1">
-  <link rel="stylesheet" href="styles.css?v=20.1">
-  <title>Studio Costa Companion V20.1</title>
+  <link rel="manifest" href="manifest.json?v=20.8">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=20.8">
+  <link rel="stylesheet" href="styles-foundation.css?v=20.8">
+  <link rel="stylesheet" href="styles-legacy.css?v=20.8">
+  <link rel="stylesheet" href="styles.css?v=20.8">
+  <title>Studio Costa Companion V20.8</title>
 </head>
 <body>
+  <!-- Vault locale: nessun contenuto dell'archivio è reso prima dello sblocco. -->
+  <section id="vaultScreen" class="screen vault-screen hidden" aria-label="Protezione dell'archivio locale">
+    <div class="vault-card">
+      <div class="vault-mark" aria-hidden="true">GC</div>
+      <div class="eyebrow dark">STUDIO LEGALE COSTA · ARCHIVIO PROTETTO</div>
+      <h1 id="vaultHeading">Sblocca la Companion</h1>
+      <p id="vaultExplanation"></p>
+      <label class="vault-label" for="vaultPassword">Password locale</label>
+      <input id="vaultPassword" type="password" autocomplete="off" minlength="12" placeholder="Password locale" spellcheck="false">
+      <div id="vaultConfirmRow" class="hidden">
+        <label class="vault-label" for="vaultConfirm">Ripeti la password locale</label>
+        <input id="vaultConfirm" type="password" autocomplete="off" minlength="12" placeholder="Conferma password" spellcheck="false">
+      </div>
+      <label id="vaultBackupRow" class="vault-backup hidden"><input id="vaultBackupConfirmed" type="checkbox"><span>Confermo di avere salvato un backup dei dati e delle modifiche locali dalla versione precedente prima della migrazione.</span></label>
+      <button id="vaultAction" type="button">Sblocca</button>
+      <div id="vaultError" class="error" role="alert"></div>
+      <p class="vault-footnote">La password locale non è recuperabile da remoto. Senza di essa i dati locali cifrati potrebbero non essere recuperabili; i file di backup esterni rimangono indipendenti.</p>
+    </div>
+  </section>
+
   <section id="pairScreen" class="screen hidden">
     <div class="login-card">
       <div class="brand">GC</div>
@@ -37,6 +59,11 @@
     </div>
   </section>
 
+  <aside id="updateNotice" class="update-notice hidden" role="status" aria-live="polite" aria-label="Aggiornamento dell’app">
+    <div class="update-notice-copy"><strong>Aggiornamento disponibile</strong><span>Per applicarlo salva prima ciò che stai scrivendo. I dati già registrati restano sul dispositivo.</span></div>
+    <div class="update-notice-actions"><button id="applyUpdate" type="button">Aggiorna ora</button><button id="laterUpdate" type="button" class="update-later">Più tardi</button></div>
+  </aside>
+
   <div id="app" class="hidden">
     <header class="companion-topbar">
       <div class="brand-lockup brand-lockup-redesigned">
@@ -48,6 +75,7 @@
         </div>
       </div>
       <div class="header-actions compact-actions">
+        <span id="networkStatus" class="network-status" role="status" aria-live="polite">Offline</span>
         <div class="sync-pill" id="headerSync">—</div>
         <button id="settingsButton" class="icon-button" aria-label="Sincronizzazione e privacy">⋯</button>
       </div>
@@ -58,11 +86,17 @@
       <button id="quickExportActions" class="text-button">0 modifiche</button>
     </div>
 
-    <div class="hero-switchbar">
-      <button class="hero-switch active" data-top-target="homeView"><span>Home</span></button>
-      <button class="hero-switch" data-top-target="hearingsView"><span>Udienze</span></button>
-    </div>
 
+
+    <!-- V20.8: unico menu, orizzontale in alto su tablet e in basso su telefono. -->
+    <nav class="bottom-nav companion-bottom-nav five-nav v19-nav" aria-label="Navigazione principale">
+      <button data-target="homeView" class="active" aria-current="page"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 10.5L12 4l8 6.5"/><path d="M6.5 9.5V20h11V20.8"/><path d="M10 20v-5.5h4V20"/></svg></span><em>Home</em></button>
+      <button data-target="hearingsView"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 4v15"/><path d="M7 7h10"/><path d="M5 7c0 3-2 5-2 5h6c0 0-2-2-2-5"/><path d="M19 7c0 3-2 5-2 5h6c0 0-2-2-2-5"/><path d="M8 20h8"/></svg></span><em>Udienze</em></button>
+      <button data-target="agendaView"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16"/><path d="M8 14h3M13 14h3M8 17h3"/></svg></span><em>Agenda</em></button>
+      <button data-target="plannerView"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 4v3M16 4v3M4 10h16M8 14h8M8 17h5"/></svg></span><em>Planner</em></button>
+      <button data-target="practicesView"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 7.5A2.5 2.5 0 0 1 6.5 5H10l1.7 2H17.5A2.5 2.5 0 0 1 20 9.5v8A2.5 2.5 0 0 1 17.5 20h-11A2.5 2.5 0 0 1 4 17.5v-10Z"/><path d="M4 9h16"/></svg></span><em>Pratiche</em></button>
+      <button data-target="toolsView"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l1.6 3.9L17.5 8.5l-3.1 2.5.9 4-3.3-2-3.3 2 .9-4L6.5 8.5l3.9-1.6L12 3Z"/><path d="M20.1 15.5l.8 1.9 1.9.8-1.9.8-.8 1.9-.8-1.9-1.9-.8 1.9-.8.8-1.9Z"/></svg></span><em>Strumenti</em></button>
+    </nav>
 
     <main>
       <section id="homeView" class="view"></section>
@@ -119,7 +153,7 @@
       <section id="plannerView" class="view hidden">
         <div class="v19-planner-head">
           <div class="view-kicker">STUDIO COSTA · ORGANIZZAZIONE</div><h2>Il mio Planner</h2>
-          <p>Lavoro, udienze, famiglia e tempo per gli atti in una sola giornata, con lettura più chiara.</p>
+          <p>Tutti gli impegni di oggi. Ruota iPhone o iPad per una lettura più ampia.</p>
           <div class="v19-planner-date"><button id="plannerPrev" aria-label="Giorno precedente">‹</button><input type="date" id="plannerDate" aria-label="Data Planner"><button id="plannerNext" aria-label="Giorno successivo">›</button><button id="plannerToday">Oggi</button></div>
           <strong id="plannerPeriodLabel"></strong>
         </div>
@@ -205,7 +239,7 @@
         <section id="taxesTool" class="plugin-tool hidden">
           <div class="tool-card">
             <h3>Tributi locali</h3>
-            <p class="muted">Decadenza dell'accertamento, riscossione ed eventuale prescrizione secondo il medesimo motore della versione desktop V14.18.</p>
+            <p class="muted">Decadenza dell'accertamento, riscossione ed eventuale prescrizione secondo il medesimo motore della versione desktop V20.8.</p>
             <div class="tool-subcard">
               <strong>1. Tributo e decadenza</strong>
               <label>Tributo<select id="taxType" class="tool-input"><option>IMU</option><option>TARI</option><option>TASI</option><option>ICP/CANONE (verificare disciplina propria)</option><option>ALTRO TRIBUTO LOCALE</option></select></label>
@@ -294,21 +328,14 @@
       </section>
     </main>
 
-    <nav class="bottom-nav companion-bottom-nav five-nav v19-nav">
-      <button data-target="homeView"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 10.5L12 4l8 6.5"/><path d="M6.5 9.5V20h11V9.5"/><path d="M10 20v-5.5h4V20"/></svg></span><em>Home</em></button>
-      <button data-target="hearingsView"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 4v15"/><path d="M7 7h10"/><path d="M5 7c0 3-2 5-2 5h6c0 0-2-2-2-5"/><path d="M19 7c0 3-2 5-2 5h6c0 0-2-2-2-5"/><path d="M8 20h8"/></svg></span><em>Udienze</em></button>
-      <button data-target="agendaView"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16"/><path d="M8 14h3M13 14h3M8 17h3"/></svg></span><em>Agenda</em></button>
-      <button data-target="plannerView"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 4v3M16 4v3M4 10h16M8 14h8M8 17h5"/></svg></span><em>Planner</em></button>
-      <button data-target="practicesView"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 7.5A2.5 2.5 0 0 1 6.5 5H10l1.7 2H17.5A2.5 2.5 0 0 1 20 9.5v8A2.5 2.5 0 0 1 17.5 20h-11A2.5 2.5 0 0 1 4 17.5v-10Z"/><path d="M4 9h16"/></svg></span><em>Pratiche</em></button>
-      <button data-target="toolsView"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l1.6 3.9L17.5 8.5l-3.1 2.5.9 4-3.3-2-3.3 2 .9-4L6.5 8.5l3.9-1.6L12 3Z"/><path d="M20.1 15.5l.8 1.9 1.9.8-1.9.8-.8 1.9-.8-1.9-1.9-.8 1.9-.8.8-1.9Z"/></svg></span><em>Strumenti</em></button>
-    </nav>
+
   </div>
 
   <button id="addLocalTask" class="floating-add compact-fab" aria-label="Nuovo impegno">＋</button>
 
   <div id="localTaskModal" class="modal hidden">
     <div class="modal-sheet compact-sheet">
-      <div class="modal-top"><button id="closeLocalTask" class="back-button">‹</button><div><div class="eyebrow dark">NUOVO IMPEGNO</div><h2 id="localModalTitle">Inserisci</h2></div></div>
+      <div class="modal-top"><button id="closeLocalTask" class="back-button" type="button" aria-label="Chiudi nuovo impegno">‹</button><div><div class="eyebrow dark">NUOVO IMPEGNO</div><h2 id="localModalTitle">Inserisci</h2></div></div>
       <input id="localTaskId" type="hidden">
       <label>Tipo<select id="localCategory"><option>UDIENZA</option><option>APPUNTAMENTO</option><option>ATTIVITÀ</option><option>PROMEMORIA</option><option>TELEFONATA</option><option>COMMISSIONE</option><option>PERSONALE</option><option>ALTRO</option></select></label>
       <label>Pratica<select id="localPractice"><option value="">Nessuna pratica</option></select></label>
@@ -332,7 +359,7 @@
 
   <div id="hearingOutcomeModal" class="modal hidden">
     <div class="modal-sheet compact-sheet">
-      <div class="modal-top"><button id="closeHearingOutcome" class="back-button">‹</button><div><div class="eyebrow dark">UDIENZA</div><h2 id="hearingOutcomeTitle">Esito / rinvio</h2></div></div>
+      <div class="modal-top"><button id="closeHearingOutcome" class="back-button" type="button" aria-label="Chiudi gestione udienza">‹</button><div><div class="eyebrow dark">UDIENZA</div><h2 id="hearingOutcomeTitle">Esito / rinvio</h2></div></div>
       <input id="outcomeHearingId" type="hidden">
       <label>Esito<select id="outcomeValue"><option value="">Seleziona</option><option value="RINVIO">Rinvio</option><option value="DISCUSSIONE">Discussione</option><option value="RISERVA">Riserva</option><option value="SENTENZA">Decisione / sentenza</option><option value="CTU AMMESSA">CTU ammessa</option><option value="TERMINI CONCESSI">Termini concessi</option><option value="ALTRO">Altro</option></select></label>
       <div class="two-cols"><label>Nuova udienza<input id="outcomeNextDate" type="date"></label><label>Ora<input id="outcomeNextTime" type="time"></label></div>
@@ -347,7 +374,7 @@
 
   <div id="practiceModal" class="modal hidden">
     <div class="modal-sheet">
-      <div class="modal-top"><button id="closePractice" class="back-button">‹</button><div><div class="eyebrow dark">SCHEDA PRATICA</div><h2 id="detailTitle"></h2></div></div>
+      <div class="modal-top"><button id="closePractice" class="back-button" type="button" aria-label="Chiudi scheda pratica">‹</button><div><div class="eyebrow dark">SCHEDA PRATICA</div><h2 id="detailTitle"></h2></div></div>
       <div id="detailSync" class="detail-sync"></div>
       <div id="practiceDetail"></div>
     </div>
@@ -355,7 +382,7 @@
 
   <div id="settingsModal" class="modal hidden">
     <div class="modal-sheet compact-sheet">
-      <div class="modal-top"><button id="closeSettings" class="back-button">‹</button><div><div class="eyebrow dark">COMPANION V20.1</div><h2>Sincronizzazione e privacy</h2></div></div>
+      <div class="modal-top"><button id="closeSettings" class="back-button" type="button" aria-label="Chiudi impostazioni">‹</button><div><div class="eyebrow dark">COMPANION V20.8</div><h2>Sincronizzazione e privacy</h2></div></div>
       <div class="detail-section">
         <h3>Modifiche da riportare al PC</h3>
         <p id="pendingActionsInfo" class="muted"></p>
@@ -376,13 +403,36 @@
         <input id="localTasksFile" type="file" accept=".scl,application/json">
         <button id="importLocalTasks" class="secondary-button">Ripristina backup attività</button>
       </div>
-      <div class="detail-section"><button id="clearLocalArchive" class="danger-button">Elimina archivio locale</button></div>
+      <div class="detail-section">
+        <h3>Gestione dati sul dispositivo</h3>
+        <button id="lockCompanionNow" class="secondary-button" type="button">Blocca ora l’archivio</button>
+        <button id="openVaultPasswordChange" class="secondary-button" type="button">Cambia password locale</button>
+        <p class="muted">Archivio importato, attività locali e modifiche in attesa sono cifrati con AES-256-GCM quando l'app è bloccata. La password locale non è la password del file di scambio. Il blocco automatico interviene dopo 5 minuti di inattività o oltre 60 secondi in background.</p>
+        <button id="clearLocalArchive" class="secondary-button">Elimina solo archivio importato</button>
+        <button id="clearAllLocalData" class="danger-button" type="button">Elimina tutti i dati locali</button>
+      </div>
     </div>
   </div>
 
+
+  <section id="changeVaultPasswordModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="changeVaultHeading">
+    <div class="modal-sheet compact-sheet vault-rotation-sheet">
+      <div class="modal-top"><button id="closeVaultPasswordChange" class="back-button" type="button" aria-label="Chiudi cambio password">‹</button><div><div class="eyebrow dark">PROTEZIONE LOCALE</div><h2 id="changeVaultHeading">Cambia password</h2></div></div>
+      <p class="muted">La modifica ricifra l'intero archivio conservato sul dispositivo. Prima salva un backup ed esporta le modifiche in sospeso. Chiudi le altre schede della Companion.</p>
+      <label class="vault-password-label" for="vaultOldPassword">Password attuale</label>
+      <input id="vaultOldPassword" type="password" autocomplete="current-password" spellcheck="false">
+      <label class="vault-password-label" for="vaultNewPassword">Nuova password (minimo 12 caratteri)</label>
+      <input id="vaultNewPassword" type="password" autocomplete="new-password" minlength="12" spellcheck="false">
+      <label class="vault-password-label" for="vaultNewPasswordConfirm">Conferma nuova password</label>
+      <input id="vaultNewPasswordConfirm" type="password" autocomplete="new-password" minlength="12" spellcheck="false">
+      <div id="vaultChangeError" class="error" role="alert" aria-live="polite"></div>
+      <button id="saveVaultPasswordChange" type="button">Ricifra archivio e aggiorna password</button>
+    </div>
+  </section>
+
     <div id="checklistComposerModal" class="modal hidden">
     <div class="modal-sheet compact-sheet checklist-composer-sheet">
-      <div class="modal-top"><button id="closeChecklistComposer" class="back-button">‹</button><div><div class="eyebrow dark">CHECKLIST RAPIDA</div><h2>Incolla elenco</h2></div></div>
+      <div class="modal-top"><button id="closeChecklistComposer" class="back-button" type="button" aria-label="Chiudi checklist">‹</button><div><div class="eyebrow dark">CHECKLIST RAPIDA</div><h2>Incolla elenco</h2></div></div>
       <p class="muted">Puoi incollare una checklist scritta anche con ChatGPT. Ogni riga diventa una voce spuntabile. Se una riga contiene una data o un orario, il Companion li riconosce automaticamente.</p>
       <label>Titolo checklist<input id="checklistComposerTitle" type="text" placeholder="Es. Adempimenti udienza / documenti da preparare"></label>
       <div class="two-cols"><label>Data di riferimento<input id="checklistComposerDate" type="date"></label><label>Priorità<select id="checklistComposerPriority"><option>BASSA</option><option selected>MEDIA</option><option>ALTA</option><option>URGENTE</option></select></label></div>
@@ -395,6 +445,19 @@
 
 <div id="undoToast" class="undo-toast hidden"><span>Checklist aggiornata</span><button id="undoAction" type="button">Annulla</button></div>
 
-  <script src="app.js?v=20.1"></script>
+  <script src="companion-version.js?v=20.8"></script>
+  <script src="companion-core.js?v=20.8"></script>
+  <script src="planner-batch-mobile.js?v=20.8"></script>
+  <script src="companion-vault.js?v=20.8"></script>
+  <script src="companion-storage.js?v=20.8"></script>
+  <script src="app.js?v=20.8"></script>
+  <script src="app-calendar.js?v=20.8"></script>
+  <script src="app-planner.js?v=20.8"></script>
+  <script src="app-workflows.js?v=20.8"></script>
+  <script src="app-calculators.js?v=20.8"></script>
+  <script src="app-actions.js?v=20.8"></script>
+  <script src="app-details.js?v=20.8"></script>
+  <script src="app-privacy.js?v=20.8"></script>
+  <script src="app-bootstrap.js?v=20.8"></script>
 </body>
 </html>

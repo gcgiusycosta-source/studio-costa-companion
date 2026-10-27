@@ -1,0 +1,11 @@
+STUDIO COSTA COMPANION V20.8 — VERSIONE ABBINATA A STUDIO COSTA V18 BETA8 PATCH
+
+PUBBLICAZIONE GITHUB: caricare tutti i file dello ZIP COMPANION nella radice del repository, sostituendo quelli precedenti. Non eliminare file personali o archivi dati di altri servizi.
+
+PRIMO ACCESSO: HTTPS (GitHub Pages), password cassaforte e importazione di un nuovo .scmobile esportato dal gestionale aggiornato. Il file .scmobile non deve essere pubblicato sul repository.
+
+FLUSSO DI RITORNO: in Companion esportare .scmr, nel gestionale usare Importa risposte cifrate. L'elenco delle operazioni non importabili viene ora mostrato PRIMA dell'esportazione; il gestionale le scarta ancora in modo sicuro. Per note udienza e checklist di udienza serve la patch desktop inclusa nell'archivio completo. Non trattare mai il semplice export come conferma di acquisizione.
+
+Le funzioni di planner avanzato, creazione nuovi appuntamenti/attivita, creazione checklist non sono tuttora importabili automaticamente dalla V18 beta8. L'app le conserva ma l'utente deve gestirle separatamente. Scadenze legali: sola consultazione, non modificabili in mobile.
+
+Non caricare database, backup, file .scmobile o .scmr su GitHub pubblico.

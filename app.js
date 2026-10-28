@@ -109,76 +109,11 @@ function base64UrlToBytes(value){
 }
 const b64bytes=base64UrlToBytes;
 
-async function decryptCompanion(packageData,password){
-  let parsed;
-  if(packageData?.format==='SCM0'){
-    parsed=await decodePlainExchange(packageData,'SCM0');
-  }else{
-  if(!crypto?.subtle){
-    throw new Error("Il browser non supporta la decifratura sicura.");
-  }
-  if(!packageData||packageData.format!=="SCM1"){
-    throw new Error("File SCM1 non valido.");
-  }
-  if(Number(packageData.formatVersion||1)!==1){
-    throw new Error("Versione del formato non supportata.");
-  }
-  if(!password||password.length<8){
-    throw new Error("Inserire la password usata durante l’esportazione.");
-  }
-
-  let material;
-  let key;
-  try{
-    material=await crypto.subtle.importKey(
-      "raw",
-      new TextEncoder().encode(password),
-      "PBKDF2",
-      false,
-      ["deriveKey"]
-    );
-    key=await crypto.subtle.deriveKey(
-      {
-        name:"PBKDF2",
-        hash:"SHA-256",
-        salt:base64UrlToBytes(packageData.salt),
-        iterations:Number(packageData.iterations||300000)
-      },
-      material,
-      {name:"AES-GCM",length:256},
-      false,
-      ["decrypt"]
-    );
-  }catch(_){
-    throw new Error("File SCM1 non valido.");
-  }
-
-  let decryptedBytes;
-  try{
-    decryptedBytes=await crypto.subtle.decrypt(
-      {
-        name:"AES-GCM",
-        iv:base64UrlToBytes(packageData.nonce),
-        additionalData:new TextEncoder().encode(
-          "STUDIO-COSTA-COMPANION-SCM1"
-        )
-      },
-      key,
-      base64UrlToBytes(packageData.ciphertext)
-    );
-  }catch(_){
-    throw new Error("Password errata o archivio non autentico.");
-  }
-
-
-  try{
-    const plainText=new TextDecoder("utf-8").decode(decryptedBytes);
-    parsed=JSON.parse(plainText);
-  }catch(_){
-    throw new Error("Contenuto decifrato non interpretabile come JSON.");
-  }
-
-  }
+async function decryptCompanion(packageData){
+  // Gli aggiornamenti correnti del gestionale usano il formato SCM0 senza password.
+  // I pacchetti storici SCM1 non sono decifrabili senza la password originale.
+  if(packageData?.format!=='SCM0')throw Error('Formato non supportato: riesportare .scmobile dal gestionale aggiornato.');
+  const parsed=await decodePlainExchange(packageData,'SCM0');
   const archiveData=
     parsed&&parsed.data&&typeof parsed.data==="object"
       ? parsed.data
@@ -246,7 +181,8 @@ async function importCompanionFile(file,password){
     throw new Error("File SCM1 non valido.");
   }
 
-  const decoded=await decryptCompanion(packageData,password);
+  if(packageData?.format==='SCM1')throw new Error('File storico cifrato: riesportare il file .scmobile dal gestionale aggiornato. Il nuovo formato SCM0 non richiede password.');
+  const decoded=await decryptCompanion(packageData);
   const candidate={
     generated_at:decoded.exportedAt,
     archive_id:decoded.archiveId,

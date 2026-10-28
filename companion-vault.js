@@ -1,7 +1,9 @@
-/* Studio Costa Companion — Vault locale V1.
- * Cifra snapshot, attività e modifiche in attesa con AES-256-GCM.
- * NON modifica il formato dei pacchetti SCM1/SCMR1/SCL1.
- * Migrazione da V20.5 atomica: se fallisce, la transazione lascia gli store legacy intatti.
+/* Studio Costa Companion — Vault locale senza password V2.
+ * I dati rimangono cifrati con AES-256-GCM tramite CryptoKey NON estraibile,
+ * conservata nel database IndexedDB della medesima origine. Non esiste login.
+ * La migrazione di un vecchio Vault V1 richiede una sola volta la vecchia password.
+ * I dati precedenti rimangono integri se la conversione non termina.
+ * ATTENZIONE: il possesso del dispositivo/profilo browser consente l'accesso.
  */
 (function(root,factory){
   const api=factory();
@@ -45,7 +47,9 @@
       const [meta,...counts]=await Promise.all(requests);
       await done(tx);
       if(meta&&counts.some(Boolean))throw Error('Dati legacy rilevati accanto al Vault: aggiornamento sospeso per sicurezza. Non cancellare nulla.');
-      return {initialized:!!meta,legacyCount:counts.reduce((a,b)=>a+b,0),legacyCounts:Object.fromEntries(PLAIN.map((s,i)=>[s,counts[i]]))};
+      if(meta && ![1,2].includes(meta.version))throw Error('Versione del Vault non supportata: dati non modificati.');
+      return {initialized:!!meta,mode:!meta?'new':meta.version===1?'password':'device',
+        legacyCount:counts.reduce((a,b)=>a+b,0),legacyCounts:Object.fromEntries(PLAIN.map((s,i)=>[s,counts[i]]))};
     }finally{db.close();}
   }
   async function derive(password,salt,iterations){
@@ -63,42 +67,43 @@
     return JSON.parse(decoder.decode(bytes));
   }
   const recordId=(store,k)=>`${store}:${encodeURIComponent(String(k))}`;
-  function requireUnlock(){if(!sessionKey)throw Error('Archivio bloccato: sbloccarlo prima di continuare.');return sessionKey;}
-  async function setup(password){
-    if(typeof password!=='string'||password.length<12)throw Error('La password locale deve contenere almeno 12 caratteri.');
+  function requireUnlock(){if(!sessionKey)throw Error('Archivio non inizializzato: ricaricare la Companion.');return sessionKey;}
+  async function deviceKey(){
+    if(!webcrypto()?.subtle)throw Error('Web Crypto non disponibile: utilizzare HTTPS o localhost.');
+    // Non salvare password automatiche nel codice, nei cookie o nel localStorage.
+    return webcrypto().subtle.generateKey({name:'AES-GCM',length:256},false,['encrypt','decrypt']);
+  }
+  async function setupDevice(){
     const state=await inspect();
-    if(state.initialized)throw Error('Protezione locale già attivata.');
+    if(state.initialized)throw Error('Archivio locale già inizializzato.');
     const db=await openDB();
     try{
-      // Tutte le letture prima dell'avvio della transazione di scrittura.
       const legacy={};
       for(const store of PLAIN){
-        const tx=db.transaction(store,'readonly');
-        const finish=done(tx);
+        const tx=db.transaction(store,'readonly'), completion=done(tx);
         const values=req(tx.objectStore(store).getAll());
         const keys=store==='data'?req(tx.objectStore(store).getAllKeys()):null;
         legacy[store]=await values;
         if(keys){
-          const sourceKeys=await keys;
-          if(sourceKeys.some(k=>k!=='snapshot'))throw Error('Archivio precedente contiene chiavi non riconosciute: migrazione bloccata per evitare perdite di dati.');
+          const names=await keys;
+          if(names.some(k=>k!=='snapshot'))throw Error('Archivio precedente contiene chiavi sconosciute: dati non modificati.');
         }
-        await finish;
+        await completion;
       }
-      const salt=random(16), key=await derive(password,salt,ITERATIONS);
-      const verifier=await seal(key,'verifier',{check:'STUDIO-COSTA-VAULT-READY',version:1});
+      const key=await deviceKey();
+      const verifier=await seal(key,'verifier',{check:'STUDIO-COSTA-VAULT-READY',version:2});
       const encrypted=[];
       for(const store of PLAIN){
         for(const value of legacy[store]){
           const k=store==='data'?'snapshot':store==='local_tasks'?value.id:value.action_id;
-          if(k===undefined||k===null||k==='')throw Error('Elemento legacy privo di identificativo: migrazione interrotta senza cancellazioni.');
+          if(k===undefined||k===null||k==='')throw Error('Elemento privo di identificativo: migrazione annullata.');
           encrypted.push(await seal(key,recordId(store,k),value));
         }
       }
-      // Verifica di un round-trip crittografico prima di cancellare gli originali.
       if(encrypted.length)await unseal(key,encrypted[0]);
       const tx=db.transaction([...PLAIN,META,RECORDS],'readwrite');
       const completion=done(tx);
-      tx.objectStore(META).add({id:'vault',version:1,salt:b64(salt),iterations:ITERATIONS,verifier,createdAt:new Date().toISOString()});
+      tx.objectStore(META).add({id:'vault',version:2,mode:'device',key,verifier,createdAt:new Date().toISOString()});
       for(const record of encrypted)tx.objectStore(RECORDS).put(record);
       for(const store of PLAIN)tx.objectStore(store).clear();
       await completion;
@@ -106,64 +111,62 @@
       return {migrated:encrypted.length};
     }finally{db.close();}
   }
-  async function unlock(password){
+  async function openAutomatically(){
     sessionKey=null;
     const db=await openDB();
-    let meta;
     try{
-      const tx=db.transaction(META,'readonly');meta=await req(tx.objectStore(META).get('vault'));await done(tx);
+      const tx=db.transaction(META,'readonly'),complete=done(tx);
+      const meta=await req(tx.objectStore(META).get('vault'));
+      await complete;
+      if(!meta)throw Error('Archivio non inizializzato.');
+      if(meta.version===1)throw Error('Archivio precedente protetto da password: eseguire la conversione una sola volta.');
+      if(meta.version!==2||!meta.key)throw Error('Chiave del dispositivo assente: archivio non modificato.');
+      try{
+        const value=await unseal(meta.key,meta.verifier);
+        if(value.check!=='STUDIO-COSTA-VAULT-READY')throw Error('Verifica non riuscita.');
+      }catch(_){throw Error('Chiave del dispositivo non valida: non cancellare i dati locali.');}
+      sessionKey=meta.key;
+      return true;
     }finally{db.close();}
-    if(!meta)throw Error('Protezione locale non ancora attivata.');
-    if(meta.version!==1)throw Error('Versione archivio locale non supportata.');
-    const key=await derive(password,from64(meta.salt),meta.iterations);
-    try{
-      const v=await unseal(key,meta.verifier);
-      if(v.check!=='STUDIO-COSTA-VAULT-READY')throw Error('Verifica non riuscita');
-    }catch(_){throw Error('Password locale errata o archivio danneggiato.');}
-    sessionKey=key;
-    return true;
   }
-  // Rotazione password: nessun record viene rimosso prima che la nuova cifratura sia pronta.
-  // La sostituzione di meta e record avviene in un'unica transazione IndexedDB.
-  async function changePassword(oldPassword,newPassword){
-    requireUnlock();
-    if(typeof newPassword!=='string'||newPassword.length<12)throw Error('La nuova password deve contenere almeno 12 caratteri.');
-    if(newPassword===oldPassword)throw Error('Scegli una password diversa da quella precedente.');
+  // Il Vault protetto V1 non può essere aperto senza la password originale.
+  // Conversione atomica: in caso di errore, rimangono intatti tutti i record V1.
+  async function migratePasswordVault(oldPassword){
+    if(typeof oldPassword!=='string'||!oldPassword)throw Error('Inserire una volta la password locale precedente.');
+    const state=await inspect();
+    if(state.mode!=='password')throw Error('Non è presente un archivio da convertire.');
     const db=await openDB();
     try{
-      const tx=db.transaction([META,RECORDS],'readonly');
-      const complete=done(tx);
-      const metaPromise=req(tx.objectStore(META).get('vault'));
-      const recordsPromise=req(tx.objectStore(RECORDS).getAll());
-      const [meta,records]=await Promise.all([metaPromise,recordsPromise]);
-      await complete;
-      if(!meta||meta.version!==1)throw Error('Formato Vault non supportato.');
+      const read=db.transaction([META,RECORDS],'readonly');const readDone=done(read);
+      const [meta,records]=await Promise.all([
+        req(read.objectStore(META).get('vault')),
+        req(read.objectStore(RECORDS).getAll())
+      ]);
+      await readDone;
+      if(!meta||meta.version!==1)throw Error('Formato precedente non valido.');
       const oldKey=await derive(oldPassword,from64(meta.salt),meta.iterations);
       try{
-        const v=await unseal(oldKey,meta.verifier);
-        if(v.check!=='STUDIO-COSTA-VAULT-READY')throw Error('Controllo non valido');
-      }catch(_){throw Error('Password locale attuale errata.');}
-      // Decifratura totale: se un record e' corrotto, non modificare nulla.
-      const plain=[];
+        const result=await unseal(oldKey,meta.verifier);
+        if(result.check!=='STUDIO-COSTA-VAULT-READY')throw Error('Verifica non riuscita.');
+      }catch(_){throw Error('Password precedente errata: dati conservati, riprovare.');}
+      const decrypted=[];
       for(const record of records){
-        if(!record?.id||typeof record.id!=='string')throw Error('Record del Vault non valido: rotazione annullata.');
-        try{plain.push([record.id,await unseal(oldKey,record)]);}
-        catch(_){throw Error("Un record del Vault non è leggibile: password invariata.");}
+        if(!record||typeof record.id!=='string')throw Error('Archivio incompleto: conversione annullata.');
+        try{decrypted.push([record.id,await unseal(oldKey,record)]);}
+        catch(_){throw Error('Record precedente non leggibile: conversione annullata senza cancellazioni.');}
       }
-      const salt=random(16),nextKey=await derive(newPassword,salt,ITERATIONS);
+      const key=await deviceKey();
       const replacement=[];
-      for(const [id,value] of plain)replacement.push(await seal(nextKey,id,value));
-      const verifier=await seal(nextKey,'verifier',{check:'STUDIO-COSTA-VAULT-READY',version:1});
-      // Il roundtrip crittografico avviene prima della scrittura.
-      if(replacement.length)await unseal(nextKey,replacement[0]);
-      await unseal(nextKey,verifier);
-      const write=db.transaction([META,RECORDS],'readwrite');
-      const written=done(write);
-      write.objectStore(META).put({...meta,salt:b64(salt),iterations:ITERATIONS,verifier,rotatedAt:new Date().toISOString()});
-      for(const row of replacement)write.objectStore(RECORDS).put(row);
+      for(const [id,value] of decrypted)replacement.push(await seal(key,id,value));
+      const verifier=await seal(key,'verifier',{check:'STUDIO-COSTA-VAULT-READY',version:2});
+      await unseal(key,verifier);
+      if(replacement.length)await unseal(key,replacement[0]);
+      const write=db.transaction([META,RECORDS],'readwrite'), written=done(write);
+      write.objectStore(META).put({id:'vault',version:2,mode:'device',key,verifier,createdAt:meta.createdAt||new Date().toISOString(),migratedAt:new Date().toISOString()});
+      for(const record of replacement)write.objectStore(RECORDS).put(record);
       await written;
-      sessionKey=nextKey;
-      return {rotated:replacement.length};
+      sessionKey=key;
+      return {migrated:replacement.length};
     }finally{db.close();}
   }
   function lock(){sessionKey=null;}
@@ -195,5 +198,5 @@
       await completion;sessionKey=null;
     }finally{db.close();}
   }
-  return {inspect,setup,unlock,changePassword,lock,isUnlocked,get,all,put,remove,clearEverything,openDB};
+  return {inspect,setupDevice,openAutomatically,migratePasswordVault,lock,isUnlocked,get,all,put,remove,clearEverything,openDB};
 });

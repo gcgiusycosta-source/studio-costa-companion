@@ -84,18 +84,22 @@ async function deleteLocalTask(){
   localTasks=localTasks.filter(t=>t.id!==id);
   closeLocalTask();updatePendingIndicator();renderAll();
 }
-async function exportLocalTasks(){const password=prompt("Password backup attività locali (almeno 8 caratteri)");if(!password||password.length<8)return;const payload={formatVersion:1,deviceId:deviceId(),createdAt:new Date().toISOString(),localTasks};const env=await encryptEnvelope(payload,password,"SCL1","STUDIO-COSTA-LOCAL-TASKS-SCL1");downloadJson(env,`AttivitaLocaliCosta_${plannerLocalToday()}.scl`)}
-async function decryptGenericEnvelope(envelope,password,format,aadText){
-  if(!envelope||envelope.format!==format)throw new Error("Formato del backup non valido.");
-  const material=await crypto.subtle.importKey("raw",new TextEncoder().encode(password),"PBKDF2",false,["deriveKey"]);
-  const key=await crypto.subtle.deriveKey({name:"PBKDF2",hash:"SHA-256",salt:base64UrlToBytes(envelope.salt),iterations:Number(envelope.iterations||300000)},material,{name:"AES-GCM",length:256},false,["decrypt"]);
-  let plain;try{plain=await crypto.subtle.decrypt({name:"AES-GCM",iv:base64UrlToBytes(envelope.nonce),additionalData:new TextEncoder().encode(aadText)},key,base64UrlToBytes(envelope.ciphertext))}catch(_){throw new Error("Password errata o backup non autentico.")}
-  return JSON.parse(new TextDecoder().decode(plain));
+async function exportLocalTasks(){
+  const payload={formatVersion:1,deviceId:deviceId(),createdAt:new Date().toISOString(),localTasks};
+  const file=await makePlainExchange(payload,'SCL0');
+  downloadJson(file,`AttivitaLocaliCosta_${plannerLocalToday()}.scl`);
 }
-async function importLocalTasksFile(file,password){
-  if(!file)throw new Error("Selezionare un file .scl."); const envelope=JSON.parse(await file.text()); const payload=await decryptGenericEnvelope(envelope,password,"SCL1","STUDIO-COSTA-LOCAL-TASKS-SCL1");
-  if(!Array.isArray(payload.localTasks))throw new Error("Backup attività locali non valido.");
-  for(const task of payload.localTasks)await storePut("local_tasks",task); localTasks=await storeAll("local_tasks"); renderAll();
+async function importLocalTasksFile(file){
+  if(!file)throw Error('Selezionare un file .scl.');
+  let envelope;
+  try{envelope=JSON.parse(await file.text());}catch(_){throw Error('Backup attività non valido.');}
+  if(envelope?.format==='SCL1')throw Error('Questo backup storico è cifrato: aprirlo nella vecchia Companion con la password originale e riesportarlo nel nuovo formato SCL0.');
+  const payload=await decodePlainExchange(envelope,'SCL0');
+  if(!Array.isArray(payload.localTasks))throw Error('Backup attività non valido.');
+  // Prima verifica tutto il contenuto, evitando importazioni parziali per record invalidi.
+  if(payload.localTasks.some(task=>!task||typeof task!=='object'||!task.id))throw Error('Backup attività contiene record privi di identificativo.');
+  for(const task of payload.localTasks)await storePut('local_tasks',task);
+  localTasks=await storeAll('local_tasks');renderAll();
 }
 
 async function completeLocalTask(id){

@@ -23,16 +23,16 @@ function bindChecklistNavigation(){
 async function boot(){
   bindChecklistNavigation();
   const state=await CompanionVault.inspect();
-  companionVaultUI(state);
+  if(state.mode==='password'){
+    companionVaultUI(state); // Solo conversione una tantum dell'archivio precedente.
+    return;
+  }
+  if(state.mode==='new')await CompanionVault.setupDevice();
+  else await CompanionVault.openAutomatically();
+  await bootUnlocked();
 }
 $('vaultAction').onclick=vaultProceed;
 $('vaultPassword').addEventListener('keydown',event=>{if(event.key==='Enter')vaultProceed();});
-$('vaultConfirm').addEventListener('keydown',event=>{if(event.key==='Enter')vaultProceed();});
-$('lockCompanionNow')?.addEventListener('click',companionLockNow);
-$('openVaultPasswordChange')?.addEventListener('click',openVaultPasswordChange);
-$('closeVaultPasswordChange')?.addEventListener('click',closeVaultPasswordChange);
-$('saveVaultPasswordChange')?.addEventListener('click',saveVaultPasswordChange);
-$('changeVaultPasswordModal')?.addEventListener('click',event=>{if(event.target.id==='changeVaultPasswordModal')closeVaultPasswordChange();});
 const companionFileInput=$("companionFile");
 if(companionFileInput){
   companionFileInput.onchange=()=>{
@@ -46,8 +46,7 @@ $("companionImportButton").onclick=async()=>{
   const button=$("companionImportButton");
   button.disabled=true; button.textContent="Importazione in corso…";
   try{
-    await importCompanionFile($("companionFile").files[0],$("companionPassword").value);
-    $("companionPassword").value=""; // non trattenere la password nel campo DOM
+    await importCompanionFile($("companionFile").files[0]);
     showApp();
   }catch(error){$("pairError").textContent=error.message}
   finally{button.disabled=false;button.textContent="Importa aggiornamento"}
@@ -114,9 +113,9 @@ $("closeHearingOutcome").onclick=closeHearingOutcome;
 $("saveHearingOutcome").onclick=()=>saveHearingOutcome().catch(e=>alert(e.message));
 $("exportMobileActions").onclick=()=>exportMobileActions().catch(e=>alert(e.message));
 $("exportLocalTasks").onclick=()=>exportLocalTasks().catch(e=>alert(e.message));
-$("importLocalTasks").onclick=async()=>{const file=$("localTasksFile").files[0];if(!file)return;const password=prompt("Password del backup attività locali");if(!password)return;try{await importLocalTasksFile(file,password);alert("Attività locali importate.")}catch(e){alert(e.message)}};
+$("importLocalTasks").onclick=async()=>{const file=$("localTasksFile").files[0];if(!file)return;try{await importLocalTasksFile(file);alert("Attività locali importate.")}catch(e){alert(e.message)}};
 $("exportCalendarIcs").onclick=exportCalendarIcs;
-boot().catch(error=>{$('vaultScreen').classList.remove('hidden');$('vaultError').textContent='Impossibile verificare l’archivio locale: '+error.message;});
+boot().catch(error=>{companionVaultUI();$('vaultAction').classList.add('hidden');$('vaultPassword').classList.add('hidden');$('vaultPasswordLabel').classList.add('hidden');$('vaultHeading').textContent='Archivio non disponibile';$('vaultExplanation').textContent='Nessun dato è stato eliminato. Non cancellare la memoria del browser.';$('vaultError').textContent=error.message;});
 
 
 document.querySelectorAll("[data-top-target]").forEach(button=>button.addEventListener("click",()=>switchView(button.dataset.topTarget)));
@@ -128,10 +127,3 @@ if($('plannerPrev'))$('plannerPrev').onclick=()=>plannerMove(-1);
 if($('plannerNext'))$('plannerNext').onclick=()=>plannerMove(1);
 if($('plannerToday'))$('plannerToday').onclick=()=>{$('plannerDate').value=plannerLocalToday();renderMobilePlanner($('plannerDate').value,calendarItems());};
 if($('plannerDate'))$('plannerDate').onchange=()=>renderMobilePlanner($('plannerDate').value,calendarItems());
-
-$('companionFile')?.addEventListener('change',async()=>{
- const input=$('companionPassword');if(!input)return;
- let encrypted=false;
- try{const f=$('companionFile').files?.[0];encrypted=f?JSON.parse(await f.text()).format==='SCM1':false;}catch(_){}
- input.hidden=!encrypted;input.disabled=!encrypted;input.value='';
-});

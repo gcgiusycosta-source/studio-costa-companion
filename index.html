@@ -7,31 +7,26 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Studio Costa">
-  <link rel="manifest" href="manifest.json?v=20.9">
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=20.9">
-  <link rel="stylesheet" href="styles-foundation.css?v=20.9">
-  <link rel="stylesheet" href="styles-legacy.css?v=20.9">
-  <link rel="stylesheet" href="styles.css?v=20.9">
-  <title>Studio Costa Companion V20.9</title>
+  <link rel="manifest" href="manifest.json?v=20.10">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=20.10">
+  <link rel="stylesheet" href="styles-foundation.css?v=20.10">
+  <link rel="stylesheet" href="styles-legacy.css?v=20.10">
+  <link rel="stylesheet" href="styles.css?v=20.10">
+  <title>Studio Costa Companion V20.10</title>
 </head>
 <body>
-  <!-- Vault locale: nessun contenuto dell'archivio è reso prima dello sblocco. -->
-  <section id="vaultScreen" class="screen vault-screen hidden" aria-label="Protezione dell'archivio locale">
+  <!-- Solo recupero una tantum da Vault V1 protetto: per gli altri accessi nessuna password. -->
+  <section id="vaultScreen" class="screen vault-screen hidden" aria-label="Conversione archivio precedente">
     <div class="vault-card">
       <div class="vault-mark" aria-hidden="true">GC</div>
-      <div class="eyebrow dark">STUDIO LEGALE COSTA · ARCHIVIO PROTETTO</div>
-      <h1 id="vaultHeading">Sblocca la Companion</h1>
-      <p id="vaultExplanation"></p>
-      <label class="vault-label" for="vaultPassword">Password locale</label>
-      <input id="vaultPassword" type="password" autocomplete="off" minlength="12" placeholder="Password locale" spellcheck="false">
-      <div id="vaultConfirmRow" class="hidden">
-        <label class="vault-label" for="vaultConfirm">Ripeti la password locale</label>
-        <input id="vaultConfirm" type="password" autocomplete="off" minlength="12" placeholder="Conferma password" spellcheck="false">
-      </div>
-      <label id="vaultBackupRow" class="vault-backup hidden"><input id="vaultBackupConfirmed" type="checkbox"><span>Confermo di avere salvato un backup dei dati e delle modifiche locali dalla versione precedente prima della migrazione.</span></label>
-      <button id="vaultAction" type="button">Sblocca</button>
+      <div class="eyebrow dark">STUDIO LEGALE COSTA · AGGIORNAMENTO ARCHIVIO</div>
+      <h1 id="vaultHeading">Converti archivio precedente</h1>
+      <p id="vaultExplanation">Questo dispositivo contiene dati cifrati dalla vecchia Companion. Inserisci la password precedente una sola volta per conservarli: i successivi accessi saranno automatici e senza password.</p>
+      <label id="vaultPasswordLabel" class="vault-label" for="vaultPassword">Vecchia password (solo questa volta)</label>
+      <input id="vaultPassword" type="password" autocomplete="current-password" placeholder="Password precedente" spellcheck="false">
+      <button id="vaultAction" type="button">Converti e apri senza password</button>
       <div id="vaultError" class="error" role="alert"></div>
-      <p class="vault-footnote">La password locale non è recuperabile da remoto. Senza di essa i dati locali cifrati potrebbero non essere recuperabili; i file di backup esterni rimangono indipendenti.</p>
+      <p class="vault-footnote">Non cancellare i dati del browser: senza la vecchia password non è possibile decifrare l'archivio già protetto.</p>
     </div>
   </section>
 
@@ -40,11 +35,10 @@
       <div class="brand">GC</div>
       <div class="eyebrow dark">STUDIO LEGALE COSTA</div>
       <h1>Importa aggiornamento</h1>
-      <p>Seleziona il file <strong>StudioCostaMobile.scmobile</strong> generato dal gestionale. Gli aggiornamenti nuovi non richiedono password e non sono cifrati. La password resta necessaria soltanto per i vecchi file SCM1.</p>
+      <p>Seleziona il file <strong>StudioCostaMobile.scmobile</strong> generato dal gestionale. Nessuna password richiesta. Usa un file nel formato attuale SCM0; i vecchi file cifrati SCM1 devono essere riesportati dal gestionale.</p>
       <input id="companionFile" class="file-input-native" type="file" aria-label="Seleziona file .scmobile">
       <label for="companionFile" id="companionFilePicker" class="file-picker-button" role="button" tabindex="0">Seleziona file .scmobile</label>
       <div id="companionFileName" class="file-selected-name">Nessun file selezionato</div>
-      <input id="companionPassword" hidden disabled type="password" autocomplete="current-password" placeholder="Solo per vecchi file cifrati">
       <button id="companionImportButton">Importa aggiornamento</button>
       <div id="pairError" class="error"></div>
     </div>
@@ -88,9 +82,9 @@
 
 
 
-    <!-- V20.9: unico menu, orizzontale in alto su tablet e in basso su telefono. -->
+    <!-- V20.10: unico menu, orizzontale in alto su tablet e in basso su telefono. -->
     <nav class="bottom-nav companion-bottom-nav five-nav v19-nav" aria-label="Navigazione principale">
-      <button data-target="homeView" class="active" aria-current="page"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 10.5L12 4l8 6.5"/><path d="M6.5 9.5V20h11V20.9"/><path d="M10 20v-5.5h4V20"/></svg></span><em>Home</em></button>
+      <button data-target="homeView" class="active" aria-current="page"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 10.5L12 4l8 6.5"/><path d="M6.5 9.5V20h11V20.10"/><path d="M10 20v-5.5h4V20"/></svg></span><em>Home</em></button>
       <button data-target="hearingsView"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 4v15"/><path d="M7 7h10"/><path d="M5 7c0 3-2 5-2 5h6c0 0-2-2-2-5"/><path d="M19 7c0 3-2 5-2 5h6c0 0-2-2-2-5"/><path d="M8 20h8"/></svg></span><em>Udienze</em></button>
       <button data-target="agendaView"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16"/><path d="M8 14h3M13 14h3M8 17h3"/></svg></span><em>Agenda</em></button>
       <button data-target="plannerView"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 4v3M16 4v3M4 10h16M8 14h8M8 17h5"/></svg></span><em>Planner</em></button>
@@ -239,7 +233,7 @@
         <section id="taxesTool" class="plugin-tool hidden">
           <div class="tool-card">
             <h3>Tributi locali</h3>
-            <p class="muted">Decadenza dell'accertamento, riscossione ed eventuale prescrizione secondo il medesimo motore della versione desktop V20.9.</p>
+            <p class="muted">Decadenza dell'accertamento, riscossione ed eventuale prescrizione secondo il medesimo motore della versione desktop V20.10.</p>
             <div class="tool-subcard">
               <strong>1. Tributo e decadenza</strong>
               <label>Tributo<select id="taxType" class="tool-input"><option>IMU</option><option>TARI</option><option>TASI</option><option>ICP/CANONE (verificare disciplina propria)</option><option>ALTRO TRIBUTO LOCALE</option></select></label>
@@ -382,7 +376,7 @@
 
   <div id="settingsModal" class="modal hidden">
     <div class="modal-sheet compact-sheet">
-      <div class="modal-top"><button id="closeSettings" class="back-button" type="button" aria-label="Chiudi impostazioni">‹</button><div><div class="eyebrow dark">COMPANION V20.9</div><h2>Sincronizzazione e privacy</h2></div></div>
+      <div class="modal-top"><button id="closeSettings" class="back-button" type="button" aria-label="Chiudi impostazioni">‹</button><div><div class="eyebrow dark">COMPANION V20.10</div><h2>Sincronizzazione e privacy</h2></div></div>
       <div class="detail-section">
         <h3>Modifiche da riportare al PC</h3>
         <p id="pendingActionsInfo" class="muted"></p>
@@ -405,30 +399,13 @@
       </div>
       <div class="detail-section">
         <h3>Gestione dati sul dispositivo</h3>
-        <button id="lockCompanionNow" class="secondary-button" type="button">Blocca ora l’archivio</button>
-        <button id="openVaultPasswordChange" class="secondary-button" type="button">Cambia password locale</button>
-        <p class="muted">Archivio importato, attività locali e modifiche in attesa sono cifrati con AES-256-GCM quando l'app è bloccata. La password locale non è la password del file di scambio. Il blocco automatico interviene dopo 5 minuti di inattività o oltre 60 secondi in background.</p>
+        <p class="muted">Accesso automatico, senza password. I dati conservati in questa Companion sono cifrati con AES-256-GCM tramite una chiave locale del dispositivo. Chi può usare questo browser può consultare l'archivio. I file esportati .scmobile, .scmr e .scl non sono cifrati: conservarli in modo riservato.</p>
         <button id="clearLocalArchive" class="secondary-button">Elimina solo archivio importato</button>
         <button id="clearAllLocalData" class="danger-button" type="button">Elimina tutti i dati locali</button>
       </div>
     </div>
   </div>
 
-
-  <section id="changeVaultPasswordModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="changeVaultHeading">
-    <div class="modal-sheet compact-sheet vault-rotation-sheet">
-      <div class="modal-top"><button id="closeVaultPasswordChange" class="back-button" type="button" aria-label="Chiudi cambio password">‹</button><div><div class="eyebrow dark">PROTEZIONE LOCALE</div><h2 id="changeVaultHeading">Cambia password</h2></div></div>
-      <p class="muted">La modifica ricifra l'intero archivio conservato sul dispositivo. Prima salva un backup ed esporta le modifiche in sospeso. Chiudi le altre schede della Companion.</p>
-      <label class="vault-password-label" for="vaultOldPassword">Password attuale</label>
-      <input id="vaultOldPassword" type="password" autocomplete="current-password" spellcheck="false">
-      <label class="vault-password-label" for="vaultNewPassword">Nuova password (minimo 12 caratteri)</label>
-      <input id="vaultNewPassword" type="password" autocomplete="new-password" minlength="12" spellcheck="false">
-      <label class="vault-password-label" for="vaultNewPasswordConfirm">Conferma nuova password</label>
-      <input id="vaultNewPasswordConfirm" type="password" autocomplete="new-password" minlength="12" spellcheck="false">
-      <div id="vaultChangeError" class="error" role="alert" aria-live="polite"></div>
-      <button id="saveVaultPasswordChange" type="button">Ricifra archivio e aggiorna password</button>
-    </div>
-  </section>
 
     <div id="checklistComposerModal" class="modal hidden">
     <div class="modal-sheet compact-sheet checklist-composer-sheet">
@@ -445,19 +422,19 @@
 
 <div id="undoToast" class="undo-toast hidden"><span>Checklist aggiornata</span><button id="undoAction" type="button">Annulla</button></div>
 
-  <script src="companion-version.js?v=20.9"></script>
-  <script src="companion-core.js?v=20.9"></script>
-  <script src="planner-batch-mobile.js?v=20.9"></script>
-  <script src="companion-vault.js?v=20.9"></script>
-  <script src="companion-storage.js?v=20.9"></script>
-  <script src="app.js?v=20.9"></script>
-  <script src="app-calendar.js?v=20.9"></script>
-  <script src="app-planner.js?v=20.9"></script>
-  <script src="app-workflows.js?v=20.9"></script>
-  <script src="app-calculators.js?v=20.9"></script>
-  <script src="app-actions.js?v=20.9"></script>
-  <script src="app-details.js?v=20.9"></script>
-  <script src="app-privacy.js?v=20.9"></script>
-  <script src="app-bootstrap.js?v=20.9"></script>
+  <script src="companion-version.js?v=20.10"></script>
+  <script src="companion-core.js?v=20.10"></script>
+  <script src="planner-batch-mobile.js?v=20.10"></script>
+  <script src="companion-vault.js?v=20.10"></script>
+  <script src="companion-storage.js?v=20.10"></script>
+  <script src="app.js?v=20.10"></script>
+  <script src="app-calendar.js?v=20.10"></script>
+  <script src="app-planner.js?v=20.10"></script>
+  <script src="app-workflows.js?v=20.10"></script>
+  <script src="app-calculators.js?v=20.10"></script>
+  <script src="app-actions.js?v=20.10"></script>
+  <script src="app-details.js?v=20.10"></script>
+  <script src="app-privacy.js?v=20.10"></script>
+  <script src="app-bootstrap.js?v=20.10"></script>
 </body>
 </html>

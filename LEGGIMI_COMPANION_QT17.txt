@@ -1,4 +1,4 @@
-STUDIO COSTA COMPANION 20.9 — ABBINATA A QT19 19.2
+STUDIO COSTA COMPANION 20.10 — ABBINATA A QT19 19.2
 Aggiornare TUTTI i file di questa cartella nella stessa posizione HTTPS della
 Companion già usata, conservando origine e percorso per mantenere i dati locali.
 Non caricare database, .scmobile o .scmr nell'hosting o nel repository.
@@ -12,7 +12,17 @@ può leggerlo. Il checksum verifica corruzioni accidentali, non l'autenticità.
 Le modifiche rientrano nel desktop mediante importa risposte .scmr con revisione
 esplicita. Non esiste una sincronizzazione automatica in rete.
 
-I file storici SCM1/SCMR1 restano cifrati e richiedono la password originale.
-La protezione locale della Companion e la password desktop restano operative.
+La Companion 20.10 NON richiede password per gli accessi abituali, per importare
+nuovi .scmobile SCM0, per esportare .scmr SCMR0 né per backup .scl SCL0.
+Il Vault locale conserva cifratura AES-256-GCM con chiave non estraibile memorizzata
+nel browser del dispositivo. Non è più presente il blocco per inattività.
+ATTENZIONE: chi accede al browser/dispositivo accede anche ai dati.
+La prima apertura di un archivio locale già cifrato con Vault V1 chiede UNA
+SOLA VOLTA la vecchia password per migrare tutti i dati senza cancellazioni.
+Senza la vecchia password non è possibile recuperare i dati già cifrati.
+I vecchi file SCM1 e SCL1 cifrati non sono importabili senza password: rigenerare
+il .scmobile dal desktop e il .scl dalla precedente Companion, se necessario.
+I nuovi backup .scl SCL0 NON SONO CIFRATI: trattarli come dati riservati.
+La password eventualmente prevista dal gestionale DESKTOP non viene modificata.
 Il calcolatore mobile storico resta distinto dal nuovo riparto desktop in terzi.
 Pubblicazione effettiva, Safari/iPhone e aggiornamento PWA reale non verificati qui.

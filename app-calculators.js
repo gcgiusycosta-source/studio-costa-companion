@@ -99,13 +99,5 @@ async function exportMobileActions(){
   for(const a of actions){a.sync_status="ESPORTATA";await storePut("pending_mobile_actions",a)}
   updatePendingIndicator();renderHome();
 }
-async function encryptEnvelope(payload,password,format,aadText){
-  const salt=crypto.getRandomValues(new Uint8Array(16)); const nonce=crypto.getRandomValues(new Uint8Array(12)); const iterations=300000;
-  const material=await crypto.subtle.importKey("raw",new TextEncoder().encode(password),"PBKDF2",false,["deriveKey"]);
-  const key=await crypto.subtle.deriveKey({name:"PBKDF2",hash:"SHA-256",salt,iterations},material,{name:"AES-GCM",length:256},false,["encrypt"]);
-  const cipher=new Uint8Array(await crypto.subtle.encrypt({name:"AES-GCM",iv:nonce,additionalData:new TextEncoder().encode(aadText)},key,new TextEncoder().encode(JSON.stringify(payload))));
-  const enc=b=>{let s="";b.forEach(x=>s+=String.fromCharCode(x));return btoa(s).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/g,"")};
-  return {format,formatVersion:1,iterations,salt:enc(salt),nonce:enc(nonce),ciphertext:enc(cipher),createdAt:new Date().toISOString()};
-}
 function downloadJson(data,name){const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
 

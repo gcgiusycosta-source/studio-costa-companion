@@ -7,12 +7,12 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Studio Costa">
-  <link rel="manifest" href="manifest.json?v=20.8">
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=20.8">
-  <link rel="stylesheet" href="styles-foundation.css?v=20.8">
-  <link rel="stylesheet" href="styles-legacy.css?v=20.8">
-  <link rel="stylesheet" href="styles.css?v=20.8">
-  <title>Studio Costa Companion V20.8</title>
+  <link rel="manifest" href="manifest.json?v=20.9">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=20.9">
+  <link rel="stylesheet" href="styles-foundation.css?v=20.9">
+  <link rel="stylesheet" href="styles-legacy.css?v=20.9">
+  <link rel="stylesheet" href="styles.css?v=20.9">
+  <title>Studio Costa Companion V20.9</title>
 </head>
 <body>
   <!-- Vault locale: nessun contenuto dell'archivio è reso prima dello sblocco. -->
@@ -40,11 +40,11 @@
       <div class="brand">GC</div>
       <div class="eyebrow dark">STUDIO LEGALE COSTA</div>
       <h1>Importa aggiornamento</h1>
-      <p>Seleziona il file <strong>StudioCostaMobile.scmobile</strong> generato dal gestionale e inserisci la password scelta durante l’esportazione.</p>
+      <p>Seleziona il file <strong>StudioCostaMobile.scmobile</strong> generato dal gestionale. Gli aggiornamenti nuovi non richiedono password e non sono cifrati. La password resta necessaria soltanto per i vecchi file SCM1.</p>
       <input id="companionFile" class="file-input-native" type="file" aria-label="Seleziona file .scmobile">
       <label for="companionFile" id="companionFilePicker" class="file-picker-button" role="button" tabindex="0">Seleziona file .scmobile</label>
       <div id="companionFileName" class="file-selected-name">Nessun file selezionato</div>
-      <input id="companionPassword" type="password" autocomplete="current-password" placeholder="Password archivio">
+      <input id="companionPassword" hidden disabled type="password" autocomplete="current-password" placeholder="Solo per vecchi file cifrati">
       <button id="companionImportButton">Importa aggiornamento</button>
       <div id="pairError" class="error"></div>
     </div>
@@ -88,9 +88,9 @@
 
 
 
-    <!-- V20.8: unico menu, orizzontale in alto su tablet e in basso su telefono. -->
+    <!-- V20.9: unico menu, orizzontale in alto su tablet e in basso su telefono. -->
     <nav class="bottom-nav companion-bottom-nav five-nav v19-nav" aria-label="Navigazione principale">
-      <button data-target="homeView" class="active" aria-current="page"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 10.5L12 4l8 6.5"/><path d="M6.5 9.5V20h11V20.8"/><path d="M10 20v-5.5h4V20"/></svg></span><em>Home</em></button>
+      <button data-target="homeView" class="active" aria-current="page"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 10.5L12 4l8 6.5"/><path d="M6.5 9.5V20h11V20.9"/><path d="M10 20v-5.5h4V20"/></svg></span><em>Home</em></button>
       <button data-target="hearingsView"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 4v15"/><path d="M7 7h10"/><path d="M5 7c0 3-2 5-2 5h6c0 0-2-2-2-5"/><path d="M19 7c0 3-2 5-2 5h6c0 0-2-2-2-5"/><path d="M8 20h8"/></svg></span><em>Udienze</em></button>
       <button data-target="agendaView"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16"/><path d="M8 14h3M13 14h3M8 17h3"/></svg></span><em>Agenda</em></button>
       <button data-target="plannerView"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 4v3M16 4v3M4 10h16M8 14h8M8 17h5"/></svg></span><em>Planner</em></button>
@@ -239,7 +239,7 @@
         <section id="taxesTool" class="plugin-tool hidden">
           <div class="tool-card">
             <h3>Tributi locali</h3>
-            <p class="muted">Decadenza dell'accertamento, riscossione ed eventuale prescrizione secondo il medesimo motore della versione desktop V20.8.</p>
+            <p class="muted">Decadenza dell'accertamento, riscossione ed eventuale prescrizione secondo il medesimo motore della versione desktop V20.9.</p>
             <div class="tool-subcard">
               <strong>1. Tributo e decadenza</strong>
               <label>Tributo<select id="taxType" class="tool-input"><option>IMU</option><option>TARI</option><option>TASI</option><option>ICP/CANONE (verificare disciplina propria)</option><option>ALTRO TRIBUTO LOCALE</option></select></label>
@@ -382,7 +382,7 @@
 
   <div id="settingsModal" class="modal hidden">
     <div class="modal-sheet compact-sheet">
-      <div class="modal-top"><button id="closeSettings" class="back-button" type="button" aria-label="Chiudi impostazioni">‹</button><div><div class="eyebrow dark">COMPANION V20.8</div><h2>Sincronizzazione e privacy</h2></div></div>
+      <div class="modal-top"><button id="closeSettings" class="back-button" type="button" aria-label="Chiudi impostazioni">‹</button><div><div class="eyebrow dark">COMPANION V20.9</div><h2>Sincronizzazione e privacy</h2></div></div>
       <div class="detail-section">
         <h3>Modifiche da riportare al PC</h3>
         <p id="pendingActionsInfo" class="muted"></p>
@@ -445,19 +445,19 @@
 
 <div id="undoToast" class="undo-toast hidden"><span>Checklist aggiornata</span><button id="undoAction" type="button">Annulla</button></div>
 
-  <script src="companion-version.js?v=20.8"></script>
-  <script src="companion-core.js?v=20.8"></script>
-  <script src="planner-batch-mobile.js?v=20.8"></script>
-  <script src="companion-vault.js?v=20.8"></script>
-  <script src="companion-storage.js?v=20.8"></script>
-  <script src="app.js?v=20.8"></script>
-  <script src="app-calendar.js?v=20.8"></script>
-  <script src="app-planner.js?v=20.8"></script>
-  <script src="app-workflows.js?v=20.8"></script>
-  <script src="app-calculators.js?v=20.8"></script>
-  <script src="app-actions.js?v=20.8"></script>
-  <script src="app-details.js?v=20.8"></script>
-  <script src="app-privacy.js?v=20.8"></script>
-  <script src="app-bootstrap.js?v=20.8"></script>
+  <script src="companion-version.js?v=20.9"></script>
+  <script src="companion-core.js?v=20.9"></script>
+  <script src="planner-batch-mobile.js?v=20.9"></script>
+  <script src="companion-vault.js?v=20.9"></script>
+  <script src="companion-storage.js?v=20.9"></script>
+  <script src="app.js?v=20.9"></script>
+  <script src="app-calendar.js?v=20.9"></script>
+  <script src="app-planner.js?v=20.9"></script>
+  <script src="app-workflows.js?v=20.9"></script>
+  <script src="app-calculators.js?v=20.9"></script>
+  <script src="app-actions.js?v=20.9"></script>
+  <script src="app-details.js?v=20.9"></script>
+  <script src="app-privacy.js?v=20.9"></script>
+  <script src="app-bootstrap.js?v=20.9"></script>
 </body>
 </html>

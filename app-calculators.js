@@ -92,19 +92,9 @@ function renderPlugins(){
 async function exportMobileActions(){
   const actions=pendingMobileActions.filter(a=>a.sync_status!=="IMPORTATA_DAL_GESTIONALE");
   if(!actions.length){alert("Non ci sono modifiche da esportare.");return}
-  // Il rientro Qt17 V18 beta8 accetta soltanto queste tipologie.
-  // Le altre rimangono esportabili per conservazione, ma non devono risultare sincronizzate.
-  const desktopSupported=new Set(["complete_task","reopen_task","task_status", "creset_mark_worked","creset_mark_constituted","creset_set_status", "hearing_note","hearing_outcome", "complete_checklist_item","reopen_checklist_item", "hearing_checklist_status"]);
-  const unsupported=actions.filter(a=>!desktopSupported.has(a.action_type));
-  if(unsupported.length){
-    const types=[...new Set(unsupported.map(a=>a.action_type))].sort().join(", ");
-    const warning=`ATTENZIONE: ${unsupported.length} operazioni non sono importabili dal gestionale V18 beta8.\n\nTipi: ${types}\n\nIl file cifrato le conserverà, ma il desktop NON le applicherà: andranno gestite separatamente. Vuoi comunque esportare tutte le modifiche?`;
-    if(!confirm(warning))return;
-  }
-  const password=prompt("Password del file modifiche (almeno 8 caratteri)");
-  if(!password||password.length<8){if(password)alert("La password deve avere almeno 8 caratteri.");return}
+  if(!confirm('Esportare le modifiche senza password? Il file non sarà cifrato.'))return;
   const payload={formatVersion:3,companionVersion:COMPANION_BUILD,sourceArchiveId:snapshot?.archive_id||"",sourceGeneratedAt:snapshot?.generated_at||"",deviceId:deviceId(),createdAt:new Date().toISOString(),actions:actions.map(a=>({actionId:a.action_id,actionType:a.action_type,actionAt:a.action_at,deviceId:a.device_id,...a}))};
-  const envelope=await encryptEnvelope(payload,password,"SCMR1","STUDIO-COSTA-COMPANION-SCMR1");
+  const envelope=await makePlainExchange(payload,"SCMR0");
   downloadJson(envelope,`StudioCostaMobile_Risposte_${new Date().toISOString().slice(0,16).replace(/[:T]/g,"-")}.scmr`);
   for(const a of actions){a.sync_status="ESPORTATA";await storePut("pending_mobile_actions",a)}
   updatePendingIndicator();renderHome();

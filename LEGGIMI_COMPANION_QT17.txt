@@ -1,0 +1,18 @@
+STUDIO COSTA COMPANION 20.9 — ABBINATA A QT19 19.2
+Aggiornare TUTTI i file di questa cartella nella stessa posizione HTTPS della
+Companion già usata, conservando origine e percorso per mantenere i dati locali.
+Non caricare database, .scmobile o .scmr nell'hosting o nel repository.
+Accettare l'aggiornamento dell'app quando viene proposto; non cancellare i dati
+locali del browser. Conservare prima le modifiche pendenti esportando il .scmr.
+
+Dal desktop: autorizzare i singoli fascicoli nella scheda pratica, quindi
+Plugin > Esporta aggiornamento Companion .scmobile. Importarlo nella Companion.
+I nuovi SCM0/SCMR0 NON chiedono password e NON SONO CIFRATI: chi possiede il file
+può leggerlo. Il checksum verifica corruzioni accidentali, non l'autenticità.
+Le modifiche rientrano nel desktop mediante importa risposte .scmr con revisione
+esplicita. Non esiste una sincronizzazione automatica in rete.
+
+I file storici SCM1/SCMR1 restano cifrati e richiedono la password originale.
+La protezione locale della Companion e la password desktop restano operative.
+Il calcolatore mobile storico resta distinto dal nuovo riparto desktop in terzi.
+Pubblicazione effettiva, Safari/iPhone e aggiornamento PWA reale non verificati qui.

@@ -1,6 +1,6 @@
-/* Companion V20.8 — shell atomico: nessun skipWaiting automatico sugli aggiornamenti. */
-const CACHE = 'studio-costa-companion-v20-8-shell';
-const APP_SHELL = ["./","./index.html","./ai-touch.jpg","./app-actions.js?v=20.8","./app-bootstrap.js?v=20.8","./app-calculators.js?v=20.8","./app-calendar.js?v=20.8","./app-details.js?v=20.8","./app-planner.js?v=20.8","./app-privacy.js?v=20.8","./app-workflows.js?v=20.8","./app.js?v=20.8","./apple-touch-icon.png","./brand-wave.jpg","./companion-core.js?v=20.8","./companion-storage.js?v=20.8","./companion-vault.js?v=20.8","./companion-version.js?v=20.8","./courtroom.jpg","./digital-home.jpg","./icon-192.png","./icon-512.png","./logo-gc.png","./office.jpg","./planner-batch-mobile.js?v=20.8","./sea-desk.jpg","./styles-foundation.css?v=20.8","./styles-legacy.css?v=20.8","./styles.css?v=20.8","./manifest.json?v=20.8"];
+/* Companion V20.6 — shell atomico: nessun skipWaiting automatico sugli aggiornamenti. */
+const CACHE = 'studio-costa-companion-v20-9-shell';
+const APP_SHELL = ["./","./index.html","./ai-touch.jpg","./app-actions.js?v=20.9","./app-bootstrap.js?v=20.9","./app-calculators.js?v=20.9","./app-calendar.js?v=20.9","./app-details.js?v=20.9","./app-planner.js?v=20.9","./app-privacy.js?v=20.9","./app-workflows.js?v=20.9","./app.js?v=20.9","./apple-touch-icon.png","./brand-wave.jpg","./companion-core.js?v=20.9","./companion-storage.js?v=20.9","./companion-vault.js?v=20.9","./companion-version.js?v=20.9","./courtroom.jpg","./digital-home.jpg","./icon-192.png","./icon-512.png","./logo-gc.png","./office.jpg","./planner-batch-mobile.js?v=20.9","./sea-desk.jpg","./styles-foundation.css?v=20.9","./styles-legacy.css?v=20.9","./styles.css?v=20.9","./manifest.json?v=20.9"];
 const SHELL_PATHS = new Set(APP_SHELL.filter(x=>!x.endsWith('/')).map(x=>new URL(x,self.registration.scope).pathname));
 self.addEventListener('install', event => {
   event.waitUntil((async()=>{

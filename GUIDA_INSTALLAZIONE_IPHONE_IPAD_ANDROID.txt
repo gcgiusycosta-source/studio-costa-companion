@@ -1,0 +1,16 @@
+COMPANION 20.9 — INSTALLAZIONE E AGGIORNAMENTO
+
+1. Pubblicare tutto il contenuto Companion_Web sulla propria origine HTTPS.
+   Per aggiornare, mantenere identici origine e percorso della vecchia app.
+2. Su Safari iPhone/iPad: Condividi > Aggiungi alla schermata Home.
+   Su Android: Installa app nel menu Chrome.
+3. Sbloccare normalmente la protezione locale già configurata.
+4. Da QT19 19.2 esportare il .scmobile, poi importarlo nella Companion.
+   Il nuovo file non richiede password: NON è cifrato e va custodito.
+5. Esportare le modifiche come .scmr; nel desktop aprire Importa risposte
+   Companion, verificare le azioni e confermare quelle supportate.
+
+Non pubblicare dati .db, .scmobile o .scmr sul sito. Non cancellare i dati locali
+del browser per aggiornare il codice. I file storici cifrati richiedono ancora
+la password originale. La password di accesso al gestionale resta invariata.
+Non è una build nativa App Store. La pubblicazione non è eseguita dal pacchetto.

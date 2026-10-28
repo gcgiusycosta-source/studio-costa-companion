@@ -128,3 +128,10 @@ if($('plannerPrev'))$('plannerPrev').onclick=()=>plannerMove(-1);
 if($('plannerNext'))$('plannerNext').onclick=()=>plannerMove(1);
 if($('plannerToday'))$('plannerToday').onclick=()=>{$('plannerDate').value=plannerLocalToday();renderMobilePlanner($('plannerDate').value,calendarItems());};
 if($('plannerDate'))$('plannerDate').onchange=()=>renderMobilePlanner($('plannerDate').value,calendarItems());
+
+$('companionFile')?.addEventListener('change',async()=>{
+ const input=$('companionPassword');if(!input)return;
+ let encrypted=false;
+ try{const f=$('companionFile').files?.[0];encrypted=f?JSON.parse(await f.text()).format==='SCM1':false;}catch(_){}
+ input.hidden=!encrypted;input.disabled=!encrypted;input.value='';
+});

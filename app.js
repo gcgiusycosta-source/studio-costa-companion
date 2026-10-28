@@ -110,6 +110,10 @@ function base64UrlToBytes(value){
 const b64bytes=base64UrlToBytes;
 
 async function decryptCompanion(packageData,password){
+  let parsed;
+  if(packageData?.format==='SCM0'){
+    parsed=await decodePlainExchange(packageData,'SCM0');
+  }else{
   if(!crypto?.subtle){
     throw new Error("Il browser non supporta la decifratura sicura.");
   }
@@ -166,7 +170,7 @@ async function decryptCompanion(packageData,password){
     throw new Error("Password errata o archivio non autentico.");
   }
 
-  let parsed;
+
   try{
     const plainText=new TextDecoder("utf-8").decode(decryptedBytes);
     parsed=JSON.parse(plainText);
@@ -174,6 +178,7 @@ async function decryptCompanion(packageData,password){
     throw new Error("Contenuto decifrato non interpretabile come JSON.");
   }
 
+  }
   const archiveData=
     parsed&&parsed.data&&typeof parsed.data==="object"
       ? parsed.data
@@ -223,8 +228,9 @@ async function decryptCompanion(packageData,password){
   };
 
 
-  // Un archivio può essere legittimamente vuoto: l'autorizzazione Mobile
-  // potrebbe non essere stata concessa ad alcun fascicolo.
+  if(normalized.practices.length===0){
+    throw new Error("Archivio valido ma privo di pratiche.");
+  }
   return normalized;
 }
 
@@ -429,4 +435,17 @@ function switchView(target){
   if(target==="toolsView")renderPlugins();
   if(target==="searchView")renderGlobalSearch();
   window.scrollTo({top:0,behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});
+}
+
+async function makePlainExchange(payload,format){
+  const text=JSON.stringify(payload);
+  const hash=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(text));
+  return {format,formatVersion:1,encrypted:false,payload:text,sha256:Array.from(new Uint8Array(hash)).map(v=>v.toString(16).padStart(2,'0')).join('')};
+}
+async function decodePlainExchange(data,format){
+  if(data?.format!==format||data.formatVersion!==1||typeof data.payload!=='string')throw new Error('Formato non valido');
+  const hash=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(data.payload));
+  const digest=Array.from(new Uint8Array(hash)).map(v=>v.toString(16).padStart(2,'0')).join('');
+  if(digest!==data.sha256)throw new Error('Checksum del file non valido');
+  return JSON.parse(data.payload);
 }

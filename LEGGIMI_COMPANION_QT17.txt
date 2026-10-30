@@ -1,4 +1,4 @@
-STUDIO COSTA COMPANION 20.10 — ABBINATA A QT19 19.2
+STUDIO COSTA COMPANION 20.11 — ABBINATA A QT19 19.2
 Aggiornare TUTTI i file di questa cartella nella stessa posizione HTTPS della
 Companion già usata, conservando origine e percorso per mantenere i dati locali.
 Non caricare database, .scmobile o .scmr nell'hosting o nel repository.
@@ -12,17 +12,27 @@ può leggerlo. Il checksum verifica corruzioni accidentali, non l'autenticità.
 Le modifiche rientrano nel desktop mediante importa risposte .scmr con revisione
 esplicita. Non esiste una sincronizzazione automatica in rete.
 
-La Companion 20.10 NON richiede password per gli accessi abituali, per importare
-nuovi .scmobile SCM0, per esportare .scmr SCMR0 né per backup .scl SCL0.
-Il Vault locale conserva cifratura AES-256-GCM con chiave non estraibile memorizzata
-nel browser del dispositivo. Non è più presente il blocco per inattività.
-ATTENZIONE: chi accede al browser/dispositivo accede anche ai dati.
-La prima apertura di un archivio locale già cifrato con Vault V1 chiede UNA
-SOLA VOLTA la vecchia password per migrare tutti i dati senza cancellazioni.
-Senza la vecchia password non è possibile recuperare i dati già cifrati.
-I vecchi file SCM1 e SCL1 cifrati non sono importabili senza password: rigenerare
-il .scmobile dal desktop e il .scl dalla precedente Companion, se necessario.
-I nuovi backup .scl SCL0 NON SONO CIFRATI: trattarli come dati riservati.
+La Companion 20.11 NON presenta più alcun campo password o PIN:
+accesso automatico anche se era presente un Vault V1 cifrato. In tale caso
+il vecchio database viene preservato INALTERATO e la Companion apre un archivio
+nuovo e separato senza password. Per rivedere pratiche e appuntamenti, importare
+il nuovo file .scmobile dal gestionale. Le attività presenti SOLO nel vecchio
+archivio non diventano leggibili senza la chiave originale: conservarne una
+copia e NON cancellare i dati dell'origine browser.
+L'archivio attivo è cifrato AES-256-GCM con chiave locale non estraibile;
+l'accesso al dispositivo/browser consente di accedervi senza credenziali.
+I vecchi file SCM1 e SCL1 cifrati non si possono leggere automaticamente:
+riesportare un file attuale .scmobile dal gestionale. I nuovi scambi non sono
+cifrati: conservarli fuori dall'hosting e dal repository pubblico.
+
+ATTENZIONE AGGIORNAMENTO PWA: lo ZIP sul computer NON aggiorna da solo
+la pagina Companion installata sul telefono. Pubblicare tutti i file in
+Companion_Web sulla medesima origine HTTPS. Aprire la Companion online,
+applicare l'eventuale notifica Aggiorna ora (per uscire dalla vecchia versione),
+chiudere e riaprire l'app. Verificare che l'interfaccia mostri v20.11.
+Senza pubblicazione della Companion aggiornata, resta la versione precedente.
+Non cancellare cache/dati locali prima di salvare le modifiche pendenti.
+
 La password eventualmente prevista dal gestionale DESKTOP non viene modificata.
 Il calcolatore mobile storico resta distinto dal nuovo riparto desktop in terzi.
 Pubblicazione effettiva, Safari/iPhone e aggiornamento PWA reale non verificati qui.

@@ -7,33 +7,28 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Studio Costa">
-  <link rel="manifest" href="manifest.json?v=20.10">
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=20.10">
-  <link rel="stylesheet" href="styles-foundation.css?v=20.10">
-  <link rel="stylesheet" href="styles-legacy.css?v=20.10">
-  <link rel="stylesheet" href="styles.css?v=20.10">
-  <title>Studio Costa Companion V20.10</title>
+  <link rel="manifest" href="manifest.json?v=20.11">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=20.11">
+  <link rel="stylesheet" href="styles-foundation.css?v=20.11">
+  <link rel="stylesheet" href="styles-legacy.css?v=20.11">
+  <link rel="stylesheet" href="styles.css?v=20.11">
+  <title>Studio Costa Companion V20.11</title>
 </head>
 <body>
-  <!-- Solo recupero una tantum da Vault V1 protetto: per gli altri accessi nessuna password. -->
-  <section id="vaultScreen" class="screen vault-screen hidden" aria-label="Conversione archivio precedente">
+  <section id="vaultScreen" class="screen vault-screen hidden" aria-label="Errore archivio locale">
     <div class="vault-card">
       <div class="vault-mark" aria-hidden="true">GC</div>
-      <div class="eyebrow dark">STUDIO LEGALE COSTA · AGGIORNAMENTO ARCHIVIO</div>
-      <h1 id="vaultHeading">Converti archivio precedente</h1>
-      <p id="vaultExplanation">Questo dispositivo contiene dati cifrati dalla vecchia Companion. Inserisci la password precedente una sola volta per conservarli: i successivi accessi saranno automatici e senza password.</p>
-      <label id="vaultPasswordLabel" class="vault-label" for="vaultPassword">Vecchia password (solo questa volta)</label>
-      <input id="vaultPassword" type="password" autocomplete="current-password" placeholder="Password precedente" spellcheck="false">
-      <button id="vaultAction" type="button">Converti e apri senza password</button>
+      <div class="eyebrow dark">STUDIO LEGALE COSTA · ARCHIVIO LOCALE</div>
+      <h1 id="vaultHeading">Archivio non disponibile</h1>
+      <p id="vaultExplanation">I dati sono stati lasciati intatti. Non cancellare i dati del browser.</p>
       <div id="vaultError" class="error" role="alert"></div>
-      <p class="vault-footnote">Non cancellare i dati del browser: senza la vecchia password non è possibile decifrare l'archivio già protetto.</p>
     </div>
   </section>
 
   <section id="pairScreen" class="screen hidden">
     <div class="login-card">
       <div class="brand">GC</div>
-      <div class="eyebrow dark">STUDIO LEGALE COSTA</div>
+      <div class="eyebrow dark">STUDIO LEGALE COSTA · COMPANION V20.11</div>
       <h1>Importa aggiornamento</h1>
       <p>Seleziona il file <strong>StudioCostaMobile.scmobile</strong> generato dal gestionale. Nessuna password richiesta. Usa un file nel formato attuale SCM0; i vecchi file cifrati SCM1 devono essere riesportati dal gestionale.</p>
       <input id="companionFile" class="file-input-native" type="file" aria-label="Seleziona file .scmobile">
@@ -41,15 +36,18 @@
       <div id="companionFileName" class="file-selected-name">Nessun file selezionato</div>
       <button id="companionImportButton">Importa aggiornamento</button>
       <div id="pairError" class="error"></div>
+      <p id="pairLegacyNotice" class="muted hidden" role="status">È stato rilevato un vecchio archivio cifrato, conservato senza modifiche. Non è leggibile automaticamente. Per ritrovare pratiche e appuntamenti, importa un nuovo file .scmobile dal gestionale. Le eventuali attività registrate solo nel vecchio archivio non compariranno qui.</p>
     </div>
   </section>
 
   <section id="emptyScreen" class="screen hidden">
     <div class="login-card">
       <div class="brand">GC</div>
+      <div class="eyebrow dark">COMPANION V20.11 · ACCESSO AUTOMATICO</div>
       <h1>Nessun archivio locale</h1>
       <p>Esporta dal gestionale il file <strong>StudioCostaMobile.scmobile</strong>, trasferiscilo su iPhone e importalo qui.</p>
       <button id="emptyImportButton">Importa aggiornamento</button>
+      <p id="emptyLegacyNotice" class="muted hidden" role="status">Il vecchio archivio cifrato è stato conservato intatto, in uno spazio separato. Per visualizzare nuovamente pratiche e appuntamenti, importa un file .scmobile recente dal gestionale. Le attività presenti esclusivamente nel vecchio archivio non sono accessibili automaticamente.</p>
     </div>
   </section>
 
@@ -69,7 +67,7 @@
         </div>
       </div>
       <div class="header-actions compact-actions">
-        <span id="networkStatus" class="network-status" role="status" aria-live="polite">Offline</span>
+        <span id="networkStatus" class="network-status" role="status" aria-live="polite">Offline</span><span class="companion-version-label">v20.11</span>
         <div class="sync-pill" id="headerSync">—</div>
         <button id="settingsButton" class="icon-button" aria-label="Sincronizzazione e privacy">⋯</button>
       </div>
@@ -82,7 +80,7 @@
 
 
 
-    <!-- V20.10: unico menu, orizzontale in alto su tablet e in basso su telefono. -->
+    <!-- V20.11: unico menu, orizzontale in alto su tablet e in basso su telefono. -->
     <nav class="bottom-nav companion-bottom-nav five-nav v19-nav" aria-label="Navigazione principale">
       <button data-target="homeView" class="active" aria-current="page"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 10.5L12 4l8 6.5"/><path d="M6.5 9.5V20h11V20.10"/><path d="M10 20v-5.5h4V20"/></svg></span><em>Home</em></button>
       <button data-target="hearingsView"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 4v15"/><path d="M7 7h10"/><path d="M5 7c0 3-2 5-2 5h6c0 0-2-2-2-5"/><path d="M19 7c0 3-2 5-2 5h6c0 0-2-2-2-5"/><path d="M8 20h8"/></svg></span><em>Udienze</em></button>
@@ -422,19 +420,19 @@
 
 <div id="undoToast" class="undo-toast hidden"><span>Checklist aggiornata</span><button id="undoAction" type="button">Annulla</button></div>
 
-  <script src="companion-version.js?v=20.10"></script>
-  <script src="companion-core.js?v=20.10"></script>
-  <script src="planner-batch-mobile.js?v=20.10"></script>
-  <script src="companion-vault.js?v=20.10"></script>
-  <script src="companion-storage.js?v=20.10"></script>
-  <script src="app.js?v=20.10"></script>
-  <script src="app-calendar.js?v=20.10"></script>
-  <script src="app-planner.js?v=20.10"></script>
-  <script src="app-workflows.js?v=20.10"></script>
-  <script src="app-calculators.js?v=20.10"></script>
-  <script src="app-actions.js?v=20.10"></script>
-  <script src="app-details.js?v=20.10"></script>
-  <script src="app-privacy.js?v=20.10"></script>
-  <script src="app-bootstrap.js?v=20.10"></script>
+  <script src="companion-version.js?v=20.11"></script>
+  <script src="companion-core.js?v=20.11"></script>
+  <script src="planner-batch-mobile.js?v=20.11"></script>
+  <script src="companion-vault.js?v=20.11"></script>
+  <script src="companion-storage.js?v=20.11"></script>
+  <script src="app.js?v=20.11"></script>
+  <script src="app-calendar.js?v=20.11"></script>
+  <script src="app-planner.js?v=20.11"></script>
+  <script src="app-workflows.js?v=20.11"></script>
+  <script src="app-calculators.js?v=20.11"></script>
+  <script src="app-actions.js?v=20.11"></script>
+  <script src="app-details.js?v=20.11"></script>
+  <script src="app-privacy.js?v=20.11"></script>
+  <script src="app-bootstrap.js?v=20.11"></script>
 </body>
 </html>

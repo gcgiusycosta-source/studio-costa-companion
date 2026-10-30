@@ -86,3 +86,6 @@
 .vault-rotation-sheet #saveVaultPasswordChange{display:block;min-height:48px;margin-top:15px;width:100%;background:var(--ui-green);color:white;border:0;border-radius:12px;font-weight:750}
 .vault-rotation-sheet #saveVaultPasswordChange:disabled{opacity:.6}
 .vault-rotation-sheet .error{min-height:16px;padding-top:6px}
+
+/* V20.11 — indicatore discreto della build PWA per distinguere cache precedenti. */
+.companion-version-label{font-size:10px;letter-spacing:.02em;color:var(--ink-muted,#697577);font-weight:700;white-space:nowrap;}

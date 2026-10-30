@@ -35,7 +35,8 @@ async function clearArchive(){
 }
 async function clearAllLocalData(){
   const pendingCount=pendingMobileActions.filter(a=>a.sync_status!=="IMPORTATA_DAL_GESTIONALE").length;
-  const warning=`Eliminazione completa dei dati nel browser: archivio, ${localTasks.length} attività locali e ${pendingCount} modifiche non confermate. Non sarà possibile recuperarle senza un backup. Continuare?`;
+  const hasOldArchive=await CompanionVault.preservedLegacyVault();
+  const warning=`Eliminazione dei dati della Companion attiva: archivio, ${localTasks.length} attività locali e ${pendingCount} modifiche non confermate. Non sarà possibile recuperarli senza backup.${hasOldArchive?' Il precedente archivio cifrato, separato, sarà conservato intatto.':''} Continuare?`;
   if(!confirm(warning))return;
   if(prompt('Per confermare scrivi esattamente ELIMINA')!=="ELIMINA")return;
   await CompanionVault.clearEverything();
@@ -43,14 +44,13 @@ async function clearAllLocalData(){
   snapshot=null;localTasks=[];pendingMobileActions=[];
   location.reload();
 }
-// La schermata di recupero compare soltanto per convertire un vecchio Vault V1.
-function companionVaultUI(state){
+// Schermata di errore di archivio; nessuna richiesta di credenziali.
+function companionVaultUI(){
   $('vaultScreen').classList.remove('hidden');
   $('pairScreen').classList.add('hidden');
   $('emptyScreen').classList.add('hidden');
   $('app').classList.add('hidden');
   $('vaultError').textContent='';
-  $('vaultPassword').value='';
 }
 async function bootUnlocked(){
   $('vaultScreen').classList.add('hidden');
@@ -58,14 +58,4 @@ async function bootUnlocked(){
   if(hasCache)showApp();
   else $('emptyScreen').classList.remove('hidden');
 }
-async function vaultProceed(){
-  const button=$('vaultAction');
-  button.disabled=true;
-  $('vaultError').textContent='';
-  try{
-    await CompanionVault.migratePasswordVault($('vaultPassword').value);
-    $('vaultPassword').value='';
-    await bootUnlocked();
-  }catch(error){$('vaultError').textContent=error.message;}
-  finally{button.disabled=false;}
-}
+

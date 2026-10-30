@@ -1,9 +1,8 @@
-/* Studio Costa Companion — Vault locale senza password V2.
- * I dati rimangono cifrati con AES-256-GCM tramite CryptoKey NON estraibile,
- * conservata nel database IndexedDB della medesima origine. Non esiste login.
- * La migrazione di un vecchio Vault V1 richiede una sola volta la vecchia password.
- * I dati precedenti rimangono integri se la conversione non termina.
- * ATTENZIONE: il possesso del dispositivo/profilo browser consente l'accesso.
+/* Studio Costa Companion — Vault locale senza password V20.11.
+ * Per un Vault V1 cifrato: non chiedere credenziali e non alterare i dati.
+ * Aprire un archivio parallelo senza password, conservando l'originale integro.
+ * Dati cifrati con AES-256-GCM e chiave di dispositivo non estraibile.
+ * ATTENZIONE: il possesso del browser/profilo consente l'accesso.
  */
 (function(root,factory){
   const api=factory();
@@ -11,13 +10,12 @@
   else root.CompanionVault=api;
 })(typeof globalThis!=='undefined'?globalThis:this,function(){
   'use strict';
-  const DB_NAME='studio-costa-mobile', DB_VERSION=4;
+  const DB_NAME='studio-costa-mobile', PASSWORDLESS_DB_NAME='studio-costa-mobile-no-password-v3', DB_VERSION=4;
   const PLAIN=['data','local_tasks','pending_mobile_actions'];
   const META='secure_meta', RECORDS='secure_records';
   const LABEL='STUDIO-COSTA-LOCAL-VAULT-V1';
-  const ITERATIONS=350000;
   const encoder=new TextEncoder(), decoder=new TextDecoder();
-  let sessionKey=null;
+  let sessionKey=null, selectedDatabase=null, choosingDatabase=null;
   const webcrypto=()=>globalThis.crypto;
   const random=n=>webcrypto().getRandomValues(new Uint8Array(n));
   function b64(buf){return BufferLikeToBase64(new Uint8Array(buf));}
@@ -25,8 +23,8 @@
   function from64(x){let s=String(x).replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';return Uint8Array.from(atob(s),x=>x.charCodeAt(0));}
   function req(request){return new Promise((ok,no)=>{request.onsuccess=()=>ok(request.result);request.onerror=()=>no(request.error);});}
   function done(tx){return new Promise((ok,no)=>{tx.oncomplete=()=>ok();tx.onabort=()=>no(tx.error||Error('Transazione annullata'));tx.onerror=()=>no(tx.error||Error('Errore IndexedDB'));});}
-  function openDB(){return new Promise((resolve,reject)=>{
-    const r=indexedDB.open(DB_NAME,DB_VERSION);
+  function rawOpenDB(name){return new Promise((resolve,reject)=>{
+    const r=indexedDB.open(name,DB_VERSION);
     r.onupgradeneeded=()=>{
       const db=r.result;
       if(!db.objectStoreNames.contains('data'))db.createObjectStore('data');
@@ -39,6 +37,26 @@
     r.onerror=()=>reject(r.error);
     r.onblocked=()=>reject(Error('Chiudere le altre schede della Companion e riprovare.'));
   });}
+  async function chooseDatabase(){
+    if(selectedDatabase)return selectedDatabase;
+    if(!choosingDatabase){
+      choosingDatabase=(async()=>{
+        const old=await rawOpenDB(DB_NAME);
+        try{
+          const tx=old.transaction(META,'readonly'),complete=done(tx);
+          const meta=await req(tx.objectStore(META).get('vault'));
+          await complete;
+          // Un Vault V1 usa una password ignota: lasciarlo intatto nel DB originario.
+          // La Companion usa un altro DB per poter funzionare senza password.
+          selectedDatabase=meta?.version===1?PASSWORDLESS_DB_NAME:DB_NAME;
+          return selectedDatabase;
+        }finally{old.close();}
+      })().catch(error=>{choosingDatabase=null;throw error;});
+    }
+    return choosingDatabase;
+  }
+  async function openDB(){return rawOpenDB(await chooseDatabase());}
+  async function preservedLegacyVault(){return (await chooseDatabase())===PASSWORDLESS_DB_NAME;}
   async function inspect(){
     const db=await openDB();
     try{
@@ -48,14 +66,10 @@
       await done(tx);
       if(meta&&counts.some(Boolean))throw Error('Dati legacy rilevati accanto al Vault: aggiornamento sospeso per sicurezza. Non cancellare nulla.');
       if(meta && ![1,2].includes(meta.version))throw Error('Versione del Vault non supportata: dati non modificati.');
-      return {initialized:!!meta,mode:!meta?'new':meta.version===1?'password':'device',
+      if(meta?.version===1)throw Error('Archivio parallelo non valido: i dati non sono stati modificati.');
+      return {initialized:!!meta,mode:!meta?'new':'device',preservedLegacy:await preservedLegacyVault(),
         legacyCount:counts.reduce((a,b)=>a+b,0),legacyCounts:Object.fromEntries(PLAIN.map((s,i)=>[s,counts[i]]))};
     }finally{db.close();}
-  }
-  async function derive(password,salt,iterations){
-    if(!webcrypto()?.subtle)throw Error('Web Crypto non disponibile: è necessario HTTPS o localhost.');
-    const base=await webcrypto().subtle.importKey('raw',encoder.encode(password),'PBKDF2',false,['deriveKey']);
-    return webcrypto().subtle.deriveKey({name:'PBKDF2',hash:'SHA-256',salt,iterations},base,{name:'AES-GCM',length:256},false,['encrypt','decrypt']);
   }
   async function seal(key,id,value){
     const iv=random(12), aad=encoder.encode(`${LABEL}:${id}`);
@@ -119,7 +133,7 @@
       const meta=await req(tx.objectStore(META).get('vault'));
       await complete;
       if(!meta)throw Error('Archivio non inizializzato.');
-      if(meta.version===1)throw Error('Archivio precedente protetto da password: eseguire la conversione una sola volta.');
+      if(meta.version===1)throw Error('Archivio non compatibile: i dati esistenti non sono stati modificati.');
       if(meta.version!==2||!meta.key)throw Error('Chiave del dispositivo assente: archivio non modificato.');
       try{
         const value=await unseal(meta.key,meta.verifier);
@@ -129,46 +143,8 @@
       return true;
     }finally{db.close();}
   }
-  // Il Vault protetto V1 non può essere aperto senza la password originale.
-  // Conversione atomica: in caso di errore, rimangono intatti tutti i record V1.
-  async function migratePasswordVault(oldPassword){
-    if(typeof oldPassword!=='string'||!oldPassword)throw Error('Inserire una volta la password locale precedente.');
-    const state=await inspect();
-    if(state.mode!=='password')throw Error('Non è presente un archivio da convertire.');
-    const db=await openDB();
-    try{
-      const read=db.transaction([META,RECORDS],'readonly');const readDone=done(read);
-      const [meta,records]=await Promise.all([
-        req(read.objectStore(META).get('vault')),
-        req(read.objectStore(RECORDS).getAll())
-      ]);
-      await readDone;
-      if(!meta||meta.version!==1)throw Error('Formato precedente non valido.');
-      const oldKey=await derive(oldPassword,from64(meta.salt),meta.iterations);
-      try{
-        const result=await unseal(oldKey,meta.verifier);
-        if(result.check!=='STUDIO-COSTA-VAULT-READY')throw Error('Verifica non riuscita.');
-      }catch(_){throw Error('Password precedente errata: dati conservati, riprovare.');}
-      const decrypted=[];
-      for(const record of records){
-        if(!record||typeof record.id!=='string')throw Error('Archivio incompleto: conversione annullata.');
-        try{decrypted.push([record.id,await unseal(oldKey,record)]);}
-        catch(_){throw Error('Record precedente non leggibile: conversione annullata senza cancellazioni.');}
-      }
-      const key=await deviceKey();
-      const replacement=[];
-      for(const [id,value] of decrypted)replacement.push(await seal(key,id,value));
-      const verifier=await seal(key,'verifier',{check:'STUDIO-COSTA-VAULT-READY',version:2});
-      await unseal(key,verifier);
-      if(replacement.length)await unseal(key,replacement[0]);
-      const write=db.transaction([META,RECORDS],'readwrite'), written=done(write);
-      write.objectStore(META).put({id:'vault',version:2,mode:'device',key,verifier,createdAt:meta.createdAt||new Date().toISOString(),migratedAt:new Date().toISOString()});
-      for(const record of replacement)write.objectStore(RECORDS).put(record);
-      await written;
-      sessionKey=key;
-      return {migrated:replacement.length};
-    }finally{db.close();}
-  }
+  // La migrazione silenziosa di dati cifrati con chiave ignota è impossibile.
+  // Nessun dato V1 viene cancellato, migrato o sovrascritto senza consenso.
   function lock(){sessionKey=null;}
   function isUnlocked(){return !!sessionKey;}
   async function get(store,k){
@@ -198,5 +174,5 @@
       await completion;sessionKey=null;
     }finally{db.close();}
   }
-  return {inspect,setupDevice,openAutomatically,migratePasswordVault,lock,isUnlocked,get,all,put,remove,clearEverything,openDB};
+  return {inspect,setupDevice,openAutomatically,preservedLegacyVault,lock,isUnlocked,get,all,put,remove,clearEverything,openDB};
 });

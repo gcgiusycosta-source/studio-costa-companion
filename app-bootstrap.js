@@ -23,16 +23,14 @@ function bindChecklistNavigation(){
 async function boot(){
   bindChecklistNavigation();
   const state=await CompanionVault.inspect();
-  if(state.mode==='password'){
-    companionVaultUI(state); // Solo conversione una tantum dell'archivio precedente.
-    return;
+  // Se il vecchio archivio era cifrato, è conservato separatamente: nessun PIN o password.
+  for(const name of ['pairLegacyNotice','emptyLegacyNotice']){
+    const notice=$(name);if(notice)notice.classList.toggle('hidden',!state.preservedLegacy);
   }
   if(state.mode==='new')await CompanionVault.setupDevice();
   else await CompanionVault.openAutomatically();
   await bootUnlocked();
 }
-$('vaultAction').onclick=vaultProceed;
-$('vaultPassword').addEventListener('keydown',event=>{if(event.key==='Enter')vaultProceed();});
 const companionFileInput=$("companionFile");
 if(companionFileInput){
   companionFileInput.onchange=()=>{
@@ -115,7 +113,7 @@ $("exportMobileActions").onclick=()=>exportMobileActions().catch(e=>alert(e.mess
 $("exportLocalTasks").onclick=()=>exportLocalTasks().catch(e=>alert(e.message));
 $("importLocalTasks").onclick=async()=>{const file=$("localTasksFile").files[0];if(!file)return;try{await importLocalTasksFile(file);alert("Attività locali importate.")}catch(e){alert(e.message)}};
 $("exportCalendarIcs").onclick=exportCalendarIcs;
-boot().catch(error=>{companionVaultUI();$('vaultAction').classList.add('hidden');$('vaultPassword').classList.add('hidden');$('vaultPasswordLabel').classList.add('hidden');$('vaultHeading').textContent='Archivio non disponibile';$('vaultExplanation').textContent='Nessun dato è stato eliminato. Non cancellare la memoria del browser.';$('vaultError').textContent=error.message;});
+boot().catch(error=>{companionVaultUI();$('vaultHeading').textContent='Archivio non disponibile';$('vaultExplanation').textContent='Nessun dato è stato eliminato. Non cancellare i dati del browser.';$('vaultError').textContent=error.message;});
 
 
 document.querySelectorAll("[data-top-target]").forEach(button=>button.addEventListener("click",()=>switchView(button.dataset.topTarget)));

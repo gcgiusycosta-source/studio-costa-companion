@@ -10,7 +10,7 @@ let homeAnchorDate="";
 let localTasks=[];
 let pendingMobileActions=[];
 let checklistMode="todo";
-let hearingMode="week";
+let hearingMode="list";
 let hearingSelectedDay="";
 let activePracticeFilter="all";
 let activeTool="codes";
@@ -77,7 +77,7 @@ async function ensureOfflineShell(){
   companionShowPendingUpdate(registration);
   await registration.update().catch(()=>{});
   companionShowPendingUpdate(registration);
-  await navigator.serviceWorker.ready;
+  await Promise.race([navigator.serviceWorker.ready,new Promise((_,reject)=>setTimeout(()=>reject(new Error("Modalità offline non ancora pronta")),12000))]);
   return true;
 }
 function companionApplyUpdate(){
@@ -95,9 +95,19 @@ function companionApplyUpdate(){
 function updateOfflineStatus(ready){
   const label=$("syncStatus");
   if(!label||!snapshot)return;
-  const base=`Ultima sincronizzazione: ${fmtDateTime(snapshot.generated_at)}`;
-  label.textContent=ready ? `${base} · Disponibile offline` : base;
+  const base=`Ultimo aggiornamento: ${fmtDateTime(snapshot.generated_at)}`;
+  label.textContent=ready?`${base} · Disponibile offline`:`${base} · Offline non ancora pronto`;
+  const warning=$("offlineWarning");
+  if(warning){
+    warning.textContent=ready?"":"Archivio salvato sul dispositivo. La modalità offline non è ancora pronta: mantieni la connessione finché l’app non indica Disponibile offline.";
+    warning.classList.toggle('hidden',!!ready);
+  }
 }
+function refreshOfflineAvailability(){
+  // Import and persistence have already succeeded; cache failure must not report data loss.
+  ensureOfflineShell().then(updateOfflineStatus).catch(()=>updateOfflineStatus(false));
+}
+
 function base64UrlToBytes(value){
   if(typeof value!=="string"||!value){
     throw new Error("File SCM1 non valido.");
@@ -143,6 +153,7 @@ async function decryptCompanion(packageData){
     plannerUndatedTasks:Array.isArray(archiveData.plannerUndatedTasks)?archiveData.plannerUndatedTasks:[],
     plannerChecklistEstimates:Array.isArray(archiveData.plannerChecklistEstimates)?archiveData.plannerChecklistEstimates:[],
     plannerChecklistSessions:Array.isArray(archiveData.plannerChecklistSessions)?archiveData.plannerChecklistSessions:[],
+    scadenze:archiveData.scadenze&&archiveData.scadenze.schema==='STUDIO_COSTA_SCADENZE'?archiveData.scadenze:null,
     practices:archiveData.practices,
     events:archiveData.events,
     tasks:Array.isArray(archiveData.tasks)?archiveData.tasks:[],
@@ -171,7 +182,7 @@ async function decryptCompanion(packageData){
 
 async function importCompanionFile(file,password){
   if(!file){
-    throw new Error("Selezionare il file StudioCostaMobile.scmobile.");
+    throw new Error("Seleziona prima il file .scmobile esportato dal gestionale.");
   }
 
   let packageData;
@@ -195,6 +206,7 @@ async function importCompanionFile(file,password){
     plannerUndatedTasks:decoded.plannerUndatedTasks,
     plannerChecklistEstimates:decoded.plannerChecklistEstimates,
     plannerChecklistSessions:decoded.plannerChecklistSessions,
+    scadenze:decoded.scadenze,
     practices:decoded.practices,
     events:decoded.events,
     tasks:decoded.tasks,
@@ -217,7 +229,7 @@ async function importCompanionFile(file,password){
   await dbSet("snapshot",candidate);
   snapshot=candidate;
   await reconcilePendingActions(candidate);
-  await ensureOfflineShell();
+  refreshOfflineAvailability();
   return candidate;
 }
 
@@ -279,16 +291,25 @@ function isoDate(value){
   const d=new Date(value);
   return Number.isNaN(d.getTime())?"":d.toISOString().slice(0,10);
 }
+function companionDateDisplay(id){
+  const input=$(id),label=$(id+'Text');
+  if(input&&label)label.textContent=fmtDate(input.value||plannerLocalToday());
+}
+function companionClock(value){
+  const text=String(value||'').trim(),match=/^(\d{1,2})[:.](\d{2})(?::\d{2})?$/.exec(text);
+  return match&&Number(match[1])<24&&Number(match[2])<60?match[1].padStart(2,'0')+':'+match[2]:text;
+}
 function normalizeCalendarItem(item,sourceType){
   const eventDate=isoDate(item.event_date||item.date||item.due_date||item.deadline_date||item.start_date||item.data);
   const category=(item.category||item.type||item.kind||(sourceType==="DEADLINE"?"SCADENZA":sourceType==="TASK"?"ATTIVITA":"IMPEGNO")).toString().toUpperCase();
   const taskId=item.source_id??item.task_id??item.id;
-  const pendingTask=[...pendingMobileActions].reverse().find(a=>["task_status","complete_task","reopen_task"].includes(a.action_type)&&String(a.task_id??a.target_id)===String(taskId));
+  const pendingTask=["TASK","DEADLINE"].includes(item.source_type||sourceType)&&[...pendingMobileActions].reverse().find(a=>["task_status","complete_task","reopen_task"].includes(a.action_type)&&String(a.task_id??a.target_id)===String(taskId));
   return {
     ...item,
+    deadline_step_kind:(snapshot?.scadenze?.deadline_rows||[]).find(r=>String(r.task_id)===String(taskId)&&['TASK','DEADLINE'].includes(item.source_type||sourceType))?.kind||'',
     event_date:eventDate,
-    start_time:item.start_time||item.time||item.ora||"",
-    end_time:item.end_time||"",
+    start_time:companionClock(item.start_time||item.time||item.ora||""),
+    end_time:companionClock(item.end_time||""),
     title:item.title||item.name||item.description||item.oggetto||(category==="SCADENZA"?"Scadenza":"Attività"),
     category,
     source_type:item.source_type||sourceType,
@@ -312,7 +333,7 @@ function calendarItems(){
   });
   const seen=new Set();
   return raw.filter(i=>{
-    const key=[i.uid||i.id||i.source_id||"",i.event_date,i.start_time||"",i.title||"",i.practice_id||""].join("|");
+    const key=[i.source_type,i.uid||i.source_id||i.task_id||i.id||"",i.event_date,i.start_time||"",i.title||"",i.practice_id||""].join("|");
     if(seen.has(key))return false;
     seen.add(key);
     return true;
@@ -351,18 +372,20 @@ function showApp(){
   document.body.dataset.activeView = activeView || "homeView";
   renderAll();
   updatePendingIndicator();
-  ensureOfflineShell().then(ready=>updateOfflineStatus(ready)).catch(()=>updateOfflineStatus(false));
+  refreshOfflineAvailability();
 }
 
 function switchView(target){
+  if(target==="agendaView")target="plannerView";
   activeView=target;
   document.body.dataset.activeView=target;
   document.querySelectorAll(".view").forEach(v=>v.classList.toggle("hidden",v.id!==target));
   document.querySelectorAll(".bottom-nav button").forEach(b=>{const active=b.dataset.target===target;b.classList.toggle("active",active);if(active)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});
   document.querySelectorAll("[data-top-target]").forEach(b=>b.classList.toggle("active",b.dataset.topTarget===target));
-  const titles={homeView:"Home",hearingsView:"Udienze",agendaView:"Agenda",plannerView:"Planner",checklistsView:"Checklist",practicesView:"Pratiche",toolsView:"Strumenti",searchView:"Ricerca"};
+  const titles={scadenzeView:"Scadenze",homeView:"Home",hearingsView:"Udienze",agendaView:"Agenda",plannerView:"Planner",checklistsView:"Checklist",practicesView:"Pratiche",toolsView:"Strumenti",searchView:"Ricerca"};
   if($("pageTitle"))$("pageTitle").textContent=titles[target]||"Studio Costa";
   if(target==="homeView")renderHome();
+  if(target==="scadenzeView")renderScadenze();
   if(target==="hearingsView")renderHearings();
   if(target==="agendaView")renderAgenda();
   if(target==="plannerView")renderMobilePlanner($("plannerDate")?.value||plannerLocalToday(),calendarItems().sort(eventSort));

@@ -180,9 +180,9 @@ function renderHome(){
   const all=calendarItems().sort(eventSort);
   const today=plannerLocalToday();
   const weekEnd=addDays(today,6);
-  const todayItems=all.filter(e=>e.event_date===today).slice(0,5);
+  const todayItems=all.filter(e=>e.event_date===today);
   const stats={
-    practices:(snapshot.practices||[]).filter(p=>!/(ARCHIVIAT|CHIUS|DEFINIT|ESTINT)/i.test(String(p.stato||""))).length || (snapshot.practices||[]).length,
+    practices:(snapshot.practices||[]).filter(p=>!/(ARCHIVIAT|CHIUS|DEFINIT|ESTINT)/i.test(String(p.stato||""))).length,
     hearings:all.filter(e=>eventKind(e)==="UDIENZA" && (e.event_date||"")>=today && (e.event_date||"")<=weekEnd).length,
     deadlines:all.filter(e=>eventKind(e)==="SCADENZA" && (e.event_date||"")>=today && (e.event_date||"")<=weekEnd).length,
     appointments:all.filter(e=>eventKind(e)==="APPUNTAMENTO" && (e.event_date||"")>=today && (e.event_date||"")<=weekEnd).length
@@ -223,12 +223,8 @@ function renderHome(){
       <button data-open-view="agendaView"><span>Appuntamenti</span><b>${stats.appointments}</b><i>7 giorni</i></button>
     </section>
 
-    <section class="v19-dayplan"><div class="executive-section-head"><span>IL MIO PLANNER · OGGI</span><button data-open-view="plannerView">Settimana <i>›</i></button></div>
-      <div class="v19-dayplan-hero"><div><small>TEMPO DISPONIBILE</small><strong>${(()=>{const x=mobilePlannerSegments(today,all).total;return Math.floor(x/60)+'h '+String(x%60).padStart(2,'0')+'m';})()}</strong></div><div><small>FAMIGLIA / PERSONALE</small><strong>${mobilePlannerSegments(today,all).blocks.length} impegni</strong></div></div>
-      <div class="v19-dayplan-rows">${mobilePlannerSegments(today,all).blocks.map(b=>`<button data-open-view="plannerView" class="v19-dayplan-family"><span>${escapeHtml(b.start_time)}–${escapeHtml(b.end_time)}</span><strong>${escapeHtml(b.label||'Impegno personale')}</strong></button>`).join('')||'<p class="v19-dayplan-empty">Nessun impegno personale per oggi.</p>'}
-      ${(companionDayProfile(today)?.busy||[]).filter(b=>b.source==='Trasferimento udienza').map(b=>`<button data-open-view="plannerView" class="v19-dayplan-task"><span>${escapeHtml(b.start_time)}–${escapeHtml(b.end_time)}</span><strong>${escapeHtml(b.label)}</strong></button>`).join('')}
-      ${mobilePlannerSegments(today,all).warnings?.length?`<div class="v19-dayplan-alert">${mobilePlannerSegments(today,all).warnings.map(w=>escapeHtml(w)).join(' · ')}</div>`:''}
-      ${plannerTasksForDay(today,all).slice(0,3).map(t=>`<button data-open-view="plannerView" class="v19-dayplan-task"><span>${escapeHtml(t.target_time||'Da organizzare')}</span><strong>${escapeHtml(t.title)}</strong></button>`).join('')}</div>
+    <section class="v19-dayplan"><div class="executive-section-head"><span>LA GIORNATA · OGGI</span><button data-open-view="plannerView">Apri Planner ›</button></div>
+      ${companionDayRows(today,all).length?companionDayRows(today,all).map(row=>`<button data-open-view="plannerView" class="v19-dayplan-task"><span>${escapeHtml(row.start_time?row.start_time+(row.end_time?'–'+row.end_time:''):'Senza orario')}</span><strong>${escapeHtml(row.title)}</strong></button>`).join(''):'<p class="v19-dayplan-empty">Nessun impegno per oggi.</p>'}
     </section>
 
     <section class="executive-next">
@@ -307,27 +303,23 @@ function agendaTimeline(events,emptyText="Nessun impegno nel giorno selezionato"
   }).join('')}</div>`;
 }
 function renderHearings(){
-  const today=plannerLocalToday();
-  const anchor=$("hearingDate").value||today; const all=calendarItems().filter(e=>eventKind(e)==="UDIENZA").sort(eventSort); let events=[]; let periodLabel="";
+  const anchor=$("hearingDate").value||plannerLocalToday();$("hearingDate").value=anchor;companionDateDisplay("hearingDate");
+  let events=calendarItems().filter(e=>eventKind(e)==="UDIENZA").sort(eventSort),label;
   if(hearingMode==="day"){
-    hearingSelectedDay=anchor; events=all.filter(e=>e.event_date===anchor); periodLabel=`${fmtWeekday(anchor)} ${fmtDate(anchor)}`;
-    $("hearingsContent").innerHTML=`<div class="docket-day-caption"><b>${events.length}</b><span>${events.length===1?'udienza':'udienze'} in ruolo</span></div>${hearingDocketList(events)}`;
+    events=events.filter(e=>e.event_date===anchor);label=fmtDate(anchor);
   }else if(hearingMode==="week"){
     const start=startOfWeek(anchor),end=addDays(start,6);
-    if(!hearingSelectedDay||hearingSelectedDay<start||hearingSelectedDay>end)hearingSelectedDay=(today>=start&&today<=end)?today:start;
-    events=all.filter(e=>e.event_date>=start&&e.event_date<=end); periodLabel=`${fmtDate(start)} – ${fmtDate(end)}`;
-    const dayEvents=events.filter(e=>e.event_date===hearingSelectedDay);
-    $("hearingsContent").innerHTML=`<div class="docket-week-summary"><b>${events.length}</b><span>udienze nella settimana</span></div>${weekOverview(events,start,hearingSelectedDay,"data-hearing-week-day")}<div class="docket-selected-day"><strong>${escapeHtml(fmtWeekday(hearingSelectedDay))}</strong><span>${fmtDate(hearingSelectedDay)} · ${dayEvents.length} ${dayEvents.length===1?'udienza':'udienze'}</span></div>${hearingDocketList(dayEvents)}`;
-    $("hearingsContent").querySelectorAll("[data-hearing-week-day]").forEach(b=>b.onclick=()=>{hearingSelectedDay=b.dataset.hearingWeekDay;renderHearings()});
+    events=events.filter(e=>e.event_date>=start&&e.event_date<=end);label=fmtDate(start)+' – '+fmtDate(end);
+  }else if(hearingMode==="month"){
+    const [start,end]=monthBounds(anchor);events=events.filter(e=>e.event_date>=start&&e.event_date<=end);
+    label=new Intl.DateTimeFormat('it-IT',{month:'long',year:'numeric'}).format(new Date(anchor+'T12:00:00'));
   }else{
-    const [start,end]=monthBounds(anchor);
-    if(!hearingSelectedDay||hearingSelectedDay<start||hearingSelectedDay>end)hearingSelectedDay=anchor;
-    events=all.filter(e=>e.event_date>=start&&e.event_date<=end); periodLabel=new Intl.DateTimeFormat("it-IT",{month:"long",year:"numeric"}).format(new Date(anchor+"T12:00:00"));
-    const dayEvents=events.filter(e=>e.event_date===hearingSelectedDay);
-    $("hearingsContent").innerHTML=`<div class="docket-month-count"><b>${events.length}</b><span>udienze nel mese</span></div>${renderMonthGrid(events,hearingSelectedDay)}<div class="docket-selected-day"><strong>${escapeHtml(fmtWeekday(hearingSelectedDay))}</strong><span>${fmtDate(hearingSelectedDay)} · ${dayEvents.length} in ruolo</span></div>${hearingDocketList(dayEvents)}`;
-    $("hearingsContent").querySelectorAll("[data-agenda-day]").forEach(b=>b.onclick=()=>{hearingSelectedDay=b.dataset.agendaDay;renderHearings()});
+    events=events.filter(e=>e.event_date>=anchor);label='Dal '+fmtDate(anchor)+' · tutte le prossime udienze';
   }
-  $("hearingPeriodLabel").textContent=periodLabel; bindPracticeLinks($("hearingsContent"));
+  const dates=[...new Set(events.map(e=>e.event_date))];
+  $("hearingsContent").innerHTML=`<div class="docket-week-summary"><b>${events.length}</b><span>udienze nel periodo</span></div>`+
+    (dates.map(day=>`<section class="hearing-list-day"><div class="docket-selected-day"><strong>${escapeHtml(fmtWeekday(day))}</strong><span>${fmtDate(day)}</span></div>${hearingDocketList(events.filter(e=>e.event_date===day))}</section>`).join('')||'<div class="empty">Nessuna udienza nel periodo selezionato</div>');
+  $("hearingPeriodLabel").textContent=label;bindPracticeLinks($("hearingsContent"));
 }
 
 // V18.5: Planner condiviso con il desktop. Orari operativi separati dalle scadenze giuridiche.

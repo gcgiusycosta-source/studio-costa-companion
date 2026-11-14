@@ -1,7 +1,7 @@
 {
-  "name": "Studio Costa Companion V20.7",
+  "name": "Studio Costa Companion 20.19.8",
   "short_name": "Studio Costa",
-  "description": "Companion professionale Studio Legale Costa V20.7 — pianificazione, agende e strumenti offline",
+  "description": "Studio Legale Costa — udienze in elenco e Planner cronologico offline",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

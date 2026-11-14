@@ -1,16 +1,16 @@
-COMPANION 20.9 — INSTALLAZIONE E AGGIORNAMENTO
+QT20 20.19.8 — COMPANION CON FILE
 
-1. Pubblicare tutto il contenuto Companion_Web sulla propria origine HTTPS.
-   Per aggiornare, mantenere identici origine e percorso della vecchia app.
-2. Su Safari iPhone/iPad: Condividi > Aggiungi alla schermata Home.
-   Su Android: Installa app nel menu Chrome.
-3. Sbloccare normalmente la protezione locale già configurata.
-4. Da QT19 19.2 esportare il .scmobile, poi importarlo nella Companion.
-   Il nuovo file non richiede password: NON è cifrato e va custodito.
-5. Esportare le modifiche come .scmr; nel desktop aprire Importa risposte
-   Companion, verificare le azioni e confermare quelle supportate.
+Indirizzo: https://gcgiusycosta-source.github.io/studio-costa-companion/
 
-Non pubblicare dati .db, .scmobile o .scmr sul sito. Non cancellare i dati locali
-del browser per aggiornare il codice. I file storici cifrati richiedono ancora
-la password originale. La password di accesso al gestionale resta invariata.
-Non è una build nativa App Store. La pubblicazione non è eseguita dal pacchetto.
+1. Sul PC aprire Companion / Scambio dati ed esportare il file .scmobile.
+2. Trasferire privatamente il file all’iPhone (per esempio tramite iCloud Drive).
+3. Aprire la Companion in Safari, oppure dalla sua icona Home. Scegliere Importa aggiornamento, selezionare il file .scmobile e confermare.
+4. Attendere “Disponibile offline” prima di scollegarsi da Internet. Se compare un avviso offline, i dati importati restano salvati: mantenere la connessione e riaprire l’app.
+
+Non occorrono certificati locali, QR Wi-Fi o PIN temporanei del PC. Il PIN personale della Companion protegge l’accesso locale e resta distinto dalla sincronizzazione.
+
+Per riportare le attività supportate al PC, esportare le modifiche .scmr dalla Companion e importarle con il comando già presente nel gestionale. Esportare eventuali modifiche pendenti della vecchia app locale prima di abbandonarla: gli archivi di indirizzi web diversi sono separati.
+
+Non pubblicare mai .scmobile, .scmr, database, documenti dei clienti o chiavi su GitHub. Questi file di scambio non sono cifrati: trasferirli tramite canali privati. GitHub ospita soltanto il codice dell’app.
+
+Sul medesimo indirizzo GitHub l’aggiornamento conserva l’archivio locale; non cancellare i dati del sito. Per la Home: Safari > Condividi > Aggiungi alla schermata Home.

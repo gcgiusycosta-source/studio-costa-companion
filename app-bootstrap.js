@@ -1,5 +1,6 @@
 function renderAll(){
   renderHome();
+  renderScadenze();
   renderHearings();
   renderAgenda();
   if($("plannerView"))renderMobilePlanner($("plannerDate")?.value||plannerLocalToday(),calendarItems().sort(eventSort));
@@ -22,6 +23,7 @@ function bindChecklistNavigation(){
 }
 async function boot(){
   bindChecklistNavigation();
+  CompanionAccess.initialize();
   const state=await CompanionVault.inspect();
   // Se il vecchio archivio era cifrato, è conservato separatamente: nessun PIN o password.
   for(const name of ['pairLegacyNotice','emptyLegacyNotice']){
@@ -29,6 +31,7 @@ async function boot(){
   }
   if(state.mode==='new')await CompanionVault.setupDevice();
   else await CompanionVault.openAutomatically();
+  await CompanionAccess.unlockAccess();
   await bootUnlocked();
 }
 const companionFileInput=$("companionFile");
@@ -36,6 +39,7 @@ if(companionFileInput){
   companionFileInput.onchange=()=>{
     const label=$("companionFileName");
     if(label)label.textContent=companionFileInput.files?.[0]?.name||"Nessun file selezionato";
+    if($("companionImportButton"))$("companionImportButton").disabled=!companionFileInput.files?.length;
   };
 }
 $("companionFilePicker")?.addEventListener("keydown",event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();$("companionFile")?.click()}});
@@ -47,7 +51,7 @@ $("companionImportButton").onclick=async()=>{
     await importCompanionFile($("companionFile").files[0]);
     showApp();
   }catch(error){$("pairError").textContent=error.message}
-  finally{button.disabled=false;button.textContent="Importa aggiornamento"}
+  finally{button.disabled=!$("companionFile").files?.length;button.textContent="Importa aggiornamento"}
 };
 document.querySelectorAll(".bottom-nav button").forEach(button=>{button.onclick=()=>switchView(button.dataset.target)});
 $("applyUpdate")?.addEventListener("click",companionApplyUpdate);
@@ -125,3 +129,9 @@ if($('plannerPrev'))$('plannerPrev').onclick=()=>plannerMove(-1);
 if($('plannerNext'))$('plannerNext').onclick=()=>plannerMove(1);
 if($('plannerToday'))$('plannerToday').onclick=()=>{$('plannerDate').value=plannerLocalToday();renderMobilePlanner($('plannerDate').value,calendarItems());};
 if($('plannerDate'))$('plannerDate').onchange=()=>renderMobilePlanner($('plannerDate').value,calendarItems());
+
+if($('scadenzeFrom'))$('scadenzeFrom').value=plannerLocalToday();
+if($('scadenzeTo'))$('scadenzeTo').value=addDays(plannerLocalToday(),30);
+for(const id of ['scadenzeFrom','scadenzeTo','scadenzeAllDates'])$(id)?.addEventListener('change',renderScadenze);
+$('scadenzePrint')?.addEventListener('click',()=>window.print());
+$('scadenzeCsv')?.addEventListener('click',exportScadenzeCsv);

@@ -1,0 +1,9 @@
+*.scmobile
+*.scmr
+*.scl
+*.sqlite*
+*.db
+*.pem
+*.pfx
+*.p12
+__pycache__/

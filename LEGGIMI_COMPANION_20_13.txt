@@ -1,0 +1,16 @@
+QT20 20.19.8 — COMPANION CON FILE
+
+Indirizzo: https://gcgiusycosta-source.github.io/studio-costa-companion/
+
+1. Sul PC aprire Companion / Scambio dati ed esportare il file .scmobile.
+2. Trasferire privatamente il file all’iPhone (per esempio tramite iCloud Drive).
+3. Aprire la Companion in Safari, oppure dalla sua icona Home. Scegliere Importa aggiornamento, selezionare il file .scmobile e confermare.
+4. Attendere “Disponibile offline” prima di scollegarsi da Internet. Se compare un avviso offline, i dati importati restano salvati: mantenere la connessione e riaprire l’app.
+
+Non occorrono certificati locali, QR Wi-Fi o PIN temporanei del PC. Il PIN personale della Companion protegge l’accesso locale e resta distinto dalla sincronizzazione.
+
+Per riportare le attività supportate al PC, esportare le modifiche .scmr dalla Companion e importarle con il comando già presente nel gestionale. Esportare eventuali modifiche pendenti della vecchia app locale prima di abbandonarla: gli archivi di indirizzi web diversi sono separati.
+
+Non pubblicare mai .scmobile, .scmr, database, documenti dei clienti o chiavi su GitHub. Questi file di scambio non sono cifrati: trasferirli tramite canali privati. GitHub ospita soltanto il codice dell’app.
+
+Sul medesimo indirizzo GitHub l’aggiornamento conserva l’archivio locale; non cancellare i dati del sito. Per la Home: Safari > Condividi > Aggiungi alla schermata Home.

@@ -89,3 +89,57 @@
 
 /* V20.11 — indicatore discreto della build PWA per distinguere cache precedenti. */
 .companion-version-label{font-size:10px;letter-spacing:.02em;color:var(--ink-muted,#697577);font-weight:700;white-space:nowrap;}
+
+/* Companion 20.12: lettura cronologica, senza troncamento dei titoli. */
+#app .hearing-list-day{margin:18px 0 25px}
+#app .docket-card{height:auto!important;min-height:70px!important;align-items:center}
+#app .docket-body{min-width:0}
+#app .docket-body strong,#app .docket-body small,#app .docket-body em{white-space:normal!important;overflow:visible!important;text-overflow:clip!important;line-height:1.45}
+#app .hearing-mode{flex-wrap:wrap;gap:4px}
+#app .companion-day-row{display:grid!important;grid-template-columns:77px minmax(0,1fr) 12px;gap:12px;width:100%;text-align:left;padding:15px 10px!important;margin:7px 0;border:1px solid #d4e0d7!important;border-left:4px solid #ad8650!important;border-radius:12px;background:#fff!important;color:#172920!important;height:auto!important;box-sizing:border-box}
+#app .companion-day-row.is-personal{border-left-color:#55856c!important;background:#eff6f1!important}
+#app .companion-row-time{font-size:14px;font-weight:800;font-variant-numeric:tabular-nums}
+#app .companion-row-time small{display:block;font-size:12px;margin-top:5px}
+#app .companion-row-body{display:flex;flex-direction:column;gap:5px;min-width:0}
+#app .companion-row-body small{font-size:10px;letter-spacing:.05em;color:#465f52}
+#app .companion-row-body strong{font-size:15px;white-space:normal;line-height:1.4;overflow-wrap:anywhere}
+#app .companion-row-body em{font-size:12px;font-style:normal;color:#465f52;white-space:normal}
+#app .companion-dated-tasks{margin-top:22px;border-top:1px solid #d4e0d7;padding-top:12px}
+#app .companion-dated-tasks h3{font-size:12px;line-height:1.5}
+#app .v19-dayplan-task{height:auto!important;min-height:55px}
+#app .v19-dayplan-task strong{white-space:normal!important;line-height:1.4}
+#plannerView:before,#plannerView:after{display:none!important}
+@media(max-width:420px){#app .companion-day-row{gap:8px;grid-template-columns:66px minmax(0,1fr) 10px}#app .companion-row-time{font-size:12px}}
+
+@media(max-width:767px){#app .bottom-nav.v19-nav{grid-template-columns:repeat(5,minmax(0,1fr))!important}}
+
+#app .docket-time{color:#284b3b!important;font-weight:800!important;font-size:13px!important}
+#app .docket-selected-day span{color:#435a4d!important;font-size:13px!important}
+#app .hearing-mode{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;width:100%!important}
+#app .hearing-mode button{padding:10px 5px!important;font-size:11px!important;min-width:0}
+#app .hearing-view-row{flex-wrap:wrap}
+#app .companion-date-picker{position:relative;display:grid;place-items:center;min-width:0;min-height:42px;background:#fff;border:1px solid #c8d9ce;border-radius:12px;color:#174e3c;font-weight:800;font-size:14px;box-sizing:border-box;overflow:hidden}
+#app .companion-date-picker input[type=date]{position:absolute!important;inset:0!important;width:100%!important;min-width:0!important;height:100%!important;opacity:0!important;cursor:pointer;margin:0!important}
+#app .companion-date-picker:focus-within{outline:3px solid #256d51;outline-offset:2px}
+#app .companion-date-picker>span{pointer-events:none}
+
+#app .hearing-view-row{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:7px!important}
+#app .hearing-view-row .hearing-today{justify-self:end}
+#app .hearing-mode button{white-space:nowrap!important;overflow-wrap:normal!important}
+
+/* Scadenze del plugin, stesse identità e colori del desktop. */
+#app .scadenze-head{background:#fff;border:1px solid #d4e0d7;border-radius:18px;padding:18px;margin-bottom:18px}
+#app .scadenze-filters{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+#app .scadenza-card{border:1px solid #d4c68a;border-radius:14px;padding:15px;margin:10px 0;color:#172920;break-inside:avoid}
+#app .scadenza-preparazione,#app .companion-day-row.plugin-preparazione{background:#fff2b2!important}
+#app .scadenza-prudenziale,#app .companion-day-row.plugin-prudenziale{background:#ffd39b!important}
+#app .scadenza-termine,#app .companion-day-row.plugin-termine{background:#ffd1d1!important;border-left:4px solid #a52b31!important}
+#app .scadenza-kind{font-size:11px;font-weight:900;letter-spacing:.04em}
+#app .scadenza-card h3{font-size:16px;line-height:1.45;white-space:normal;margin:8px 0;color:#172920}
+#app .scadenza-card p{font-size:12px;line-height:1.5;margin:6px 0;color:#173b2d}
+#app .scadenza-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+#app .scadenza-actions button{background:#174e3c;color:#fff;padding:10px;border-radius:10px;min-height:42px}
+#app .scadenza-actions small{font-size:10px;color:#5d2631}
+@media(max-width:767px){#app .bottom-nav.v19-nav{grid-template-columns:repeat(6,minmax(0,1fr))!important}#app .bottom-nav.v19-nav button em{font-size:9px!important}}
+@media print{body{background:white!important}#app>header,#app>.bottom-nav,.floating-add,#settingsModal,#undoToast{display:none!important}#app main{padding:0!important}body[data-active-view="scadenzeView"] .view:not(#scadenzeView){display:none!important}#scadenzeView{display:block!important}#scadenzeView button,#scadenzeView input,#scadenzeView .scadenze-filters,#scadenzeView label{display:none!important}#app .scadenza-card{print-color-adjust:exact;-webkit-print-color-adjust:exact}h3{break-after:avoid}@page{size:A4;margin:12mm}}
+#app .scadenze-head label,#app .scadenze-head .view-kicker{color:#354f41!important}

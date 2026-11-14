@@ -57,5 +57,6 @@ async function bootUnlocked(){
   const hasCache=await loadCached();
   if(hasCache)showApp();
   else $('emptyScreen').classList.remove('hidden');
+
 }
 

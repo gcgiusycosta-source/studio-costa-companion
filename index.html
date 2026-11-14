@@ -7,14 +7,23 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Studio Costa">
-  <link rel="manifest" href="manifest.json?v=20.11">
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=20.11">
-  <link rel="stylesheet" href="styles-foundation.css?v=20.11">
-  <link rel="stylesheet" href="styles-legacy.css?v=20.11">
-  <link rel="stylesheet" href="styles.css?v=20.11">
-  <title>Studio Costa Companion V20.11</title>
+  <link rel="manifest" href="manifest.json?v=20.19.8">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=20.19.8">
+  <link rel="stylesheet" href="styles-foundation.css?v=20.19.8">
+  <link rel="stylesheet" href="styles-legacy.css?v=20.19.8">
+  <link rel="stylesheet" href="styles.css?v=20.19.8">
+  <title>Studio Costa Companion V20.19.8</title>
 </head>
 <body>
+  <section id="accessPinScreen" class="screen hidden" aria-label="PIN di accesso">
+    <div class="login-card">
+      <div class="brand">GC</div><h1>Companion protetta</h1>
+      <p>Inserisci il PIN personale di 4 cifre.</p>
+      <input id="accessPinInput" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" autocomplete="off" placeholder="PIN" aria-label="PIN di accesso">
+      <button id="accessPinUnlock" type="button">Sblocca</button>
+      <p id="accessPinError" class="error" role="alert"></p>
+    </div>
+  </section>
   <section id="vaultScreen" class="screen vault-screen hidden" aria-label="Errore archivio locale">
     <div class="vault-card">
       <div class="vault-mark" aria-hidden="true">GC</div>
@@ -28,13 +37,14 @@
   <section id="pairScreen" class="screen hidden">
     <div class="login-card">
       <div class="brand">GC</div>
-      <div class="eyebrow dark">STUDIO LEGALE COSTA · COMPANION V20.11</div>
+      <div class="eyebrow dark">STUDIO LEGALE COSTA · COMPANION V20.19.8</div>
       <h1>Importa aggiornamento</h1>
       <p>Seleziona il file <strong>StudioCostaMobile.scmobile</strong> generato dal gestionale. Nessuna password richiesta. Usa un file nel formato attuale SCM0; i vecchi file cifrati SCM1 devono essere riesportati dal gestionale.</p>
       <input id="companionFile" class="file-input-native" type="file" aria-label="Seleziona file .scmobile">
       <label for="companionFile" id="companionFilePicker" class="file-picker-button" role="button" tabindex="0">Seleziona file .scmobile</label>
       <div id="companionFileName" class="file-selected-name">Nessun file selezionato</div>
-      <button id="companionImportButton">Importa aggiornamento</button>
+      <button id="companionImportButton" disabled>Importa aggiornamento</button>
+      <button id="importBackButton" class="secondary-button" type="button">Torna alla Companion</button>
       <div id="pairError" class="error"></div>
       <p id="pairLegacyNotice" class="muted hidden" role="status">È stato rilevato un vecchio archivio cifrato, conservato senza modifiche. Non è leggibile automaticamente. Per ritrovare pratiche e appuntamenti, importa un nuovo file .scmobile dal gestionale. Le eventuali attività registrate solo nel vecchio archivio non compariranno qui.</p>
     </div>
@@ -43,10 +53,10 @@
   <section id="emptyScreen" class="screen hidden">
     <div class="login-card">
       <div class="brand">GC</div>
-      <div class="eyebrow dark">COMPANION V20.11 · ACCESSO AUTOMATICO</div>
+      <div class="eyebrow dark">COMPANION V20.19.8 · PIN ATTIVO</div>
       <h1>Nessun archivio locale</h1>
-      <p>Esporta dal gestionale il file <strong>StudioCostaMobile.scmobile</strong>, trasferiscilo su iPhone e importalo qui.</p>
-      <button id="emptyImportButton">Importa aggiornamento</button>
+      <p>Esporta dal gestionale il file StudioCostaMobile.scmobile, trasferiscilo in modo riservato su iPhone e importalo qui. Per consultarlo usa sempre la stessa icona sulla schermata Home.</p>
+      <button id="emptyImportButton" class="secondary-button">Importa file .scmobile</button>
       <p id="emptyLegacyNotice" class="muted hidden" role="status">Il vecchio archivio cifrato è stato conservato intatto, in uno spazio separato. Per visualizzare nuovamente pratiche e appuntamenti, importa un file .scmobile recente dal gestionale. Le attività presenti esclusivamente nel vecchio archivio non sono accessibili automaticamente.</p>
     </div>
   </section>
@@ -67,7 +77,7 @@
         </div>
       </div>
       <div class="header-actions compact-actions">
-        <span id="networkStatus" class="network-status" role="status" aria-live="polite">Offline</span><span class="companion-version-label">v20.11</span>
+        <span id="networkStatus" class="network-status" role="status" aria-live="polite">Offline</span><span class="companion-version-label">v20.19.8</span>
         <div class="sync-pill" id="headerSync">—</div>
         <button id="settingsButton" class="icon-button" aria-label="Sincronizzazione e privacy">⋯</button>
       </div>
@@ -80,16 +90,17 @@
 
 
 
-    <!-- V20.11: unico menu, orizzontale in alto su tablet e in basso su telefono. -->
+    <!-- V20.19.8: unico menu, orizzontale in alto su tablet e in basso su telefono. -->
     <nav class="bottom-nav companion-bottom-nav five-nav v19-nav" aria-label="Navigazione principale">
-      <button data-target="homeView" class="active" aria-current="page"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 10.5L12 4l8 6.5"/><path d="M6.5 9.5V20h11V20.10"/><path d="M10 20v-5.5h4V20"/></svg></span><em>Home</em></button>
+      <button data-target="homeView" class="active" aria-current="page"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 10.5L12 4l8 6.5"/><path d="M6.5 9.5V20h11V20.19.8"/><path d="M10 20v-5.5h4V20"/></svg></span><em>Home</em></button>
       <button data-target="hearingsView"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 4v15"/><path d="M7 7h10"/><path d="M5 7c0 3-2 5-2 5h6c0 0-2-2-2-5"/><path d="M19 7c0 3-2 5-2 5h6c0 0-2-2-2-5"/><path d="M8 20h8"/></svg></span><em>Udienze</em></button>
-      <button data-target="agendaView"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="15" rx="3"/><path d="M8 3v4M16 3v4M4 10h16"/><path d="M8 14h3M13 14h3M8 17h3"/></svg></span><em>Agenda</em></button>
       <button data-target="plannerView"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 4v3M16 4v3M4 10h16M8 14h8M8 17h5"/></svg></span><em>Planner</em></button>
+      <button data-target="scadenzeView"><span class="nav-svg" aria-hidden="true">◷</span><em>Scadenze</em></button>
       <button data-target="practicesView"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 7.5A2.5 2.5 0 0 1 6.5 5H10l1.7 2H17.5A2.5 2.5 0 0 1 20 9.5v8A2.5 2.5 0 0 1 17.5 20h-11A2.5 2.5 0 0 1 4 17.5v-10Z"/><path d="M4 9h16"/></svg></span><em>Pratiche</em></button>
       <button data-target="toolsView"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l1.6 3.9L17.5 8.5l-3.1 2.5.9 4-3.3-2-3.3 2 .9-4L6.5 8.5l3.9-1.6L12 3Z"/><path d="M20.1 15.5l.8 1.9 1.9.8-1.9.8-.8 1.9-.8-1.9-1.9-.8 1.9-.8.8-1.9Z"/></svg></span><em>Strumenti</em></button>
     </nav>
 
+    <p id="offlineWarning" class="muted hidden" role="status" aria-live="polite"></p>
     <main>
       <section id="homeView" class="view"></section>
 
@@ -101,13 +112,14 @@
           </div>
           <div class="hearing-period-control">
             <button id="hearingPrev" class="nav-square" aria-label="Periodo precedente">‹</button>
-            <input id="hearingDate" type="date" aria-label="Data udienze">
+            <span class="companion-date-picker"><span id="hearingDateText" aria-hidden="true"></span><input id="hearingDate" type="date" aria-label="Data udienze"></span>
             <button id="hearingNext" class="nav-square" aria-label="Periodo successivo">›</button>
           </div>
           <div class="hearing-view-row">
             <div class="hearing-mode" role="group" aria-label="Vista udienze">
+              <button data-hearing-mode="list" class="active">Elenco</button>
               <button data-hearing-mode="day">Giorno</button>
-              <button data-hearing-mode="week" class="active">Settimana</button>
+              <button data-hearing-mode="week">Settimana</button>
               <button data-hearing-mode="month">Mese</button>
             </div>
             <button id="hearingToday" class="hearing-today">Oggi</button>
@@ -145,11 +157,17 @@
       <section id="plannerView" class="view hidden">
         <div class="v19-planner-head">
           <div class="view-kicker">STUDIO COSTA · ORGANIZZAZIONE</div><h2>Il mio Planner</h2>
-          <p>Tutti gli impegni di oggi. Ruota iPhone o iPad per una lettura più ampia.</p>
-          <div class="v19-planner-date"><button id="plannerPrev" aria-label="Giorno precedente">‹</button><input type="date" id="plannerDate" aria-label="Data Planner"><button id="plannerNext" aria-label="Giorno successivo">›</button><button id="plannerToday">Oggi</button></div>
+          <p>Udienze, lavoro e impegni personali in ordine di orario.</p>
+          <div class="v19-planner-date"><button id="plannerPrev" aria-label="Giorno precedente">‹</button><span class="companion-date-picker"><span id="plannerDateText" aria-hidden="true"></span><input type="date" id="plannerDate" aria-label="Data Planner"></span><button id="plannerNext" aria-label="Giorno successivo">›</button><button id="plannerToday">Oggi</button></div>
           <strong id="plannerPeriodLabel"></strong>
         </div>
         <div id="plannerContent"></div>
+      </section>
+
+      <section id="scadenzeView" class="view hidden">
+        <div class="scadenze-head"><span class="view-kicker">ATTI DA NOTIFICARE E DEPOSITARE</span><h2>Scadenze</h2><p>Preparazioni, date interne e termini effettivi</p><label><input id="scadenzeAllDates" type="checkbox" checked> TUTTE LE DATE</label>
+        <div class="scadenze-filters"><label>DAL<span class="companion-date-picker"><span id="scadenzeFromText" aria-hidden="true"></span><input type="date" id="scadenzeFrom" aria-label="Scadenze dal"></span></label><label>AL<span class="companion-date-picker"><span id="scadenzeToText" aria-hidden="true"></span><input type="date" id="scadenzeTo" aria-label="Scadenze al"></span></label></div>
+        <div class="scadenza-actions"><button id="scadenzePrint">STAMPA / PDF</button><button id="scadenzeCsv">ESPORTA ELENCO</button></div><p id="scadenzeCount"></p></div><div id="scadenzeContent"></div>
       </section>
 
       <section id="practicesView" class="view hidden">
@@ -231,7 +249,7 @@
         <section id="taxesTool" class="plugin-tool hidden">
           <div class="tool-card">
             <h3>Tributi locali</h3>
-            <p class="muted">Decadenza dell'accertamento, riscossione ed eventuale prescrizione secondo il medesimo motore della versione desktop V20.10.</p>
+            <p class="muted">Decadenza dell'accertamento, riscossione ed eventuale prescrizione secondo il medesimo motore della versione desktop V20.19.8</p>
             <div class="tool-subcard">
               <strong>1. Tributo e decadenza</strong>
               <label>Tributo<select id="taxType" class="tool-input"><option>IMU</option><option>TARI</option><option>TASI</option><option>ICP/CANONE (verificare disciplina propria)</option><option>ALTRO TRIBUTO LOCALE</option></select></label>
@@ -374,7 +392,7 @@
 
   <div id="settingsModal" class="modal hidden">
     <div class="modal-sheet compact-sheet">
-      <div class="modal-top"><button id="closeSettings" class="back-button" type="button" aria-label="Chiudi impostazioni">‹</button><div><div class="eyebrow dark">COMPANION V20.10</div><h2>Sincronizzazione e privacy</h2></div></div>
+      <div class="modal-top"><button id="closeSettings" class="back-button" type="button" aria-label="Chiudi impostazioni">‹</button><div><div class="eyebrow dark">COMPANION V20.19.8</div><h2>Sincronizzazione e privacy</h2></div></div>
       <div class="detail-section">
         <h3>Modifiche da riportare al PC</h3>
         <p id="pendingActionsInfo" class="muted"></p>
@@ -384,6 +402,11 @@
         <h3>Archivio</h3>
         <p id="localArchiveInfo" class="muted"></p>
         <button id="privacyImportButton" class="secondary-button">Importa nuovo .scmobile</button>
+      </div>
+      <div class="detail-section">
+        <h3>PIN di accesso iPhone</h3>
+        <p class="muted">PIN di 4 cifre richiesto all'apertura della Companion. È una protezione aggiuntiva al codice dell'iPhone, non sostituisce la sicurezza del dispositivo.</p>
+        <button id="changeAccessPin" class="secondary-button" type="button">Imposta o modifica PIN di accesso</button>
       </div>
       <div class="detail-section">
         <h3>Protezione visualizzazione</h3>
@@ -397,7 +420,7 @@
       </div>
       <div class="detail-section">
         <h3>Gestione dati sul dispositivo</h3>
-        <p class="muted">Accesso automatico, senza password. I dati conservati in questa Companion sono cifrati con AES-256-GCM tramite una chiave locale del dispositivo. Chi può usare questo browser può consultare l'archivio. I file esportati .scmobile, .scmr e .scl non sono cifrati: conservarli in modo riservato.</p>
+        <p class="muted">Accesso protetto con PIN locale quando configurato. I dati conservati in questa Companion sono cifrati con AES-256-GCM tramite una chiave locale del dispositivo. Chi può usare questo browser può consultare l'archivio. I file esportati .scmobile, .scmr e .scl non sono cifrati: conservarli in modo riservato.</p>
         <button id="clearLocalArchive" class="secondary-button">Elimina solo archivio importato</button>
         <button id="clearAllLocalData" class="danger-button" type="button">Elimina tutti i dati locali</button>
       </div>
@@ -420,19 +443,21 @@
 
 <div id="undoToast" class="undo-toast hidden"><span>Checklist aggiornata</span><button id="undoAction" type="button">Annulla</button></div>
 
-  <script src="companion-version.js?v=20.11"></script>
-  <script src="companion-core.js?v=20.11"></script>
-  <script src="planner-batch-mobile.js?v=20.11"></script>
-  <script src="companion-vault.js?v=20.11"></script>
-  <script src="companion-storage.js?v=20.11"></script>
-  <script src="app.js?v=20.11"></script>
-  <script src="app-calendar.js?v=20.11"></script>
-  <script src="app-planner.js?v=20.11"></script>
-  <script src="app-workflows.js?v=20.11"></script>
-  <script src="app-calculators.js?v=20.11"></script>
-  <script src="app-actions.js?v=20.11"></script>
-  <script src="app-details.js?v=20.11"></script>
-  <script src="app-privacy.js?v=20.11"></script>
-  <script src="app-bootstrap.js?v=20.11"></script>
+  <script src="companion-version.js?v=20.19.8"></script>
+  <script src="companion-core.js?v=20.19.8"></script>
+  <script src="planner-batch-mobile.js?v=20.19.8"></script>
+  <script src="companion-vault.js?v=20.19.8"></script>
+  <script src="companion-storage.js?v=20.19.8"></script>
+  <script src="app.js?v=20.19.8"></script>
+  <script src="app-calendar.js?v=20.19.8"></script>
+  <script src="app-planner.js?v=20.19.8"></script>
+  <script src="app-workflows.js?v=20.19.8"></script>
+  <script src="app-calculators.js?v=20.19.8"></script>
+  <script src="app-actions.js?v=20.19.8"></script>
+  <script src="app-details.js?v=20.19.8"></script>
+  <script src="app-privacy.js?v=20.19.8"></script>
+  <script src="app-scadenze.js?v=20.19.8"></script>
+  <script src="companion-access.js?v=20.19.8"></script>
+  <script src="app-bootstrap.js?v=20.19.8"></script>
 </body>
 </html>

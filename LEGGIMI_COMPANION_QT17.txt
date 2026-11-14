@@ -1,38 +1,16 @@
-STUDIO COSTA COMPANION 20.11 — ABBINATA A QT19 19.2
-Aggiornare TUTTI i file di questa cartella nella stessa posizione HTTPS della
-Companion già usata, conservando origine e percorso per mantenere i dati locali.
-Non caricare database, .scmobile o .scmr nell'hosting o nel repository.
-Accettare l'aggiornamento dell'app quando viene proposto; non cancellare i dati
-locali del browser. Conservare prima le modifiche pendenti esportando il .scmr.
+QT20 20.19.8 — COMPANION CON FILE
 
-Dal desktop: autorizzare i singoli fascicoli nella scheda pratica, quindi
-Plugin > Esporta aggiornamento Companion .scmobile. Importarlo nella Companion.
-I nuovi SCM0/SCMR0 NON chiedono password e NON SONO CIFRATI: chi possiede il file
-può leggerlo. Il checksum verifica corruzioni accidentali, non l'autenticità.
-Le modifiche rientrano nel desktop mediante importa risposte .scmr con revisione
-esplicita. Non esiste una sincronizzazione automatica in rete.
+Indirizzo: https://gcgiusycosta-source.github.io/studio-costa-companion/
 
-La Companion 20.11 NON presenta più alcun campo password o PIN:
-accesso automatico anche se era presente un Vault V1 cifrato. In tale caso
-il vecchio database viene preservato INALTERATO e la Companion apre un archivio
-nuovo e separato senza password. Per rivedere pratiche e appuntamenti, importare
-il nuovo file .scmobile dal gestionale. Le attività presenti SOLO nel vecchio
-archivio non diventano leggibili senza la chiave originale: conservarne una
-copia e NON cancellare i dati dell'origine browser.
-L'archivio attivo è cifrato AES-256-GCM con chiave locale non estraibile;
-l'accesso al dispositivo/browser consente di accedervi senza credenziali.
-I vecchi file SCM1 e SCL1 cifrati non si possono leggere automaticamente:
-riesportare un file attuale .scmobile dal gestionale. I nuovi scambi non sono
-cifrati: conservarli fuori dall'hosting e dal repository pubblico.
+1. Sul PC aprire Companion / Scambio dati ed esportare il file .scmobile.
+2. Trasferire privatamente il file all’iPhone (per esempio tramite iCloud Drive).
+3. Aprire la Companion in Safari, oppure dalla sua icona Home. Scegliere Importa aggiornamento, selezionare il file .scmobile e confermare.
+4. Attendere “Disponibile offline” prima di scollegarsi da Internet. Se compare un avviso offline, i dati importati restano salvati: mantenere la connessione e riaprire l’app.
 
-ATTENZIONE AGGIORNAMENTO PWA: lo ZIP sul computer NON aggiorna da solo
-la pagina Companion installata sul telefono. Pubblicare tutti i file in
-Companion_Web sulla medesima origine HTTPS. Aprire la Companion online,
-applicare l'eventuale notifica Aggiorna ora (per uscire dalla vecchia versione),
-chiudere e riaprire l'app. Verificare che l'interfaccia mostri v20.11.
-Senza pubblicazione della Companion aggiornata, resta la versione precedente.
-Non cancellare cache/dati locali prima di salvare le modifiche pendenti.
+Non occorrono certificati locali, QR Wi-Fi o PIN temporanei del PC. Il PIN personale della Companion protegge l’accesso locale e resta distinto dalla sincronizzazione.
 
-La password eventualmente prevista dal gestionale DESKTOP non viene modificata.
-Il calcolatore mobile storico resta distinto dal nuovo riparto desktop in terzi.
-Pubblicazione effettiva, Safari/iPhone e aggiornamento PWA reale non verificati qui.
+Per riportare le attività supportate al PC, esportare le modifiche .scmr dalla Companion e importarle con il comando già presente nel gestionale. Esportare eventuali modifiche pendenti della vecchia app locale prima di abbandonarla: gli archivi di indirizzi web diversi sono separati.
+
+Non pubblicare mai .scmobile, .scmr, database, documenti dei clienti o chiavi su GitHub. Questi file di scambio non sono cifrati: trasferirli tramite canali privati. GitHub ospita soltanto il codice dell’app.
+
+Sul medesimo indirizzo GitHub l’aggiornamento conserva l’archivio locale; non cancellare i dati del sito. Per la Home: Safari > Condividi > Aggiungi alla schermata Home.

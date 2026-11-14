@@ -163,7 +163,7 @@ function mobilePlannerSegments(day,events){
   const computed=companionDayProfile(day);
   const changed=pendingMobileActions.some(a=>['planner_block_save','planner_block_delete','planner_block_exception_save','planner_block_exception_remove','planner_work_sessions'].includes(a.action_type));
   if(computed&&!changed){
-    const plannedBlocks=computed.busy.filter(x=>x.private&&x.source==='Blocco personale').map(x=>({
+    const plannedBlocks=(snapshot?.plannerBlocks||[]).length?blocks:computed.busy.filter(x=>x.private&&x.source==='Blocco personale').map(x=>({
       id:x.block_id,weekday:dayNo,block_date:null,label:x.label,start_time:x.start_time,end_time:x.end_time}));
     return {ranges,blocks:plannedBlocks,busy:computed.busy.map(x=>[mobilePlannerMinutes(x.start_time),mobilePlannerMinutes(x.end_time)]),
       available:computed.available.map(x=>[mobilePlannerMinutes(x[0]),mobilePlannerMinutes(x[1]),x[2]==='preferred']),
@@ -310,38 +310,62 @@ function openPlannerBatchPaste(){
   };
   $b('plannerBatchText').focus();
 }
+// Una sola cronologia per Home e Planner. Le voci senza data restano nell'archivio.
+function companionDayRows(day,all){
+  const info=mobilePlannerSegments(day,all),rows=[],seen=new Set();
+  const add=row=>{const key=row.key;if(seen.has(key))return;seen.add(key);rows.push(row);};
+  for(const e of all.filter(e=>e.event_date===day)){
+    const isTask=['TASK','DEADLINE'].includes(e.source_type),id=e.source_id??e.task_id??e.id;
+    add({...e,key:[e.source_type,e.uid||id,e.start_time||'',e.title,e.practice_id].join('|'),
+      title:e.title||'Impegno',kind:eventKind(e),task_id:isTask?id:null,event_id:e.uid||e.id||'',
+      private:/PERSONALE|FAMIGLIA/.test(e.category||''),local_id:e.source_type==='LOCAL'?e.id:null});
+  }
+  for(const b of info.blocks){
+    add({key:'BLOCK:'+String(b.id??b.mobile_id)+':'+b.start_time,title:b.label||'Impegno personale',
+      start_time:b.start_time,end_time:b.end_time,kind:'PERSONALE',private:true,block_id:b.id??b.mobile_id});
+  }
+  // Il profilo calcolato può integrare trasferimenti o sessioni non presenti negli eventi.
+  for(const e of (info.computedBusy||[]).filter(e=>!e.private&&e.source!=='Checklist pianificata')){
+    if(rows.some(x=>x.start_time===e.start_time&&x.end_time===e.end_time&&(x.title===e.label||(e.source_id!=null&&String(x.source_id)===String(e.source_id)&&x.source_type===e.source_type))))continue;
+    add({key:['COMPUTED',e.source,e.source_id,e.label,e.start_time,e.end_time].join('|'),title:e.label||e.source||'Impegno',start_time:e.start_time,end_time:e.end_time,kind:e.source||'ATTIVITÀ',practice_id:e.practice_id});
+  }
+  for(const s of (snapshot?.plannerChecklistSessions||[]).filter(s=>s.plan_date===day)){
+    add({key:'CHECKLIST:'+String(s.id??s.checklist_item_id)+':'+s.start_time,title:s.title||'Attività checklist',start_time:s.start_time,end_time:s.end_time,kind:'CHECKLIST'});
+  }
+  for(const action of pendingMobileActions.filter(a=>a.action_type==='planner_work_sessions'))for(const slot of action.slots||[]){
+    if(slot[0]!==day)continue;
+    add({key:['PENDING',action.action_id,slot[1],slot[2]].join('|'),title:action.title||'Sessione di lavoro programmata',start_time:mobilePlannerTime(slot[1]),end_time:mobilePlannerTime(slot[2]),kind:'SESSIONE · IN ATTESA DEL DESKTOP'});
+  }
+  for(const t of plannerTasksForDay(day,all)){
+    if(rows.some(e=>e.task_id!=null&&String(e.task_id)===String(t.id)))continue;
+    add({key:'TARGET:'+t.id,title:t.title,task_id:t.id,start_time:t.target_time||'',kind:t.deadline?'SCADENZA':'ATTIVITÀ'});
+  }
+  return rows.sort((a,b)=>(mobilePlannerMinutes(a.start_time)??1441)-(mobilePlannerMinutes(b.start_time)??1441)||String(a.title).localeCompare(String(b.title),'it'));
+}
+function companionPlannerRow(row,day){
+  const p=row.practice_id&&practiceById(row.practice_id);
+  const attrs=row.block_id!=null?`data-edit-block="${escapeHtml(row.block_id)}" data-block-day="${escapeHtml(day)}"`:
+    row.local_id?`data-local-edit="${escapeHtml(row.local_id)}"`:
+    row.task_id!=null?`data-planner-task="${escapeHtml(row.task_id)}" data-planner-date="${escapeHtml(day)}"`:
+    `data-planner-event="${escapeHtml(row.event_id||'')}" data-planner-practice="${escapeHtml(row.practice_id||'')}"`;
+  return `<button class="companion-day-row ${row.private?'is-personal':''} ${row.deadline_step_kind?'plugin-'+row.deadline_step_kind.toLowerCase():''}" ${attrs}>
+    <span class="companion-row-time">${escapeHtml(row.start_time||'Senza orario')}${row.end_time?'<small>– '+escapeHtml(row.end_time)+'</small>':''}</span>
+    <span class="companion-row-body"><small>${escapeHtml(row.kind||'ATTIVITÀ')}</small><strong>${escapeHtml(row.title)}</strong>${p||row.practice_name?`<em>${escapeHtml(p?.assistito||row.practice_name)}</em>`:''}</span><span>›</span></button>`;
+}
 function renderMobilePlanner(anchor,all){
-  const day=anchor||plannerLocalToday();
-  const configured=(snapshot?.plannerWindows||[]).length>0;
-  const names=['Dom','Lun','Mar','Mer','Gio','Ven','Sab'];
-  const info=mobilePlannerSegments(day,all),events=all.filter(e=>e.event_date===day),tasks=plannerTasksForDay(day,all);
-  const rows=info.available.map(([a,b,p])=>`<div class="mobile-planner-slot ${p?'preferred':''}"><span>${mobilePlannerTime(a)}–${mobilePlannerTime(b)}</span><b>${p?'★ Preferita per lavorare':'Disponibile'}</b></div>`).join('');
-  const otherEvents=events.filter(e=>e.source_type!=='TASK');
-  const appointments=info.computedBusy?info.computedBusy.filter(e=>!e.private&&e.source!=='Checklist pianificata').map(e=>`<div class="mobile-planner-commitment ${e.source==='Trasferimento udienza'?'travel':''}"><span>${escapeHtml(e.start_time||'Senza ora')}–${escapeHtml(e.end_time||'')}</span><strong>${escapeHtml(e.label||e.source||'Impegno')}</strong></div>`).join(''):
-    otherEvents.map(e=>`<button class="mobile-planner-commitment" data-planner-event="${escapeHtml(e.uid||e.id||'')}" data-planner-practice="${escapeHtml(e.practice_id||'')}"><span>${escapeHtml(e.start_time||'Senza ora')}</span><strong>${escapeHtml(e.title||e.type||'Impegno')} ›</strong></button>`).join('');
-  const waitingSessions=pendingMobileActions.filter(a=>a.action_type==='planner_work_sessions').flatMap(a=>(a.slots||[]).filter(slot=>slot[0]===day).map(slot=>`<div class="mobile-planner-commitment work"><span>${mobilePlannerTime(slot[1])}–${mobilePlannerTime(slot[2])} · IN ATTESA DEL DESKTOP</span><strong>Sessione di lavoro programmata</strong></div>`)).join('');
-  const checklistBooked=(snapshot?.plannerChecklistSessions||[]).filter(s=>s.plan_date===day).map(s=>`<div class="mobile-planner-commitment work"><span>CHECKLIST · ${escapeHtml(s.start_time)}–${escapeHtml(s.end_time)}</span><strong>${escapeHtml(s.title||'Attività checklist')}</strong></div>`).join('');
-  const privates=info.blocks.map(b=>`<button class="mobile-planner-commitment private" data-edit-block="${escapeHtml(b.id||b.mobile_id||'')}" data-block-day="${escapeHtml(day)}"><span>FAMIGLIA / PERSONALE · ${escapeHtml(b.start_time)}–${escapeHtml(b.end_time)}</span><strong>${escapeHtml(b.label||'Impegno personale')}  ›</strong></button>`).join('');
-  const taskItems=tasks.map(t=>`<button class="mobile-planner-task ${t.deadline?'is-deadline':''}" data-planner-task="${escapeHtml(t.id)}" data-planner-date="${escapeHtml(day)}"><span>${t.target_time?'Entro '+escapeHtml(t.target_time):'Senza ora'}</span><strong>${escapeHtml(t.title)}</strong><small>${t.deadline?'Scadenza · ':'Attività · '}${t.target_time?'Orario operativo':'Imposta un orario'} · ${workloadLabel(t.id,t.title)}</small></button>`).join('');
-  const localMoves=localTasks.filter(t=>t.date===day&&t.status!=='COMPLETATA'&&t.category!=='UDIENZA').map(t=>
-    `<div class="planner-local-action"><div><small>${escapeHtml(t.start_time||'Senza ora')} · ${escapeHtml(t.category||'ATTIVITÀ')}</small><strong>${escapeHtml(t.title||'Attività')}</strong></div><button data-planner-move-local="${escapeHtml(t.id)}">Sposta a domani</button></div>`).join('');
-  const pending=tasks.filter(t=>!t.target_time).length;
-  const dayName=names[new Date(day+'T12:00:00').getDay()];
-  const html=`<article class="mobile-planner-day"><div class="mobile-planner-heading"><strong>${escapeHtml(dayName)} ${escapeHtml(day.slice(-2))}</strong><span>${Math.floor(info.total/60)} h ${String(info.total%60).padStart(2,'0')} libere</span></div>
-      ${info.warnings.length?`<div class="planner-capacity-warning">${info.warnings.map(w=>escapeHtml(w)).join(' · ')}</div>`:''}
-      <div class="planner-day-columns"><div class="planner-day-main">
-      ${appointments||privates||waitingSessions||checklistBooked?`<div class="mobile-planner-commitments">${appointments}${privates}${waitingSessions}${checklistBooked}</div>`:''}
-      <div class="mobile-planner-task-title">Scadenze e attività <b>${tasks.length}</b>${pending?` · ${pending} senza ora`:''}</div>
-      ${taskItems||'<div class="mobile-planner-empty">Nessuna attività da organizzare</div>'}
-      ${localMoves?`<div class="planner-local-section"><h3>Attività modificabili create sul telefono</h3>${localMoves}</div>`:''}
-      </div><aside class="planner-day-sidebar">
-      <details class="mobile-planner-availability"><summary>Disponibilità della giornata (${Math.floor(info.total/60)} h ${String(info.total%60).padStart(2,'0')})</summary>${rows||'<div class="mobile-planner-empty">Nessuna fascia configurata</div>'}</details>
-      ${mobileChecklistPlanHtml(day)}</aside></div></article>`;
-  $('plannerPeriodLabel').textContent=`${fmtDate(day)}`;
-  const targets=plannerTargetMap();
-  const unscheduled=(snapshot?.plannerUndatedTasks||[]).filter(t=>!((targets.get(String(t.task_id))||t).plan_date));
-  const backlog=unscheduled.length?`<section class="mobile-planner-backlog"><h3>Attività senza data <span>${unscheduled.length}</span></h3><p>Assegna un giorno per visualizzarle nella giornata.</p>${unscheduled.slice(0,40).map(t=>`<button class="mobile-planner-task" data-planner-task="${escapeHtml(t.task_id)}" data-planner-date=""><span>Da datare</span><strong>${escapeHtml(t.title||'Attività')}</strong><small>Programma la giornata e l'orario</small></button>`).join('')}${unscheduled.length>40?'<small>Mostrate le prime 40 attività; organizza le altre dal desktop.</small>':''}</section>`:'';
-  $('plannerContent').innerHTML=`<div class="planner-mobile-actions"><button id="addPlannerActivity" class="secondary">＋ Attività</button><button id="plannerPasteOpen">Incolla elenco</button><button id="addPlannerFamily" class="planner-family-btn">＋ Famiglia</button></div><section class="planner-legend"><span class="legend-hearing">● Udienze</span><span class="legend-appointment">● Appuntamenti</span><span class="legend-family">● Famiglia</span><span class="legend-work">● Lavoro</span></section><section class="mobile-planner-note"><strong>Il tuo tempo, giorno per giorno</strong><p>${configured?'★ Preferita significa fascia disponibile in cui prediligi lavorare: non è un impegno.':'Configura prima le disponibilità nel Planner desktop ed esporta il file cifrato.'}</p><small>Tutte le scadenze restano alla loro data. Gli orari «entro le» sono promemoria organizzativi, NON termini giuridici. Le ore libere non comprendono spostamenti non inseriti.</small></section>${html}${backlog}`;
+  const day=anchor||plannerLocalToday(),info=mobilePlannerSegments(day,all),entries=companionDayRows(day,all);
+  $('plannerDate').value=day;companionDateDisplay('plannerDate');
+  const timed=entries.filter(e=>mobilePlannerMinutes(e.start_time)!==null),untimed=entries.filter(e=>mobilePlannerMinutes(e.start_time)===null);
+  const available=info.available.map(([a,b])=>`<div class="mobile-planner-slot"><span>${mobilePlannerTime(a)}–${mobilePlannerTime(b)}</span><b>Disponibile</b></div>`).join('');
+  $('plannerPeriodLabel').textContent=fmtWeekday(day)+' '+fmtDate(day);
+  $('plannerContent').innerHTML=`<div class="planner-mobile-actions"><button id="addPlannerActivity" class="secondary">＋ Attività</button><button id="plannerPasteOpen">Incolla elenco</button><button id="addPlannerFamily" class="planner-family-btn">＋ Famiglia</button></div>
+    <article class="mobile-planner-day"><div class="mobile-planner-heading"><strong>IMPEGNI DELLA GIORNATA</strong><span>${entries.length} impegni</span></div>
+    ${info.warnings?.length?`<div class="planner-capacity-warning">${info.warnings.map(escapeHtml).join(' · ')}</div>`:''}
+    <div class="companion-day-timeline">${timed.map(e=>companionPlannerRow(e,day)).join('')||'<p class="empty">Nessun impegno con orario</p>'}</div>
+    ${untimed.length?`<section class="companion-dated-tasks"><h3>SCADENZE E ATTIVITÀ DEL GIORNO · SENZA ORARIO</h3>${untimed.map(e=>companionPlannerRow(e,day)).join('')}</section>`:''}
+    <details class="mobile-planner-availability"><summary>Fasce libere</summary>${available||'<p>Nessuna fascia disponibile configurata</p>'}</details>
+    ${mobileChecklistPlanHtml(day)}</article>`;
+  bindPracticeLinks($('plannerContent'));
   $('plannerContent').querySelectorAll('[data-planner-event]').forEach(button=>button.onclick=()=>{
     const p=button.dataset.plannerPractice;
     if(p && practiceById(p))openPractice(p);

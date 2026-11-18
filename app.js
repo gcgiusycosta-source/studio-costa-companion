@@ -363,7 +363,7 @@ function showApp(){
   $("pairScreen")?.classList.add("hidden");
   $("emptyScreen")?.classList.add("hidden");
   $("app")?.classList.remove("hidden");
-  const syncText=`Ultima sincronizzazione: ${fmtDateTime(snapshot.generated_at)}`;
+  const syncText=snapshot.generated_at?`Ultimo file QT20: ${fmtDateTime(snapshot.generated_at)}`:"Spazio personale · importa QT20 da Scambio e backup";
   if($("syncStatus"))$("syncStatus").textContent=syncText;
   if($("headerSync"))$("headerSync").textContent=fmtDateTime(snapshot.generated_at);
   if($("agendaDate"))$("agendaDate").value=plannerLocalToday();

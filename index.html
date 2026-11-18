@@ -7,14 +7,15 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Studio Costa">
-  <link rel="manifest" href="manifest.json?v=20.19.8">
-  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=20.19.8">
-  <link rel="stylesheet" href="styles-foundation.css?v=20.19.8">
-  <link rel="stylesheet" href="styles-legacy.css?v=20.19.8">
-  <link rel="stylesheet" href="styles.css?v=20.19.8">
-  <title>Studio Costa Companion V20.19.8</title>
+  <link rel="manifest" href="manifest.json?v=21.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=21.0.0">
+  <link rel="stylesheet" href="styles-foundation.css?v=21.0.0">
+  <link rel="stylesheet" href="styles-legacy.css?v=21.0.0">
+  <link rel="stylesheet" href="styles.css?v=21.0.0">
+  <title>Studio Costa · Companion Studio</title>
+  <link rel="stylesheet" href="studio.css?v=21.0.0">
 </head>
-<body>
+<body id="studioBody">
   <section id="accessPinScreen" class="screen hidden" aria-label="PIN di accesso">
     <div class="login-card">
       <div class="brand">GC</div><h1>Companion protetta</h1>
@@ -37,7 +38,7 @@
   <section id="pairScreen" class="screen hidden">
     <div class="login-card">
       <div class="brand">GC</div>
-      <div class="eyebrow dark">STUDIO LEGALE COSTA · COMPANION V20.19.8</div>
+      <div class="eyebrow dark">STUDIO LEGALE COSTA · COMPANION V21.0.0</div>
       <h1>Importa aggiornamento</h1>
       <p>Seleziona il file <strong>StudioCostaMobile.scmobile</strong> generato dal gestionale. Nessuna password richiesta. Usa un file nel formato attuale SCM0; i vecchi file cifrati SCM1 devono essere riesportati dal gestionale.</p>
       <input id="companionFile" class="file-input-native" type="file" aria-label="Seleziona file .scmobile">
@@ -53,7 +54,7 @@
   <section id="emptyScreen" class="screen hidden">
     <div class="login-card">
       <div class="brand">GC</div>
-      <div class="eyebrow dark">COMPANION V20.19.8 · PIN ATTIVO</div>
+      <div class="eyebrow dark">COMPANION V21.0.0 · PIN ATTIVO</div>
       <h1>Nessun archivio locale</h1>
       <p>Esporta dal gestionale il file StudioCostaMobile.scmobile, trasferiscilo in modo riservato su iPhone e importalo qui. Per consultarlo usa sempre la stessa icona sulla schermata Home.</p>
       <button id="emptyImportButton" class="secondary-button">Importa file .scmobile</button>
@@ -77,7 +78,7 @@
         </div>
       </div>
       <div class="header-actions compact-actions">
-        <span id="networkStatus" class="network-status" role="status" aria-live="polite">Offline</span><span class="companion-version-label">v20.19.8</span>
+        <span id="networkStatus" class="network-status" role="status" aria-live="polite">Offline</span><span class="companion-version-label">v21.0.0</span>
         <div class="sync-pill" id="headerSync">—</div>
         <button id="settingsButton" class="icon-button" aria-label="Sincronizzazione e privacy">⋯</button>
       </div>
@@ -90,9 +91,9 @@
 
 
 
-    <!-- V20.19.8: unico menu, orizzontale in alto su tablet e in basso su telefono. -->
+    <!-- V21.0.0: unico menu, orizzontale in alto su tablet e in basso su telefono. -->
     <nav class="bottom-nav companion-bottom-nav five-nav v19-nav" aria-label="Navigazione principale">
-      <button data-target="homeView" class="active" aria-current="page"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 10.5L12 4l8 6.5"/><path d="M6.5 9.5V20h11V20.19.8"/><path d="M10 20v-5.5h4V20"/></svg></span><em>Home</em></button>
+      <button data-target="homeView" class="active" aria-current="page"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 10.5L12 4l8 6.5"/><path d="M6.5 9.5V20h11V9.5"/><path d="M10 20v-5.5h4V20"/></svg></span><em>Home</em></button>
       <button data-target="hearingsView"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 4v15"/><path d="M7 7h10"/><path d="M5 7c0 3-2 5-2 5h6c0 0-2-2-2-5"/><path d="M19 7c0 3-2 5-2 5h6c0 0-2-2-2-5"/><path d="M8 20h8"/></svg></span><em>Udienze</em></button>
       <button data-target="plannerView"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 4v3M16 4v3M4 10h16M8 14h8M8 17h5"/></svg></span><em>Planner</em></button>
       <button data-target="scadenzeView"><span class="nav-svg" aria-hidden="true">◷</span><em>Scadenze</em></button>
@@ -249,7 +250,7 @@
         <section id="taxesTool" class="plugin-tool hidden">
           <div class="tool-card">
             <h3>Tributi locali</h3>
-            <p class="muted">Decadenza dell'accertamento, riscossione ed eventuale prescrizione secondo il medesimo motore della versione desktop V20.19.8</p>
+            <p class="muted">Decadenza dell'accertamento, riscossione ed eventuale prescrizione secondo il medesimo motore della versione desktop V21.0.0</p>
             <div class="tool-subcard">
               <strong>1. Tributo e decadenza</strong>
               <label>Tributo<select id="taxType" class="tool-input"><option>IMU</option><option>TARI</option><option>TASI</option><option>ICP/CANONE (verificare disciplina propria)</option><option>ALTRO TRIBUTO LOCALE</option></select></label>
@@ -392,7 +393,7 @@
 
   <div id="settingsModal" class="modal hidden">
     <div class="modal-sheet compact-sheet">
-      <div class="modal-top"><button id="closeSettings" class="back-button" type="button" aria-label="Chiudi impostazioni">‹</button><div><div class="eyebrow dark">COMPANION V20.19.8</div><h2>Sincronizzazione e privacy</h2></div></div>
+      <div class="modal-top"><button id="closeSettings" class="back-button" type="button" aria-label="Chiudi impostazioni">‹</button><div><div class="eyebrow dark">COMPANION V21.0.0</div><h2>Sincronizzazione e privacy</h2></div></div>
       <div class="detail-section">
         <h3>Modifiche da riportare al PC</h3>
         <p id="pendingActionsInfo" class="muted"></p>
@@ -443,21 +444,23 @@
 
 <div id="undoToast" class="undo-toast hidden"><span>Checklist aggiornata</span><button id="undoAction" type="button">Annulla</button></div>
 
-  <script src="companion-version.js?v=20.19.8"></script>
-  <script src="companion-core.js?v=20.19.8"></script>
-  <script src="planner-batch-mobile.js?v=20.19.8"></script>
-  <script src="companion-vault.js?v=20.19.8"></script>
-  <script src="companion-storage.js?v=20.19.8"></script>
-  <script src="app.js?v=20.19.8"></script>
-  <script src="app-calendar.js?v=20.19.8"></script>
-  <script src="app-planner.js?v=20.19.8"></script>
-  <script src="app-workflows.js?v=20.19.8"></script>
-  <script src="app-calculators.js?v=20.19.8"></script>
-  <script src="app-actions.js?v=20.19.8"></script>
-  <script src="app-details.js?v=20.19.8"></script>
-  <script src="app-privacy.js?v=20.19.8"></script>
-  <script src="app-scadenze.js?v=20.19.8"></script>
-  <script src="companion-access.js?v=20.19.8"></script>
-  <script src="app-bootstrap.js?v=20.19.8"></script>
+  <script src="companion-version.js?v=21.0.0"></script>
+  <script src="companion-core.js?v=21.0.0"></script>
+  <script src="planner-batch-mobile.js?v=21.0.0"></script>
+  <script src="companion-vault.js?v=21.0.0"></script>
+  <script src="companion-storage.js?v=21.0.0"></script>
+  <script src="app.js?v=21.0.0"></script>
+  <script src="app-calendar.js?v=21.0.0-home1"></script>
+  <script src="app-planner.js?v=21.0.0"></script>
+  <script src="app-workflows.js?v=21.0.0"></script>
+  <script src="app-calculators.js?v=21.0.0"></script>
+  <script src="app-actions.js?v=21.0.0"></script>
+  <script src="app-details.js?v=21.0.0"></script>
+  <script src="app-privacy.js?v=21.0.0"></script>
+  <script src="app-scadenze.js?v=21.0.0"></script>
+  <script src="companion-access.js?v=21.0.0"></script>
+  <script src="studio-core.js?v=21.0.0"></script>
+  <script src="studio.js?v=21.0.0-home1"></script>
+  <script src="app-bootstrap.js?v=21.0.0"></script>
 </body>
 </html>

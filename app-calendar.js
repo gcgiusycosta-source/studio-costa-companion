@@ -175,6 +175,75 @@ function quickToolCard(label, icon, view, badge=""){
   return `<button class="quick-tool-card" data-open-view="${view}"><span class="quick-tool-icon">${icon}</span><strong>${label}</strong>${badge?`<small>${badge}</small>`:""}</button>`;
 }
 
+let homeChecklistDays = 7;
+function homeChecklistRows(day, days) {
+  const end = addDays(day, days);
+  const closed = /^(COMPLETAT[AO]|DEPOSITAT[AO]|ANNULLAT[AO]|CANCELLAT[AO]|ARCHIVIAT[AO]|CHIUS[AO]|ELIMINAT[AO])$/i;
+  const rows = [];
+  function add(due, status, title, time, practice, notes, source) {
+    const italian = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(String(due || ''));
+    if (italian) due = italian[3] + '-' + italian[2] + '-' + italian[1];
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(due) || due < '2026-11-17' || due > end || closed.test(String(status || '').trim())) return;
+    rows.push({due, title, time, practice, notes, source});
+  }
+  const deadlineIds = new Set((snapshot?.deadlines || []).map(t => String(t.source_id ?? t.task_id ?? t.id ?? t.uid)));
+  const targets = plannerTargetMap();
+  const deadlines = new Map((snapshot?.scadenze?.deadline_rows || []).map(r => [String(r.task_id), r]));
+  const seen = new Set();
+  const taskRows = [...(snapshot?.tasks || []), ...(snapshot?.deadlines || []), ...(snapshot?.events || []).filter(t => t.source_type === 'TASK' || t.source_type === 'DEADLINE')];
+  for (const task of taskRows) {
+    const id = task.source_id ?? task.task_id ?? task.id ?? task.uid;
+    if (id != null && seen.has(String(id))) continue;
+    if (id != null) seen.add(String(id));
+    if (/^(PLANNER:|CHECKLIST_ATTIVITA)/.test(task.origin || '')) continue;
+    const target = targets.get(String(id));
+    const legacyDeadline = task.legal_deadline || /SCADENZA|DEADLINE/i.test(task.category || task.source_type || '') || deadlineIds.has(String(id));
+    const due = task.due_date ?? target?.due_date ?? deadlines.get(String(id))?.due_date ?? task.deadline_date ?? (legacyDeadline ? task.event_date : '');
+    const event = normalizeCalendarItem(task, task.source_type || 'TASK');
+    add(due, event.status, event.title, event.start_time, event.practice_id, event.notes, 'Attività del gestionale');
+  }
+  for (const target of targets.values()) {
+    const id = String(target.task_id);
+    if (seen.has(id) || !target.due_date) continue;
+    const event = normalizeCalendarItem(target, 'TASK');
+    add(target.due_date, event.status, target.title, target.target_time, target.practice_id, '', 'Attività del gestionale');
+    seen.add(id);
+  }
+  for (const row of effectiveScadenzeRows()) {
+    if (!seen.has(String(row.task_id))) add(row.due_date, row.status, row.title, '', row.practice_id, row.client, 'Scadenza');
+  }
+  for (const task of localTasks) add(task.date, task.status, task.title, task.start_time, task.practice_id, task.notes, 'Attività sul dispositivo');
+  const lists = new Map((snapshot?.checklists || []).map(list => [String(list.checklist_id), list]));
+  for (const item of effectiveChecklistItems()) {
+    const list = lists.get(String(item.checklist_id));
+    if (list && !list.archived) add(item.due_date || list.date, item.status, item.title, item.due_time, list.practice_id, item.notes, list.title || 'Checklist');
+  }
+  for (const action of pendingMobileActions.filter(a => a.action_type === 'upsert_checklist')) {
+    if (lists.has(String(action.mobile_uid || action.target_id))) continue;
+    const list = action.payload || {};
+    for (const item of list.items || []) add(item.due_date || list.date, item.status, item.title || item, item.due_time, list.practice_id, item.notes, list.title || 'Checklist sul dispositivo');
+  }
+  for (const item of snapshot?.hearingChecklistItems || []) {
+    const hearing = hearingEventById(item.hearing_id);
+    add(item.due_date || item.hearing_date || hearing?.event_date, effectiveHearingChecklistStatus(item), item.title, item.due_time, item.practice_id || hearing?.practice_id, item.notes, 'Checklist udienza');
+  }
+  return rows.sort((a,b) => a.due.localeCompare(b.due) || String(a.time || '').localeCompare(String(b.time || '')) || String(a.title).localeCompare(String(b.title), 'it'));
+}
+function mountHomeChecklist(root, day) {
+  const panel = root.querySelector('[data-home-checklist]');
+  function show() {
+    const rows = homeChecklistRows(day, homeChecklistDays);
+    const options = [7,15,30].map(n => `<option value="${n}" ${n === homeChecklistDays ? 'selected' : ''}>Prossimi ${n} giorni</option>`).join('');
+    const groups = [['Arretrate', rows.filter(r => r.due < day)], ['Della giornata', rows.filter(r => r.due === day)], ['Giorni successivi', rows.filter(r => r.due > day)]];
+    panel.innerHTML = `<label>Intervallo <select>${options}</select></label>` + groups.filter(([,items]) => items.length).map(([label,items]) =>
+      `<h4>${label}</h4>` + items.map(r => `<details><summary>${escapeHtml(fmtDate(r.due))} · ${escapeHtml(r.title || 'Attività')}</summary><p>${escapeHtml([r.source, r.time, r.notes].filter(Boolean).join(' · '))}</p>${practiceById(r.practice) ? `<button data-home-practice="${escapeHtml(r.practice)}">Apri fascicolo</button>` : ''}</details>`).join('')
+    ).join('') + (rows.length ? '' : '<p>Nessuna attività aperta nel periodo.</p>');
+    panel.querySelector('select').onchange = event => {homeChecklistDays = Number(event.target.value); show(); panel.querySelector('select').focus();};
+    panel.querySelectorAll('[data-home-practice]').forEach(button => button.onclick = () => openPractice(button.dataset.homePractice));
+  }
+  show();
+}
+
 function renderHome(){
   const root=$("homeView");if(!root||!snapshot)return;
   const all=calendarItems().sort(eventSort);
@@ -249,7 +318,8 @@ function renderHome(){
         <button data-open-tool="terms"><span>${iconClock}</span><b>Termini</b><small>Calcolo rapido</small></button>
         <button data-open-view="checklistsView"><span>${iconCheck}</span><b>Checklist</b><small>Promemoria</small></button>
       </div>
-    </section>`;
+    </section><section class="executive-today"><h3>Checklist delle attività</h3><div data-home-checklist></div></section>`;
+  mountHomeChecklist(root,today);
 
   root.querySelectorAll('[data-open-view]').forEach(btn=>btn.onclick=()=>switchView(btn.dataset.openView));
   root.querySelectorAll('[data-open-tool]').forEach(btn=>btn.onclick=()=>openTool(btn.dataset.openTool));

@@ -36,7 +36,7 @@ async function clearArchive(){
 async function clearAllLocalData(){
   const pendingCount=pendingMobileActions.filter(a=>a.sync_status!=="IMPORTATA_DAL_GESTIONALE").length;
   const hasOldArchive=await CompanionVault.preservedLegacyVault();
-  const warning=`Eliminazione dei dati della Companion attiva: archivio, ${localTasks.length} attività locali e ${pendingCount} modifiche non confermate. Non sarà possibile recuperarli senza backup.${hasOldArchive?' Il precedente archivio cifrato, separato, sarà conservato intatto.':''} Continuare?`;
+  const warning=`Eliminazione dei dati della Companion attiva: archivio, ${localTasks.length} attività locali e ${pendingCount} modifiche non confermate. Saranno eliminati anche quaderni, disegni, progetti, obiettivi, abitudini e backup personali della Companion Studio. Non sarà possibile recuperarli senza backup.${hasOldArchive?' Il precedente archivio cifrato, separato, sarà conservato intatto.':''} Continuare?`;
   if(!confirm(warning))return;
   if(prompt('Per confermare scrivi esattamente ELIMINA')!=="ELIMINA")return;
   await CompanionVault.clearEverything();
@@ -55,8 +55,9 @@ function companionVaultUI(){
 async function bootUnlocked(){
   $('vaultScreen').classList.add('hidden');
   const hasCache=await loadCached();
-  if(hasCache)showApp();
-  else $('emptyScreen').classList.remove('hidden');
+  await Studio.init();
+  if(!hasCache)snapshot=Studio.emptySnapshot();
+  showApp();
 
 }
 

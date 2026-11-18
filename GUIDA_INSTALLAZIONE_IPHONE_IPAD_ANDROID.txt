@@ -1,16 +1,47 @@
-QT20 20.19.8 — COMPANION CON FILE
+COMPANION STUDIO 21.0 — GUIDA RAPIDA
 
-Indirizzo: https://gcgiusycosta-source.github.io/studio-costa-companion/
+Questa versione amplia la Companion esistente e mantiene lo scambio file con QT20.
 
-1. Sul PC aprire Companion / Scambio dati ed esportare il file .scmobile.
-2. Trasferire privatamente il file all’iPhone (per esempio tramite iCloud Drive).
-3. Aprire la Companion in Safari, oppure dalla sua icona Home. Scegliere Importa aggiornamento, selezionare il file .scmobile e confermare.
-4. Attendere “Disponibile offline” prima di scollegarsi da Internet. Se compare un avviso offline, i dati importati restano salvati: mantenere la connessione e riaprire l’app.
+AGGIORNARE LA COMPANION GITHUB ESISTENTE
+1. Esportare prima le modifiche .scmr pendenti e conservare il più recente .scmobile.
+2. Fare una copia dei file pubblicati nel repository attuale.
+3. Estrarre lo ZIP e caricare tutti i file della cartella Companion_Web nella stessa posizione in cui si trova oggi index.html. Non caricare la cartella contenitore se index.html era nella radice.
+4. Attendere la pubblicazione GitHub Pages e aprire lo stesso indirizzo già utilizzato. Accettare l’aggiornamento proposto dalla Companion, se presente.
+5. Il PIN personale e gli archivi sono mantenuti sul medesimo dispositivo, browser e indirizzo web. Non cancellare i dati del sito e non disinstallare la vecchia icona prima di aver esportato i file necessari.
+6. Verificare la disponibilità offline nella versione reale prima di scollegarsi. La demo non installa una cache offline.
 
-Non occorrono certificati locali, QR Wi-Fi o PIN temporanei del PC. Il PIN personale della Companion protegge l’accesso locale e resta distinto dalla sincronizzazione.
+SUL NUOVO IPAD O IPHONE
+Aprire l’indirizzo della Companion in Safari. Impostare personalmente il PIN quando richiesto. Condividi > Aggiungi alla schermata Home. Lo spazio personale può essere usato anche senza un archivio QT20 importato.
+Un sito diverso (compresa l’anteprima privata Sites) ha un archivio locale distinto: non vedrà automaticamente i dati salvati su GitHub.
 
-Per riportare le attività supportate al PC, esportare le modifiche .scmr dalla Companion e importarle con il comando già presente nel gestionale. Esportare eventuali modifiche pendenti della vecchia app locale prima di abbandonarla: gli archivi di indirizzi web diversi sono separati.
+LA MIA GIORNATA
+Agenda di oggi, quaderni, promemoria veloci, timer e abitudini.
+I promemoria hanno un quadratino: spuntandoli scompaiono dall’elenco; Annulla ultima spunta recupera l’ultimo completato della giornata. Restano indipendenti dai fascicoli e dalle scadenze legali. Le giornate precedenti si consultano con il selettore data.
 
-Non pubblicare mai .scmobile, .scmr, database, documenti dei clienti o chiavi su GitHub. Questi file di scambio non sono cifrati: trasferirli tramite canali privati. GitHub ospita soltanto il codice dell’app.
+AGENDA E PLANNER
+L’agenda riunisce gli eventi importati dal gestionale e gli impegni personali creati sul dispositivo. Gli eventi QT20 conservano le funzioni precedenti. Gli impegni personali hanno categoria, giorno, ora iniziale/finale e note. Vista giorno e settimana. Il comando Planner QT20 apre il planner già esistente; nessuna doppia scrittura su fascicoli o scadenze.
 
-Sul medesimo indirizzo GitHub l’aggiornamento conserva l’archivio locale; non cancellare i dati del sito. Per la Home: Safari > Condividi > Aggiungi alla schermata Home.
+PROGETTI, OBIETTIVI E ABITUDINI
+Progetti con stato, data obiettivo facoltativa, note e piccoli passi spuntabili. Obiettivi con traguardi; abitudini con registrazione per giorno. Tutti sono personali, separati dai dati dello studio importati.
+
+QUADERNI
+Creare un quaderno e più pagine. Titolo e testo si salvano automaticamente. Attendere “Salvato sul dispositivo”; in caso di errore non chiudere la pagina e conservare una copia del testo.
+Scrivi / disegna attiva il foglio per dito, mouse o penna. Termina scrittura permette di scorrere normalmente. Tre colori, tre spessori, Annulla tratto, esportazione PNG e appunti TXT. Non sono presenti OCR, conversione del manoscritto o annotazione PDF. Apple Pencil e rifiuto del palmo richiedono verifica fisica sul proprio iPad: non sono dichiarati certificati.
+
+CONCENTRAZIONE
+Blocchi da 25 o 50 minuti, pausa, ripresa, conteggio dei blocchi terminati e rumore morbido facoltativo. Il countdown usa l’orologio: tornando alla pagina recupera il tempo trascorso. Non completa automaticamente attività. Avvisi nell’app aperta; nessuna promessa di sveglie o notifiche con app chiusa. iOS può sospendere la pagina e l’audio.
+
+SCAMBIO E BACKUP — TRE FILE DIVERSI
+.scmobile: QT20 -> Companion. Importa le pratiche autorizzate e i dati già supportati.
+.scmr: Companion -> QT20. Solo le modifiche già previste dal gestionale.
+.cstudio: backup completo del nuovo spazio personale, compresi i disegni. Serve per trasferirlo a un altro dispositivo.
+I backup e i file di scambio sono IN CHIARO, con checksum di integrità. Conservarli e trasferirli privatamente. Non pubblicarli su GitHub o Sites.
+
+TRASFERIRE LO SPAZIO PERSONALE DA IPHONE A IPAD
+Su iPhone: Scambio e backup > Esporta backup .cstudio. Trasferire il file privatamente. Su iPad: Scambio e backup > Ripristina backup, scegliere il file e confermare. Il ripristino SOSTITUISCE lo spazio personale dell’iPad, senza unire le modifiche. Una copia precedente resta recuperabile con Recupera backup precedente. Esportare prima se entrambi i dispositivi contengono novità. Non si tratta di sincronizzazione automatica o bidirezionale.
+La cancellazione dei dati del browser può eliminare anche l’archivio locale: effettuare backup periodici.
+
+DEMO
+Aprire demo.html per provare l’interfaccia con dati fittizi. Non accede all’archivio reale e perde tutte le modifiche ricaricando la pagina. Per lavorare usare index.html.
+
+La nuova versione non integra gli account Notion, Goodnotes o altre app mostrate nei riferimenti: ne riprende soltanto alcuni principi di organizzazione visiva.

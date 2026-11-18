@@ -10,6 +10,7 @@ function renderAll(){
   renderPlugins();
   renderPrivacy();
   updatePendingIndicator();
+  if(typeof Studio!=='undefined'&&Studio.ready)Studio.render();
 }
 
 function bindChecklistNavigation(){

@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f3f5f3">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Studio Costa">
+  <link rel="manifest" href="manifest.json?v=21.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=21.0.0">
+  <link rel="stylesheet" href="styles-foundation.css?v=21.0.0">
+  <link rel="stylesheet" href="styles-legacy.css?v=21.0.0">
+  <link rel="stylesheet" href="styles.css?v=21.0.0">
+  <title>Studio Costa · Companion Studio</title>
+  <link rel="stylesheet" href="studio.css?v=21.0.0">
+</head>
+<body id="studioBody">
+  <section id="accessPinScreen" class="screen hidden" aria-label="PIN di accesso">
+    <div class="login-card">
+      <div class="brand">GC</div><h1>Companion protetta</h1>
+      <p>Inserisci il PIN personale di 4 cifre.</p>
+      <input id="accessPinInput" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" autocomplete="off" placeholder="PIN" aria-label="PIN di accesso">
+      <button id="accessPinUnlock" type="button">Sblocca</button>
+      <p id="accessPinError" class="error" role="alert"></p>
+    </div>
+  </section>
+  <section id="vaultScreen" class="screen vault-screen hidden" aria-label="Errore archivio locale">
+    <div class="vault-card">
+      <div class="vault-mark" aria-hidden="true">GC</div>
+      <div class="eyebrow dark">STUDIO LEGALE COSTA · ARCHIVIO LOCALE</div>
+      <h1 id="vaultHeading">Archivio non disponibile</h1>
+      <p id="vaultExplanation">I dati sono stati lasciati intatti. Non cancellare i dati del browser.</p>
+      <div id="vaultError" class="error" role="alert"></div>
+    </div>
+  </section>
+
+  <section id="pairScreen" class="screen hidden">
+    <div class="login-card">
+      <div class="brand">GC</div>
+      <div class="eyebrow dark">STUDIO LEGALE COSTA · COMPANION V21.0.0</div>
+      <h1>Importa aggiornamento</h1>
+      <p>Seleziona il file <strong>StudioCostaMobile.scmobile</strong> generato dal gestionale. Nessuna password richiesta. Usa un file nel formato attuale SCM0; i vecchi file cifrati SCM1 devono essere riesportati dal gestionale.</p>
+      <input id="companionFile" class="file-input-native" type="file" aria-label="Seleziona file .scmobile">
+      <label for="companionFile" id="companionFilePicker" class="file-picker-button" role="button" tabindex="0">Seleziona file .scmobile</label>
+      <div id="companionFileName" class="file-selected-name">Nessun file selezionato</div>
+      <button id="companionImportButton" disabled>Importa aggiornamento</button>
+      <button id="importBackButton" class="secondary-button" type="button">Torna alla Companion</button>
+      <div id="pairError" class="error"></div>
+      <p id="pairLegacyNotice" class="muted hidden" role="status">È stato rilevato un vecchio archivio cifrato, conservato senza modifiche. Non è leggibile automaticamente. Per ritrovare pratiche e appuntamenti, importa un nuovo file .scmobile dal gestionale. Le eventuali attività registrate solo nel vecchio archivio non compariranno qui.</p>
+    </div>
+  </section>
+
+  <section id="emptyScreen" class="screen hidden">
+    <div class="login-card">
+      <div class="brand">GC</div>
+      <div class="eyebrow dark">COMPANION V21.0.0 · PIN ATTIVO</div>
+      <h1>Nessun archivio locale</h1>
+      <p>Esporta dal gestionale il file StudioCostaMobile.scmobile, trasferiscilo in modo riservato su iPhone e importalo qui. Per consultarlo usa sempre la stessa icona sulla schermata Home.</p>
+      <button id="emptyImportButton" class="secondary-button">Importa file .scmobile</button>
+      <p id="emptyLegacyNotice" class="muted hidden" role="status">Il vecchio archivio cifrato è stato conservato intatto, in uno spazio separato. Per visualizzare nuovamente pratiche e appuntamenti, importa un file .scmobile recente dal gestionale. Le attività presenti esclusivamente nel vecchio archivio non sono accessibili automaticamente.</p>
+    </div>
+  </section>
+
+  <aside id="updateNotice" class="update-notice hidden" role="status" aria-live="polite" aria-label="Aggiornamento dell’app">
+    <div class="update-notice-copy"><strong>Aggiornamento disponibile</strong><span>Per applicarlo salva prima ciò che stai scrivendo. I dati già registrati restano sul dispositivo.</span></div>
+    <div class="update-notice-actions"><button id="applyUpdate" type="button">Aggiorna ora</button><button id="laterUpdate" type="button" class="update-later">Più tardi</button></div>
+  </aside>
+
+  <div id="app" class="hidden">
+    <header class="companion-topbar">
+      <div class="brand-lockup brand-lockup-redesigned">
+        <div class="header-logo image-logo" aria-hidden="true"></div>
+        <div class="brand-copy">
+          <div class="brand-person">AVV. GIUSY COSTA</div>
+          <div class="brand-studio">Studio Legale Costa</div>
+          <h1 id="pageTitle">Home</h1>
+        </div>
+      </div>
+      <div class="header-actions compact-actions">
+        <span id="networkStatus" class="network-status" role="status" aria-live="polite">Offline</span><span class="companion-version-label">v21.0.0</span>
+        <div class="sync-pill" id="headerSync">—</div>
+        <button id="settingsButton" class="icon-button" aria-label="Sincronizzazione e privacy">⋯</button>
+      </div>
+    </header>
+
+    <div class="syncbar">
+      <span id="syncStatus">Ultima sincronizzazione: —</span>
+      <button id="quickExportActions" class="text-button">0 modifiche</button>
+    </div>
+
+
+
+    <!-- V21.0.0: unico menu, orizzontale in alto su tablet e in basso su telefono. -->
+    <nav class="bottom-nav companion-bottom-nav five-nav v19-nav" aria-label="Navigazione principale">
+      <button data-target="homeView" class="active" aria-current="page"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 10.5L12 4l8 6.5"/><path d="M6.5 9.5V20h11V9.5"/><path d="M10 20v-5.5h4V20"/></svg></span><em>Home</em></button>
+      <button data-target="hearingsView"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 4v15"/><path d="M7 7h10"/><path d="M5 7c0 3-2 5-2 5h6c0 0-2-2-2-5"/><path d="M19 7c0 3-2 5-2 5h6c0 0-2-2-2-5"/><path d="M8 20h8"/></svg></span><em>Udienze</em></button>
+      <button data-target="plannerView"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 4v3M16 4v3M4 10h16M8 14h8M8 17h5"/></svg></span><em>Planner</em></button>
+      <button data-target="scadenzeView"><span class="nav-svg" aria-hidden="true">◷</span><em>Scadenze</em></button>
+      <button data-target="practicesView"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 7.5A2.5 2.5 0 0 1 6.5 5H10l1.7 2H17.5A2.5 2.5 0 0 1 20 9.5v8A2.5 2.5 0 0 1 17.5 20h-11A2.5 2.5 0 0 1 4 17.5v-10Z"/><path d="M4 9h16"/></svg></span><em>Pratiche</em></button>
+      <button data-target="toolsView"><span class="nav-svg" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l1.6 3.9L17.5 8.5l-3.1 2.5.9 4-3.3-2-3.3 2 .9-4L6.5 8.5l3.9-1.6L12 3Z"/><path d="M20.1 15.5l.8 1.9 1.9.8-1.9.8-.8 1.9-.8-1.9-1.9-.8 1.9-.8.8-1.9Z"/></svg></span><em>Strumenti</em></button>
+    </nav>
+
+    <p id="offlineWarning" class="muted hidden" role="status" aria-live="polite"></p>
+    <main>
+      <section id="homeView" class="view"></section>
+
+      <section id="hearingsView" class="view hidden">
+        <div class="hearings-command-head">
+          <div class="view-identity">
+            <span class="view-kicker">GIUDIZIARIO</span>
+            <div><h2>Udienze</h2><p>Ruolo, orari e pratiche collegate</p></div>
+          </div>
+          <div class="hearing-period-control">
+            <button id="hearingPrev" class="nav-square" aria-label="Periodo precedente">‹</button>
+            <span class="companion-date-picker"><span id="hearingDateText" aria-hidden="true"></span><input id="hearingDate" type="date" aria-label="Data udienze"></span>
+            <button id="hearingNext" class="nav-square" aria-label="Periodo successivo">›</button>
+          </div>
+          <div class="hearing-view-row">
+            <div class="hearing-mode" role="group" aria-label="Vista udienze">
+              <button data-hearing-mode="list" class="active">Elenco</button>
+              <button data-hearing-mode="day">Giorno</button>
+              <button data-hearing-mode="week">Settimana</button>
+              <button data-hearing-mode="month">Mese</button>
+            </div>
+            <button id="hearingToday" class="hearing-today">Oggi</button>
+          </div>
+          <div id="hearingPeriodLabel" class="hearing-period-label"></div>
+        </div>
+        <div id="hearingsContent" class="hearings-docket"></div>
+      </section>
+
+      <section id="agendaView" class="view hidden">
+        <div class="agenda-planner-head">
+          <div class="agenda-title-line">
+            <div><span class="view-kicker">PLANNER</span><h2>Agenda</h2></div>
+            <button id="agendaToday" class="agenda-today">Oggi</button>
+          </div>
+          <div class="agenda-navigation-line">
+            <button id="agendaPrev" class="nav-square" aria-label="Periodo precedente">‹</button>
+            <input id="agendaDate" type="date" aria-label="Data agenda">
+            <button id="agendaNext" class="nav-square" aria-label="Periodo successivo">›</button>
+          </div>
+          <div class="agenda-mode planner-mode" role="group" aria-label="Vista agenda">
+            <button data-agenda-mode="day">Giorno</button>
+            <button data-agenda-mode="week" class="active">Settimana</button>
+            <button data-agenda-mode="month">Mese</button>
+            
+          </div>
+          <div class="agenda-meta-row">
+            <span id="agendaPeriodLabel" class="compact-period-label"></span>
+            <button id="exportCalendarIcs" class="agenda-export">Esporta</button>
+          </div>
+        </div>
+        <div id="agendaContent" class="agenda-planner-content"></div>
+      </section>
+
+      <section id="plannerView" class="view hidden">
+        <div class="v19-planner-head">
+          <div class="view-kicker">STUDIO COSTA · ORGANIZZAZIONE</div><h2>Il mio Planner</h2>
+          <p>Udienze, lavoro e impegni personali in ordine di orario.</p>
+          <div class="v19-planner-date"><button id="plannerPrev" aria-label="Giorno precedente">‹</button><span class="companion-date-picker"><span id="plannerDateText" aria-hidden="true"></span><input type="date" id="plannerDate" aria-label="Data Planner"></span><button id="plannerNext" aria-label="Giorno successivo">›</button><button id="plannerToday">Oggi</button></div>
+          <strong id="plannerPeriodLabel"></strong>
+        </div>
+        <div id="plannerContent"></div>
+      </section>
+
+      <section id="scadenzeView" class="view hidden">
+        <div class="scadenze-head"><span class="view-kicker">ATTI DA NOTIFICARE E DEPOSITARE</span><h2>Scadenze</h2><p>Preparazioni, date interne e termini effettivi</p><label><input id="scadenzeAllDates" type="checkbox" checked> TUTTE LE DATE</label>
+        <div class="scadenze-filters"><label>DAL<span class="companion-date-picker"><span id="scadenzeFromText" aria-hidden="true"></span><input type="date" id="scadenzeFrom" aria-label="Scadenze dal"></span></label><label>AL<span class="companion-date-picker"><span id="scadenzeToText" aria-hidden="true"></span><input type="date" id="scadenzeTo" aria-label="Scadenze al"></span></label></div>
+        <div class="scadenza-actions"><button id="scadenzePrint">STAMPA / PDF</button><button id="scadenzeCsv">ESPORTA ELENCO</button></div><p id="scadenzeCount"></p></div><div id="scadenzeContent"></div>
+      </section>
+
+      <section id="practicesView" class="view hidden">
+        <div class="section-head stacked practices-compact-head">
+          <div><h2>Pratiche</h2><p class="muted">Ricerca riservata nell’archivio dello studio</p></div>
+          <input id="practiceSearch" type="search" placeholder="Cerca per assistito, RG, RGNR, SIUS, SIEP, autorità, controparte">
+        </div>
+        <div id="practiceFilterBar" class="practice-simple-filters" role="group" aria-label="Filtri pratiche">
+          <button class="active" data-practice-filter="all">Tutte</button>
+          <button data-practice-filter="PENALE">Penale</button>
+          <button data-practice-filter="CIVILE">Civile</button>
+          <button data-practice-filter="office">Difese d'ufficio</button>
+        </div>
+        <div id="practiceCards"></div>
+      </section>
+
+
+      <section id="checklistsView" class="view hidden">
+        <div class="section-head">
+          <div><h2>Checklist</h2><p class="muted">Attività da spuntare e sincronizzare con il gestionale</p></div>
+          <button id="addChecklistMobile" class="secondary-button">＋ Incolla checklist</button>
+        </div>
+        <div class="filters checklist-filters">
+          <button id="checklistTodo" class="active">Da fare</button>
+          <button id="checklistDone">Completate</button>
+        </div>
+        <div class="checklist-quick-tip">Incolla una checklist scritta anche con ChatGPT: una riga = una voce spuntabile.</div>
+        <div id="checklistsContent"></div>
+      </section>
+
+      <section id="toolsView" class="view hidden">
+        <div class="section-head stacked">
+          <div><h2>Strumenti</h2><p class="muted">Le funzioni che servono fuori studio, sincronizzate con il desktop</p></div>
+          <div id="pluginStatus" class="plugin-status"></div>
+        </div>
+        <div class="tool-tabs">
+          <button data-tool="codes">§<span>Banca</span></button>
+          <button data-tool="terms">⌛<span>Calendario</span></button>
+          <button data-tool="taxes">⌁<span>Tributi</span></button>
+          <button data-tool="split">€<span>Riparto</span></button>
+          <button data-tool="documents">▤<span>Documenti</span></button>
+          <button data-tool="creset">▦<span>Creset</span></button>
+          <button data-tool="checklist">☑<span>Checklist</span></button>
+        </div>
+
+        <section id="hearingTool" class="plugin-tool"></section>
+
+        <section id="codesTool" class="plugin-tool hidden">
+          <div class="tool-card">
+            <div class="section-head stacked compact-head"><div><h3>Banca giuridica</h3><p class="muted">Normativa, sentenze, prassi e note sincronizzate dal desktop</p></div></div>
+            <input id="legalSearch" class="tool-input" type="search" placeholder="Articolo, sentenza, argomento, parola chiave…">
+            <select id="legalTypeFilter" class="tool-input">
+              <option value="">Tutto</option><option value="NORMA">Normativa</option><option value="SENTENZA">Giurisprudenza</option><option value="PRASSI">Prassi</option><option value="FORMULA">Formule</option><option value="NOTA">Note</option>
+            </select>
+            <div class="legal-institutional-links" aria-label="Fonti istituzionali">
+              <a href="https://www.normattiva.it/" target="_blank" rel="noopener noreferrer">Normattiva ↗</a>
+              <a href="https://dati.normattiva.it/" target="_blank" rel="noopener noreferrer">Normattiva Open Data ↗</a>
+              <a href="https://www.gazzettaufficiale.it/" target="_blank" rel="noopener noreferrer">Gazzetta Ufficiale ↗</a>
+              <a href="https://eur-lex.europa.eu/" target="_blank" rel="noopener noreferrer">EUR-Lex ↗</a>
+              <a href="https://www.cortecostituzionale.it/" target="_blank" rel="noopener noreferrer">Corte costituzionale ↗</a>
+              <a href="https://www.giustizia-amministrativa.it/" target="_blank" rel="noopener noreferrer">Giustizia amministrativa ↗</a>
+            </div>
+            <p class="legal-source-disclaimer">Collegamenti esterni alle fonti. Le schede locali provengono dal desktop; verifica sempre vigenza e testo applicabile.</p>
+            <div id="legalResults"></div>
+          </div>
+        </section>
+
+        <section id="termsTool" class="plugin-tool hidden">
+          <div class="tool-card">
+            <h3>Calcolo calendario</h3>
+            <p class="muted">Somma o sottrae giorni da una data. Il calcolo dei tributi locali è disponibile nella voce Tributi.</p>
+            <label>Data di partenza<input id="termStartDate" class="tool-input" type="date"></label>
+            <div class="two-cols"><label>Giorni<input id="termDays" class="tool-input" type="number" min="0" value="30"></label><label>Direzione<select id="termDirection" class="tool-input"><option value="1">In avanti</option><option value="-1">A ritroso</option></select></label></div>
+            <button id="calculateQuickTerm">Calcola</button>
+            <div id="termResult" class="tool-result">—</div>
+          </div>
+        </section>
+
+        <section id="taxesTool" class="plugin-tool hidden">
+          <div class="tool-card">
+            <h3>Tributi locali</h3>
+            <p class="muted">Decadenza dell'accertamento, riscossione ed eventuale prescrizione secondo il medesimo motore della versione desktop V21.0.0</p>
+            <div class="tool-subcard">
+              <strong>1. Tributo e decadenza</strong>
+              <label>Tributo<select id="taxType" class="tool-input"><option>IMU</option><option>TARI</option><option>TASI</option><option>ICP/CANONE (verificare disciplina propria)</option><option>ALTRO TRIBUTO LOCALE</option></select></label>
+              <div class="two-cols"><label>Annualità<input id="taxYear" class="tool-input" type="number" min="1990" max="2100"></label><label>Violazione<select id="taxViolation" class="tool-input"><option value="PAYMENT">Omesso/parziale pagamento</option><option value="DECLARATION">Omessa/infedele dichiarazione</option></select></label></div>
+              <label id="taxDeclarationYearRow" class="hidden">Anno in cui la dichiarazione era dovuta<input id="taxDeclarationYear" class="tool-input" type="number" min="1990" max="2100"></label>
+              <label class="setting-row"><span><strong>Sospensione COVID/IFEL</strong><small>Applica +85 giorni soltanto quando il motore la ritiene pertinente.</small></span><input id="taxCovid" type="checkbox" checked></label>
+            </div>
+            <div class="tool-subcard">
+              <strong>2. Atto / riscossione</strong>
+              <label>Atto o fase<select id="taxActType" class="tool-input"><option value="ORDINARY">Avviso di accertamento ordinario / non esecutivo</option><option value="EXECUTIVE" selected>Accertamento esecutivo ex L. 160/2019</option><option value="TITLE">Ingiunzione / cartella / titolo coattivo</option><option value="INTERRUPTIVE">Sollecito / intimazione / atto interruttivo</option><option value="PRESCRIPTION">Prescrizione del credito</option><option value="FULL">Quadro completo</option></select></label>
+              <label>Regime<select id="taxRegime" class="tool-input"><option value="EXECUTIVE" selected>Accertamento esecutivo locale ex L. 160/2019</option><option value="PREVIOUS">Regime previgente / titolo separato</option><option value="OTHER">Altro / da verificare</option></select></label>
+              <label>Data notifica accertamento<input id="taxNoticeDate" class="tool-input" type="date"></label>
+              <label>Data definitività / esecutività verificata<input id="taxDefinitiveDate" class="tool-input" type="date"></label>
+              <label>Scadenza termine ricorso/pagamento (se nota)<input id="taxPaymentDeadline" class="tool-input" type="date"></label>
+              <label>Riscossione dopo l'affidamento<select id="taxCollectorMode" class="tool-input"><option value="UNKNOWN">Da verificare</option><option value="SAME">Stesso soggetto che ha notificato — 120 giorni</option><option value="OTHER">Soggetto diverso / affidatario — 180 giorni</option></select></label>
+            </div>
+            <div class="tool-subcard">
+              <strong>3. Prescrizione</strong>
+              <label>Ultimo atto interruttivo validamente notificato<input id="taxLastActDate" class="tool-input" type="date"></label>
+              <label class="setting-row"><span><strong>Credito consacrato in giudicato</strong><small>Verifica indicativa del termine decennale ex art. 2953 c.c.</small></span><input id="taxJudgment" type="checkbox"></label>
+            </div>
+            <button id="calculateLocalTaxes">Calcola termini</button>
+            <div id="taxResult" class="tool-result tax-result">—</div>
+          </div>
+        </section>
+
+        <section id="splitTool" class="plugin-tool hidden">
+          <div class="tool-card">
+            <h3>Riparto Studio / TFC</h3>
+            <p class="muted">Tre passaggi distinti, come nel desktop: 50% eventuale, accantonamento 19%, riparto del residuo.</p>
+            <div class="tool-subcard">
+              <strong>1. Calcolo eventuale del 50%</strong>
+              <label>Importo totale (€)<input id="splitHalfTotal" class="tool-input" inputmode="decimal" placeholder="0,00"></label>
+              <button id="calculateHalfInvoice" class="secondary-button">Calcola 50%</button>
+              <div id="splitHalfResult" class="tool-result compact-result">—</div>
+            </div>
+            <div class="tool-subcard">
+              <strong>2. Fatturato e accantonamento 19%</strong>
+              <label>Importo effettivamente fatturato (€)<input id="splitBilledAmount" class="tool-input" inputmode="decimal" placeholder="0,00"></label>
+              <label>Chi ha fatturato?<select id="splitBilledBy" class="tool-input"></select></label>
+              <button id="calculateReserve" class="secondary-button">Calcola accantonamento</button>
+              <div id="splitReserveResult" class="tool-result compact-result">—</div>
+            </div>
+            <div class="tool-subcard">
+              <strong>3. Riparto del residuo</strong>
+              <label>Schema<select id="splitMode" class="tool-input"><option value="thirds">Tre quote uguali</option><option value="tfc">Quote TFC — Studio 30% · Titolare 30% · Firmatario 10% · Redattore 30%</option></select></label>
+              <div id="splitTfcRoles" class="tfc-role-grid hidden">
+                <label>Titolare della pratica (30%)<select id="splitHolder" class="tool-input"></select></label>
+                <label>Firmatario (10%)<select id="splitSigner" class="tool-input"></select></label>
+                <label>Redattore dell'atto (30%)<select id="splitDrafter" class="tool-input"></select></label>
+                <p class="muted">La quota Studio TFC del 30% viene accantonata separatamente e resta allo Studio.</p>
+              </div>
+              <button id="calculateSplit">Calcola riparto</button>
+              <div id="splitResult" class="tool-result">—</div>
+            </div>
+          </div>
+        </section>
+
+        <section id="documentsTool" class="plugin-tool hidden">
+          <div class="tool-card">
+            <h3>Documenti</h3>
+            <p class="muted">Documenti autorizzati e disponibili offline nel pacchetto sincronizzato.</p>
+            <input id="documentSearch" class="tool-input" type="search" placeholder="Nome file, pratica, categoria, tipo…">
+            <select id="documentCategoryFilter" class="tool-input"><option value="">Tutte le categorie</option></select>
+            <div id="documentsToolResults"></div>
+          </div>
+        </section>
+
+        <section id="cresetTool" class="plugin-tool hidden"></section>
+
+        <section id="checklistTool" class="plugin-tool hidden">
+          <div class="tool-card">
+            <h3>Checklist</h3>
+            <p class="muted">Apri le checklist operative sincronizzate con il gestionale.</p>
+            <button id="openChecklistsFromTools">Apri checklist</button>
+          </div>
+        </section>
+      </section>
+
+      <section id="searchView" class="view hidden">
+        <div class="section-head stacked">
+          <div><h2>Ricerca</h2><p class="muted">Pratiche, agenda, documenti, checklist, Creset e banca giuridica</p></div>
+          <input id="globalSearch" type="search" autocomplete="off" placeholder="Scrivi un nome, RG, udienza, documento…">
+        </div>
+        <div id="globalSearchResults" class="search-results"></div>
+      </section>
+    </main>
+
+
+  </div>
+
+  <button id="addLocalTask" class="floating-add compact-fab" aria-label="Nuovo impegno">＋</button>
+
+  <div id="localTaskModal" class="modal hidden">
+    <div class="modal-sheet compact-sheet">
+      <div class="modal-top"><button id="closeLocalTask" class="back-button" type="button" aria-label="Chiudi nuovo impegno">‹</button><div><div class="eyebrow dark">NUOVO IMPEGNO</div><h2 id="localModalTitle">Inserisci</h2></div></div>
+      <input id="localTaskId" type="hidden">
+      <label>Tipo<select id="localCategory"><option>UDIENZA</option><option>APPUNTAMENTO</option><option>ATTIVITÀ</option><option>PROMEMORIA</option><option>TELEFONATA</option><option>COMMISSIONE</option><option>PERSONALE</option><option>ALTRO</option></select></label>
+      <label>Pratica<select id="localPractice"><option value="">Nessuna pratica</option></select></label>
+      <label>Titolo / tipo di udienza<input id="localTitle" type="text"></label>
+      <label>Data<input id="localDate" type="date"></label>
+      <div class="two-cols"><label>Ora iniziale<input id="localStart" type="time"></label><label>Ora finale<input id="localEnd" type="time"></label></div>
+      <label><input id="localAllDay" type="checkbox"> Tutto il giorno</label>
+      <label>Luogo<input id="localLocation" type="text"></label>
+      <div id="hearingExtraFields" class="hearing-extra hidden">
+        <div class="two-cols"><label>Aula<input id="localCourtroom" type="text"></label><label>Giudice<input id="localJudge" type="text"></label></div>
+        <label class="setting-row hearing-first-row"><span><strong>Prima udienza del procedimento</strong><small>Attiva i termini processuali pertinenti quando la pratica lo richiede.</small></span><input id="localFirstHearing" type="checkbox"></label>
+      </div>
+      <label>Note<textarea id="localNotes" rows="3"></textarea></label>
+      <label>Priorità<select id="localPriority"><option>BASSA</option><option selected>MEDIA</option><option>ALTA</option><option>URGENTE</option></select></label>
+      <label id="localBusyRow"><input id="localBusy" type="checkbox" checked> Occupa il calendario</label>
+      <label id="localPrivateRow"><input id="localPrivate" type="checkbox"> Privata</label>
+      <div class="modal-actions"><button id="deleteLocalTask" class="danger-button hidden">Elimina</button><button id="saveLocalTask">Salva sul telefono</button></div>
+      <p class="muted">La modifica entrerà nel gestionale solo dopo l’esportazione e l’importazione controllata sul PC.</p>
+    </div>
+  </div>
+
+  <div id="hearingOutcomeModal" class="modal hidden">
+    <div class="modal-sheet compact-sheet">
+      <div class="modal-top"><button id="closeHearingOutcome" class="back-button" type="button" aria-label="Chiudi gestione udienza">‹</button><div><div class="eyebrow dark">UDIENZA</div><h2 id="hearingOutcomeTitle">Esito / rinvio</h2></div></div>
+      <input id="outcomeHearingId" type="hidden">
+      <label>Esito<select id="outcomeValue"><option value="">Seleziona</option><option value="RINVIO">Rinvio</option><option value="DISCUSSIONE">Discussione</option><option value="RISERVA">Riserva</option><option value="SENTENZA">Decisione / sentenza</option><option value="CTU AMMESSA">CTU ammessa</option><option value="TERMINI CONCESSI">Termini concessi</option><option value="ALTRO">Altro</option></select></label>
+      <div class="two-cols"><label>Nuova udienza<input id="outcomeNextDate" type="date"></label><label>Ora<input id="outcomeNextTime" type="time"></label></div>
+      <label>Motivo rinvio<input id="outcomeReason" type="text"></label>
+      <label><input id="outcomeTermsGranted" type="checkbox"> Il giudice ha concesso termini</label>
+      <label>Provvedimenti / termini esatti<textarea id="outcomeJudgeOrders" rows="3"></textarea></label>
+      <label>Nota / attività svolte<textarea id="outcomePerformed" rows="3"></textarea></label>
+      <button id="saveHearingOutcome">Registra da sincronizzare</button>
+      <p class="muted">Il telefono non trasforma il testo del provvedimento in una scadenza legale. Il desktop valida l’esito e applica il motore giuridico.</p>
+    </div>
+  </div>
+
+  <div id="practiceModal" class="modal hidden">
+    <div class="modal-sheet">
+      <div class="modal-top"><button id="closePractice" class="back-button" type="button" aria-label="Chiudi scheda pratica">‹</button><div><div class="eyebrow dark">SCHEDA PRATICA</div><h2 id="detailTitle"></h2></div></div>
+      <div id="detailSync" class="detail-sync"></div>
+      <div id="practiceDetail"></div>
+    </div>
+  </div>
+
+  <div id="settingsModal" class="modal hidden">
+    <div class="modal-sheet compact-sheet">
+      <div class="modal-top"><button id="closeSettings" class="back-button" type="button" aria-label="Chiudi impostazioni">‹</button><div><div class="eyebrow dark">COMPANION V21.0.0</div><h2>Sincronizzazione e privacy</h2></div></div>
+      <div class="detail-section">
+        <h3>Modifiche da riportare al PC</h3>
+        <p id="pendingActionsInfo" class="muted"></p>
+        <button id="exportMobileActions">Esporta modifiche .scmr</button>
+      </div>
+      <div class="detail-section">
+        <h3>Archivio</h3>
+        <p id="localArchiveInfo" class="muted"></p>
+        <button id="privacyImportButton" class="secondary-button">Importa nuovo .scmobile</button>
+      </div>
+      <div class="detail-section">
+        <h3>PIN di accesso iPhone</h3>
+        <p class="muted">PIN di 4 cifre richiesto all'apertura della Companion. È una protezione aggiuntiva al codice dell'iPhone, non sostituisce la sicurezza del dispositivo.</p>
+        <button id="changeAccessPin" class="secondary-button" type="button">Imposta o modifica PIN di accesso</button>
+      </div>
+      <div class="detail-section">
+        <h3>Protezione visualizzazione</h3>
+        <label class="setting-row"><span><strong>Nascondi note sensibili</strong><small>Le note non saranno mostrate nelle schede pratica.</small></span><input id="hideNotesSetting" type="checkbox"></label>
+        <label class="setting-row"><span><strong>Nascondi documenti offline</strong><small>I file resteranno salvati ma non saranno elencati.</small></span><input id="hideDocumentsSetting" type="checkbox"></label>
+      </div>
+      <div class="detail-section">
+        <button id="exportLocalTasks" class="secondary-button">Backup attività create su iPhone</button>
+        <input id="localTasksFile" type="file" accept=".scl,application/json">
+        <button id="importLocalTasks" class="secondary-button">Ripristina backup attività</button>
+      </div>
+      <div class="detail-section">
+        <h3>Gestione dati sul dispositivo</h3>
+        <p class="muted">Accesso protetto con PIN locale quando configurato. I dati conservati in questa Companion sono cifrati con AES-256-GCM tramite una chiave locale del dispositivo. Chi può usare questo browser può consultare l'archivio. I file esportati .scmobile, .scmr e .scl non sono cifrati: conservarli in modo riservato.</p>
+        <button id="clearLocalArchive" class="secondary-button">Elimina solo archivio importato</button>
+        <button id="clearAllLocalData" class="danger-button" type="button">Elimina tutti i dati locali</button>
+      </div>
+    </div>
+  </div>
+
+
+    <div id="checklistComposerModal" class="modal hidden">
+    <div class="modal-sheet compact-sheet checklist-composer-sheet">
+      <div class="modal-top"><button id="closeChecklistComposer" class="back-button" type="button" aria-label="Chiudi checklist">‹</button><div><div class="eyebrow dark">CHECKLIST RAPIDA</div><h2>Incolla elenco</h2></div></div>
+      <p class="muted">Puoi incollare una checklist scritta anche con ChatGPT. Ogni riga diventa una voce spuntabile. Se una riga contiene una data o un orario, il Companion li riconosce automaticamente.</p>
+      <label>Titolo checklist<input id="checklistComposerTitle" type="text" placeholder="Es. Adempimenti udienza / documenti da preparare"></label>
+      <div class="two-cols"><label>Data di riferimento<input id="checklistComposerDate" type="date"></label><label>Priorità<select id="checklistComposerPriority"><option>BASSA</option><option selected>MEDIA</option><option>ALTA</option><option>URGENTE</option></select></label></div>
+      <label>Assistito o codice pratica (facoltativo)<input id="checklistComposerPractice" type="text" placeholder="Es. Rossi Mario / RGNR 1234/2026"></label>
+      <label>Voci da creare<textarea id="checklistComposerItems" rows="10" placeholder="Incolla qui la checklist, una voce per riga.&#10;Esempio:&#10;07/10 ore 09:30 - chiamare il cliente&#10;depositare memoria conclusionale&#10;recuperare marca da bollo"></textarea></label>
+      <div class="checklist-composer-actions"><button id="clearChecklistComposer" class="secondary-button" type="button">Svuota</button><button id="saveChecklistComposer" type="button">Crea checklist</button></div>
+      <p class="muted">Dopo la creazione, potrai flaggare le voci direttamente dal telefono e poi esportare le modifiche verso il desktop.</p>
+    </div>
+  </div>
+
+<div id="undoToast" class="undo-toast hidden"><span>Checklist aggiornata</span><button id="undoAction" type="button">Annulla</button></div>
+
+  <script src="companion-version.js?v=21.0.0"></script>
+  <script src="companion-core.js?v=21.0.0"></script>
+  <script src="planner-batch-mobile.js?v=21.0.0"></script>
+  <script src="companion-vault.js?v=21.0.0"></script>
+  <script src="companion-storage.js?v=21.0.0"></script>
+  <script src="studio-demo.js?v=21.0.0"></script>
+  <script src="app.js?v=21.0.0"></script>
+  <script src="app-calendar.js?v=21.0.0-home1"></script>
+  <script src="app-planner.js?v=21.0.0"></script>
+  <script src="app-workflows.js?v=21.0.0"></script>
+  <script src="app-calculators.js?v=21.0.0"></script>
+  <script src="app-actions.js?v=21.0.0"></script>
+  <script src="app-details.js?v=21.0.0"></script>
+  <script src="app-privacy.js?v=21.0.0"></script>
+  <script src="app-scadenze.js?v=21.0.0"></script>
+  <script src="companion-access.js?v=21.0.0"></script>
+  <script src="studio-core.js?v=21.0.0"></script>
+  <script src="studio.js?v=21.0.0-home1"></script>
+  <script src="demo-bootstrap.js?v=21.0.0"></script>
+</body>
+</html>
